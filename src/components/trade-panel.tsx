@@ -276,7 +276,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
           {/* ── Exchange Selector ── */}
           <div style={{ marginBottom: '12px' }}>
             <div style={{ fontFamily: te.mono, fontSize: '7px', color: te.textDim, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '6px' }}>
-              GIEŁDA
+              EXCHANGE
             </div>
             <div style={{ display: 'flex', gap: '4px' }}>
               {(['bybit', 'binance'] as const).map(ex => {
@@ -316,7 +316,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
           {/* ── Mode Selector ── */}
           <div style={{ marginBottom: '12px' }}>
             <div style={{ fontFamily: te.mono, fontSize: '7px', color: te.textDim, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '6px' }}>
-              TRYB
+              MODE
             </div>
             <div style={{ display: 'flex', gap: '4px' }}>
               <button
@@ -377,7 +377,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
           {/* ── Amount Input ── */}
           <div style={{ marginBottom: '12px' }}>
             <div style={{ fontFamily: te.mono, fontSize: '7px', color: te.textDim, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '6px' }}>
-              KWOTA USDT
+              AMOUNT USDT
             </div>
             <div
               style={{
@@ -443,9 +443,9 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
               fontFamily: te.mono, fontSize: '7px', color: te.textDim, marginTop: '4px',
               letterSpacing: '0.04em', display: 'flex', justifyContent: 'space-between',
             }}>
-              <span>DOSTĘPNE: {usdtBalance.toFixed(2)} USDT</span>
+              <span>AVAILABLE: {usdtBalance.toFixed(2)} USDT</span>
               {numAmount > usdtBalance && (
-                <span style={{ color: te.red, fontWeight: 600 }}>NIEWYSTARCZAJĄCE</span>
+                <span style={{ color: te.red, fontWeight: 600 }}>INSUFFICIENT</span>
               )}
             </div>
           </div>
@@ -463,15 +463,15 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
             }}
           >
             <div style={{ fontFamily: te.mono, fontSize: '7px', color: te.textDim, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '8px' }}>
-              <PixelIcon grid={PIXEL_ICONS.target} color={te.orange} size={10} /> PODSUMOWANIE ZAMÓWIENIA
+              <PixelIcon grid={PIXEL_ICONS.target} color={te.orange} size={10} /> ORDER SUMMARY
             </div>
             {[
               { label: 'TYP', value: 'MARKET BUY', color: te.green },
               { label: 'PARA', value: `${target.symbol.toUpperCase()}/USDT`, color: te.text },
               { label: 'KWOTA', value: `$${numAmount.toFixed(2)}`, color: te.text },
-              { label: 'OPŁATA', value: `-$${feeUsdt.toFixed(2)} (${fee}%)`, color: te.textMuted },
+              { label: 'FEE', value: `-$${feeUsdt.toFixed(2)} (${fee}%)`, color: te.textMuted },
               { label: 'NETTO', value: `$${netUsdt.toFixed(2)}`, color: te.text },
-              { label: 'ILOŚĆ', value: estimatedQty < 1 ? estimatedQty.toFixed(6) : estimatedQty.toFixed(4), color: te.purple },
+              { label: 'AMOUNT', value: estimatedQty < 1 ? estimatedQty.toFixed(6) : estimatedQty.toFixed(4), color: te.purple },
             ].map((item, i) => (
               <div
                 key={i}
@@ -517,11 +517,11 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
             onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.background = te.green }}
           >
             {submitting ? (
-              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-                WYKONYWANIE...
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                  EXECUTING...
               </span>
             ) : (
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
@@ -537,7 +537,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
               fontFamily: te.mono, fontSize: '7px', color: te.red, marginTop: '6px',
               textAlign: 'center', letterSpacing: '0.06em', fontWeight: 600,
             }}>
-              UWAGA: TRYB REAL — ZAMÓWIENIE NIEODWRACALNE
+              WARNING: REAL MODE — ORDER IS IRREVERSIBLE
             </div>
           )}
 
@@ -559,7 +559,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
                   color: orderResult.success ? te.green : te.red,
                   letterSpacing: '0.06em', textTransform: 'uppercase' as const,
                 }}>
-                  {orderResult.success ? 'ZAMÓWIENIE ZŁOŻONE' : 'BŁĄD'}
+                  {orderResult.success ? 'ORDER PLACED' : 'ERROR'}
                 </span>
               </div>
               {orderResult.success ? (

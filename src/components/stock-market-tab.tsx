@@ -597,7 +597,7 @@ export default function StockMarketTab({ onOpenAssetChart }: { onOpenAssetChart?
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: loading ? TE.yellow : TE.green, boxShadow: `0 0 6px ${loading ? TE.yellow : TE.green}`, animation: loading ? 'macro-blink 1.2s infinite' : 'none' }} />
-            <span style={{ fontFamily: TE.mono, fontSize: 9, letterSpacing: '0.12em', color: TE.textMuted, textTransform: 'uppercase' }}>{loading ? 'ŁADOWANIE' : 'LIVE'}</span>
+            <span style={{ fontFamily: TE.mono, fontSize: 9, letterSpacing: '0.12em', color: TE.textMuted, textTransform: 'uppercase' }}>{loading ? 'LOADING' : 'LIVE'}</span>
           </div>
           <button
             onClick={loadData}

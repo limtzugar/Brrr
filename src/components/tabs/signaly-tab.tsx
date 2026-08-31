@@ -493,7 +493,7 @@ export default function SignalyTab() {
       if (!signalsOk) setLastUpdated(coinsData.last_updated)
     }
     if (!signalsOk && coinsResult.status !== 'fulfilled') {
-      setError('Failed to fetch data — sprawdź połączenie')
+      setError('Failed to fetch data — check connection')
     }
     setLoading(false)
   }, [])
@@ -1030,7 +1030,7 @@ export default function SignalyTab() {
           <div className="mt-2">
             {closedSpotPositions.length === 0 ? (
               <div className="text-[10px] text-center py-3" style={{ color: te.textDim, fontFamily: te.mono }}>
-                No zamkniętych transakcji — pozycje zamkną się automatycznie przy TP/SL lub ręcznie przez SELL
+                No closed trades — positions close automatically at TP/SL or manually via SELL
               </div>
             ) : (
               <div className="space-y-1 max-h-64 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: `${te.border} transparent` }}>
@@ -1287,7 +1287,7 @@ export default function SignalyTab() {
               <SlidersHorizontal className="size-5" /> Alert thresholds per coin
             </DialogTitle>
             <DialogDescription>
-              Adjust RSI, 24h drop and volume multiplier thresholds for each monitored coin. Niestandardowe progi są oznaczone ikoną ⚙️ on karcie sygnału.
+              Adjust RSI, 24h drop and volume multiplier thresholds for each monitored coin. Custom thresholds are marked with a ⚙️ icon on the signal card.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 mt-2">

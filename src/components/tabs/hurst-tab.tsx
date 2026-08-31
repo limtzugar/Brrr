@@ -2111,8 +2111,8 @@ plot(close, offset = -25, color=#FFFF00, title="Lagging Span")`}</pre>
                   {lastH !== null && (
                     <div className="mt-1 text-[7px]" style={{ color: te.textDim }}>
                       H = <span style={{ color: lastH < 0.0 ? te.green : lastH > 1.0 ? te.red : te.textDim, fontWeight: 700 }}>{lastH.toFixed(3)}</span>
-                      {lastH < 0.0 && <span style={{ color: te.green }}> ← poniżej 0.0!</span>}
-                      {lastH > 1.0 && <span style={{ color: te.red }}> → powyżej 1.0!</span>}
+                      {lastH < 0.0 && <span style={{ color: te.green }}> ← below 0.0!</span>}
+                      {lastH > 1.0 && <span style={{ color: te.red }}> → above 1.0!</span>}
                     </div>
                   )}
                 </div>
@@ -2301,7 +2301,7 @@ plot(close, offset = -25, color=#FFFF00, title="Lagging Span")`}</pre>
             {showBacktest && (
               <div className="px-2 pb-2 flex flex-col gap-1.5">
                 <div className="text-[7px]" style={{ color: te.textDim }}>
-                  LONG: BB dolna dotknięcie + Hurst ↑0.00 | SHORT: BB górna dotknięcie + Hurst ↓1.00
+                  LONG: BB lower band touch + Hurst ↑0.00 | SHORT: BB upper band touch + Hurst ↓1.00
                 </div>
                 <ParamControl label="Days" value={backtestDays} min={7} max={365} step={7} onChange={setBacktestDays} te={te} />
                 <ParamControl label="SL %" value={backtestSlPct} min={0.5} max={20} step={0.5} onChange={setBacktestSlPct} te={te} suffix="%" />

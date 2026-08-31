@@ -120,7 +120,7 @@ function DrawdownHeatMap() {
       {heatMapTooltip && (
         <div className="mt-2 rounded-sm px-3 py-1.5" style={{ background: `${te.bgInput}55`, border: `1px solid ${te.border}` }}>
           <span className="text-[9px] font-bold" style={{ color: te.text, fontFamily: te.mono }}>{heatMapTooltip.coin}</span>
-          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono }}> — day {heatMapTooltip.day === 0 ? 'dziś' : `-${heatMapTooltip.day}d`}: </span>
+          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono }}> — day {heatMapTooltip.day === 0 ? 'today' : `-${heatMapTooltip.day}d`}: </span>
           <span className="text-[9px] font-bold" style={{ color: heatMapTooltip.drawdown < -5 ? te.red : te.yellow, fontFamily: te.mono }}>{heatMapTooltip.drawdown.toFixed(2)}%</span>
         </div>
       )}

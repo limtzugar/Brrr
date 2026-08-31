@@ -50,18 +50,18 @@ export default function TradeHistoryTab() {
 
   const importFromDirectory = async () => {
     setImporting(true)
-    setStatus('Importowanie... (użyj: node scripts/import-csv-direct.mjs dla szybkiego importu)')
+    setStatus('Importing... (use: node scripts/import-csv-direct.mjs for fast import)')
     try {
       const res = await fetch('/api/trades/analytics')
       const data = await res.json()
       if (data.total > 0) {
-        setStatus(`Dane już załadowane: ${data.total.toLocaleString()} transakcji`)
+        setStatus(`Data already loaded: ${data.total.toLocaleString()} trades`)
         setAnalytics(data)
       } else {
-        setStatus('No data — uruchom: node scripts/import-csv-direct.mjs')
+        setStatus('No data — run: node scripts/import-csv-direct.mjs')
       }
     } catch {
-      setStatus('Error — uruchom: node scripts/import-csv-direct.mjs')
+      setStatus('Error — run: node scripts/import-csv-direct.mjs')
     } finally {
       setImporting(false)
     }
@@ -77,7 +77,7 @@ export default function TradeHistoryTab() {
         body: JSON.stringify({ csv: text, batch: `file-${Date.now()}` }),
       })
       const data = await res.json()
-      setStatus(data.success ? `Zaimportowano ${data.inserted} transakcji` : (data.error ?? 'Error'))
+      setStatus(data.success ? `Imported ${data.inserted} trades` : (data.error ?? 'Error'))
       if (data.success) await fetchAnalytics()
     } finally {
       setImporting(false)
@@ -85,10 +85,10 @@ export default function TradeHistoryTab() {
   }
 
   const clearAll = async () => {
-    if (!confirm('Usunąć wszystkie zaimportowane transakcje?')) return
+    if (!confirm('Delete all imported trades?')) return
     await fetch('/api/trades/analytics', { method: 'DELETE' })
     setAnalytics(null)
-    setStatus('Wyczyszczono')
+    setStatus('Cleared')
     await fetchAnalytics()
   }
 
@@ -104,7 +104,7 @@ export default function TradeHistoryTab() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <BarChart3 className="size-5" style={{ color: TE.orange }} />
-          <h2 className="text-lg font-semibold">History Transakcji</h2>
+          <h2 className="text-lg font-semibold">Trade History</h2>
           {analytics?.total ? (
             <Badge variant="outline">{analytics.total.toLocaleString()} trades</Badge>
           ) : null}
@@ -119,7 +119,7 @@ export default function TradeHistoryTab() {
           </Button>
           <label>
             <Button size="sm" variant="outline" asChild disabled={importing}>
-              <span><Upload className="size-3.5 mr-1" /> Import plik</span>
+              <span><Upload className="size-3.5 mr-1" /> Import file</span>
             </Button>
             <input type="file" accept=".csv" className="hidden" onChange={e => {
               const f = e.target.files?.[0]
@@ -127,7 +127,7 @@ export default function TradeHistoryTab() {
             }} />
           </label>
           <Button size="sm" variant="destructive" onClick={() => void clearAll()}>
-            <Trash2 className="size-3.5 mr-1" /> Wyczyść
+            <Trash2 className="size-3.5 mr-1" /> Clear
           </Button>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default function TradeHistoryTab() {
 
       {!analytics?.total ? (
         <div className="text-center py-12 opacity-60">
-          <p>No data. Kliknij &quot;Import 162 CSV&quot; aby załadować historię Dip Hunter.</p>
+          <p>No data. Click &quot;Import 162 CSV&quot; to load Dip Hunter history.</p>
         </div>
       ) : (
         <>

@@ -225,11 +225,11 @@ function BuyPanel() {
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-semibold" style={{ color: te.cyan }}>USDC</span>
               </div>
               {currentPrice && currentPrice > 0 && (
-                <Button variant="ghost" size="sm" className="h-5 text-[9px] rounded-sm px-1.5 mt-1" style={{ color: te.textMuted }} onClick={() => setLimitPrice(currentPrice.toFixed(currentPrice < 1 ? 6 : currentPrice < 100 ? 4 : 2))}>Użyj obecnej ceny</Button>
+                <Button variant="ghost" size="sm" className="h-5 text-[9px] rounded-sm px-1.5 mt-1" style={{ color: te.textMuted }} onClick={() => setLimitPrice(currentPrice.toFixed(currentPrice < 1 ? 6 : currentPrice < 100 ? 4 : 2))}>Use current price</Button>
               )}
             </div>
             <div>
-              <Label className="text-[10px]" style={{ color: te.textMuted, fontFamily: te.mono, letterSpacing: '0.06em' }}>ILOŚĆ {coinInfo?.label}</Label>
+              <Label className="text-[10px]" style={{ color: te.textMuted, fontFamily: te.mono, letterSpacing: '0.06em' }}>AMOUNT {coinInfo?.label}</Label>
               <div className="relative mt-1">
                 <Input type="number" placeholder="0.00" value={limitQty} onChange={e => setLimitQty(e.target.value)} className="h-8 pr-14" style={{ background: te.bgInput, border: `1px solid ${te.border}`, color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }} min={0} step={0.001} />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-semibold" style={{ color: te.orange }}>{coinInfo?.label}</span>
@@ -237,7 +237,7 @@ function BuyPanel() {
             </div>
             {Number(limitPrice) > 0 && Number(limitQty) > 0 && (
               <div className="flex items-center justify-between text-[10px] rounded-sm px-2 py-1" style={{ background: `${te.bgInput}55`, border: `1px solid ${te.border}` }}>
-                <span style={{ color: te.textMuted }}>Łącznie:</span>
+                <span style={{ color: te.textMuted }}>Total:</span>
                 <span style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{limitTotal} USDC</span>
               </div>
             )}
@@ -258,21 +258,21 @@ function BuyPanel() {
 
         <Button className="w-full h-9 text-xs gap-1.5 rounded-sm font-semibold" style={{ background: te.green, color: '#000' }} disabled={loading || (orderType === 'market' ? !amountUsdc || Number(amountUsdc) <= 0 : !limitPrice || !limitQty || Number(limitPrice) <= 0 || Number(limitQty) <= 0)} onClick={handleBuy}>
           {loading ? <RefreshCw className="size-3.5 animate-spin" /> : <ShoppingCart className="size-3.5" />}
-          {loading ? 'Składanie zlecenia...' : `KUP ${coinInfo?.label}`}
+          {loading ? 'Placing order...' : `KUP ${coinInfo?.label}`}
         </Button>
 
         {orderResult && (
           <div className="rounded-sm px-3 py-2 space-y-1" style={{ background: te.greenBg, border: `1px solid ${te.green}30` }}>
-            <div className="text-[10px] font-semibold" style={{ color: te.green }}>Zlecenie złożone!</div>
+            <div className="text-[10px] font-semibold" style={{ color: te.green }}>Order placed!</div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[9px]" style={{ fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>
               <div><span style={{ color: te.textMuted }}>Symbol:</span> <span style={{ color: te.text }}>{orderResult.symbol}</span></div>
               <div><span style={{ color: te.textMuted }}>Typ:</span> <span style={{ color: te.text }}>{orderResult.type}</span></div>
-              {orderResult.filledQty && <div><span style={{ color: te.textMuted }}>Ilość:</span> <span style={{ color: te.text }}>{orderResult.filledQty}</span></div>}
+              {orderResult.filledQty && <div><span style={{ color: te.textMuted }}>Qty:</span> <span style={{ color: te.text }}>{orderResult.filledQty}</span></div>}
               {orderResult.avgPrice && <div><span style={{ color: te.textMuted }}>Cena:</span> <span style={{ color: te.text }}>${orderResult.avgPrice}</span></div>}
               {orderResult.quoteQty && <div><span style={{ color: te.textMuted }}>Value:</span> <span style={{ color: te.text }}>${orderResult.quoteQty}</span></div>}
               {orderResult.price && <div><span style={{ color: te.textMuted }}>Cena limit:</span> <span style={{ color: te.text }}>${orderResult.price}</span></div>}
-              {orderResult.quantity && <div><span style={{ color: te.textMuted }}>Ilość:</span> <span style={{ color: te.text }}>{orderResult.quantity}</span></div>}
-              {orderResult.total && <div><span style={{ color: te.textMuted }}>Łącznie:</span> <span style={{ color: te.text }}>${orderResult.total} USDC</span></div>}
+              {orderResult.quantity && <div><span style={{ color: te.textMuted }}>Qty:</span> <span style={{ color: te.text }}>{orderResult.quantity}</span></div>}
+              {orderResult.total && <div><span style={{ color: te.textMuted }}>Total:</span> <span style={{ color: te.text }}>${orderResult.total} USDC</span></div>}
               <div><span style={{ color: te.textMuted }}>Order ID:</span> <span style={{ color: te.text }}>{orderResult.orderId}</span></div>
             </div>
           </div>
@@ -416,7 +416,7 @@ function OrderBookPanel() {
         {/* Header row */}
         <div className="grid grid-cols-3 gap-x-2 text-[8px] mb-1" style={{ color: te.textDim, fontFamily: te.mono, letterSpacing: '0.06em' }}>
           <span>CENA</span>
-          <span className="text-right">ILOŚĆ</span>
+          <span className="text-right">AMOUNT</span>
           <span className="text-right">SUMA</span>
         </div>
 
@@ -665,7 +665,7 @@ function LiquidationMapPanel() {
 
             {/* Disclaimer */}
             <div className="text-[7px] mt-2 leading-tight" style={{ color: te.textDim }}>
-              Szacunkowe poziomy on podstawie dźwigni i maintenance margin. Dane of Binance Futures (USDT-M).
+              Estimated levels based on leverage and maintenance margin. Data from Binance Futures (USDT-M).
             </div>
           </div>
         )}
@@ -792,7 +792,7 @@ function OpenOrdersPanel() {
 
         {loading && orders.length === 0 ? (
           <div className="flex items-center justify-center py-6 text-[10px]" style={{ color: te.textMuted }}>
-            <RefreshCw className="size-3 animate-spin mr-2" />Ładowanie zleceń...
+            <RefreshCw className="size-3 animate-spin mr-2" />Loading orders...
           </div>
         ) : orders.length === 0 ? (
           <div className="flex items-center justify-center py-6 text-[10px]" style={{ color: te.textDim }}>
@@ -831,9 +831,9 @@ function OpenOrdersPanel() {
                           {o.timeInForce && <Badge variant="outline" className="text-[8px] px-1 py-0" style={{ color: te.textDim }}>{o.timeInForce}</Badge>}
                         </div>
                         <div className="flex items-center gap-3 mt-0.5 text-[9px]" style={{ fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>
-                          <span style={{ color: te.textMuted }}>Cena: <span style={{ color: te.text }}>${price < 1 ? price.toFixed(6) : price < 100 ? price.toFixed(4) : price.toFixed(2)}</span></span>
-                          <span style={{ color: te.textMuted }}>Ilość: <span style={{ color: te.text }}>{origQty < 1 ? origQty.toFixed(6) : origQty.toFixed(4)}</span></span>
-                          <span style={{ color: te.textMuted }}>Suma: <span style={{ color: te.text }}>${total < 1 ? total.toFixed(4) : total.toFixed(2)}</span></span>
+                          <span style={{ color: te.textMuted }}>Price: <span style={{ color: te.text }}>${price < 1 ? price.toFixed(6) : price < 100 ? price.toFixed(4) : price.toFixed(2)}</span></span>
+                          <span style={{ color: te.textMuted }}>Qty: <span style={{ color: te.text }}>{origQty < 1 ? origQty.toFixed(6) : origQty.toFixed(4)}</span></span>
+                          <span style={{ color: te.textMuted }}>Sum: <span style={{ color: te.text }}>${total < 1 ? total.toFixed(4) : total.toFixed(2)}</span></span>
                         </div>
                         {filledPct > 0 && filledPct < 100 && (
                           <div className="mt-1">
@@ -942,7 +942,7 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
           <CardContent className="py-12 text-center" style={{ color: te.textMuted }}>
             <Play className="size-8 mx-auto mb-2 opacity-50" />
             <p>No active strategies</p>
-            <p className="text-xs mt-1">Przejdź do zakładki Strategiesss i kliknij Demo lub Real aby aktywować</p>
+            <p className="text-xs mt-1">Go to the Strategies tab and click Demo or Real to activate</p>
           </CardContent>
         </Card>
       ) : (
@@ -962,10 +962,10 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
                         <Badge variant="outline" className="text-[10px] shrink-0">{s.symbol}</Badge>
                         {strategyTypeBadge(s.strategyType || 'dip_buying')}
                         <Badge className={`shrink-0 ${s.mode === 'demo' ? 'text-white text-[10px]' : 'text-white text-[10px]'}`} style={{ background: s.mode === 'demo' ? te.blue : te.red }}>{s.mode === 'demo' ? 'DEMO' : 'REAL'}</Badge>
-                        {s.inPosition && <Badge style={{ background: te.yellow, color: '#000' }} className="text-[10px] shrink-0">W POZYCJI</Badge>}
+                        {s.inPosition && <Badge style={{ background: te.yellow, color: '#000' }} className="text-[10px] shrink-0">IN POSITION</Badge>}
                       </div>
                       <div className="text-xs mt-0.5" style={{ color: te.textMuted }}>
-                        {s.inPosition && s.entryPrice ? `Entry: $${s.entryPrice.toFixed(4)}` : `Czeka on sygnał ${strategyTypeLabel(s.strategyType || 'dip_buying')}...`}
+                        {s.inPosition && s.entryPrice ? `Entry: $${s.entryPrice.toFixed(4)}` : `Waiting for ${strategyTypeLabel(s.strategyType || 'dip_buying')} signal...`}
                         {s.lastPrice ? ` | Obecna: $${s.lastPrice.toFixed(4)}` : ''}
                       </div>
                     </div>
@@ -1021,18 +1021,18 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
       <div className="rounded-sm" style={{ background: te.bgCard, border: `1px dashed ${te.borderLight}`, borderRadius: '4px' }}>
         <button className="w-full flex items-center gap-2 px-3 py-2 text-left" onClick={() => setShowHelp(!showHelp)} style={{ color: te.textMuted }}>
           <Shield className="size-3.5 shrink-0" style={{ color: te.blue }} />
-          <span className="text-[10px] font-medium" style={{ fontFamily: te.mono, letterSpacing: '0.04em' }}>Jak działa automatyczny trading?</span>
+          <span className="text-[10px] font-medium" style={{ fontFamily: te.mono, letterSpacing: '0.04em' }}>How does automated trading work?</span>
           <span className="ml-auto text-[9px]" style={{ fontFamily: te.mono, color: te.textDim }}>{showHelp ? '▲' : '▼'}</span>
         </button>
         {showHelp && (
           <div className="px-3 pb-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs" style={{ color: te.textMuted }}>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>1.</span> Skonfiguruj klucze API Bybit w <span style={{ color: te.text }}>Settingsch</span> (ikona ⚙️ w nagłówku)</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>2.</span> Utwórz konto on <span style={{ color: te.text, fontWeight: 600 }}>testnet.binance.vision</span> dla trybu Testnet</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>3.</span> Kliknij <Badge style={{ background: te.blue, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Demo</Badge> on strategii — system zacznie monitorować rynek</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>4.</span> Gdy dip spełni warunki — system automatycznie kupi i sprzeda of TP/SL</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>5.</span> <Badge style={{ background: te.red, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Real</Badge> używa prawdziwego kapitału — upewnij się, że strategia działa w Demo!</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>6.</span> Monitoruj status w tej zakładce — możesz zatrzymać strategię w każdej chwili</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>1.</span> Configure Bybit API keys in <span style={{ color: te.text }}>Settings</span> (gear icon in the header)</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>2.</span> Create an account on <span style={{ color: te.text, fontWeight: 600 }}>testnet.binance.vision</span> for Testnet mode</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>3.</span> Click <Badge style={{ background: te.blue, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Demo</Badge> on a strategy — the system will start monitoring the market</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>4.</span> When a dip meets the conditions — the system will automatically buy and sell via TP/SL</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>5.</span> <Badge style={{ background: te.red, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Real</Badge> uses real capital — make sure the strategy works in Demo first!</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>6.</span> Monitor status in this tab — you can stop the strategy at any time</div>
             </div>
           </div>
         )}

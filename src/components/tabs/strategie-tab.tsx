@@ -404,7 +404,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
               <span className="text-[14px] font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{result.data.results.total_trades}</span>
             </div>
             <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
-              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>CAPITAL KOŃCOWY</span>
+              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>FINAL CAPITAL</span>
               <span className="text-[14px] font-bold" style={{ color: result.data.results.final_capital > (result.data.parameters?.initial_capital as number ?? 0) ? te.green : te.red, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>${result.data.results.final_capital.toFixed(0)}</span>
             </div>
           </div>
@@ -687,15 +687,15 @@ export default function StrategiessssTab({ activeStrategiessss, onStrategyChange
                 <div>
                   <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Period (days)</span>
                   <select value={String(optimizeDays)} onChange={e => setOptimizeDays(Number(e.target.value))} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teSelect(te)}>
-                    <option value="30">30 dni</option>
-                    <option value="90">90 dni</option>
-                    <option value="180">180 dni</option>
-                    <option value="365">365 dni</option>
+                    <option value="30">30 days</option>
+                    <option value="90">90 days</option>
+                    <option value="180">180 days</option>
+                    <option value="365">365 days</option>
                   </select>
                 </div>
                 <div>
                   <button className="w-full px-3 py-1 text-[9px] font-bold rounded-sm transition-all inline-flex items-center justify-center gap-1" style={{ background: te.purple, color: '#fff', border: 'none', fontFamily: te.mono, letterSpacing: '0.04em', marginTop: 14 }} onClick={runOptimize} disabled={optimizing}>
-                    {optimizing ? (<><RefreshCw className="size-3 animate-spin" /> Szukam...</>) : (<><Flame className="size-3" /> Wykryj najlepszą</>)}
+                    {optimizing ? (<><RefreshCw className="size-3 animate-spin" /> Searching...</>) : (<><Flame className="size-3" /> Find best</>)}
                   </button>
                 </div>
               </div>
@@ -814,13 +814,13 @@ export default function StrategiessssTab({ activeStrategiessss, onStrategyChange
       {/* Section Title + Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[8px] font-bold" style={{ color: te.textDim, letterSpacing: '0.14em', fontFamily: te.mono }}>TWOJE STRATEGIE TRADINGOWE</span>
-          <p className="text-[10px] mt-0.5" style={{ color: te.textMuted, fontFamily: te.mono }}>Porównaj różne konfiguracje — każdy typ strategii of własnymi parametrami</p>
+          <span className="text-[8px] font-bold" style={{ color: te.textDim, letterSpacing: '0.14em', fontFamily: te.mono }}>YOUR TRADING STRATEGIES</span>
+          <p className="text-[10px] mt-0.5" style={{ color: te.textMuted, fontFamily: te.mono }}>Compare different configurations — each strategy type with its own parameters</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={addStrategy} disabled={running} className="px-2 py-1 text-[9px] font-bold rounded-sm inline-flex items-center gap-1" style={{ color: te.textDim, background: 'transparent', border: `1px solid ${te.border}`, fontFamily: te.mono, letterSpacing: '0.04em' }}><Plus className="size-3" /> DODAJ</button>
+          <button onClick={addStrategy} disabled={running} className="px-2 py-1 text-[9px] font-bold rounded-sm inline-flex items-center gap-1" style={{ color: te.textDim, background: 'transparent', border: `1px solid ${te.border}`, fontFamily: te.mono, letterSpacing: '0.04em' }}><Plus className="size-3" /> ADD</button>
           <button onClick={runAll} disabled={running || strategies.length === 0} className="px-3 py-1 text-[9px] font-bold rounded-sm transition-all inline-flex items-center gap-1" style={{ background: te.orange, color: '#000', border: 'none', fontFamily: te.mono, letterSpacing: '0.04em' }}>
-            {running ? (<><RefreshCw className="size-3 animate-spin" /> Obliczam...</>) : (<><Play className="size-3" /> Testuj wszystkie</>)}
+            {running ? (<><RefreshCw className="size-3 animate-spin" /> Calculating...</>) : (<><Play className="size-3" /> Test all</>)}
           </button>
         </div>
       </div>
@@ -884,7 +884,7 @@ export default function StrategiessssTab({ activeStrategiessss, onStrategyChange
         ))}
         {/* Add Strategy Button */}
         <button onClick={addStrategy} className="rounded-sm p-6 flex flex-col items-center justify-center gap-2 transition-all min-h-[200px]" style={{ border: `1px dashed ${te.border}`, color: te.textMuted, background: 'transparent' }} onMouseEnter={e => { e.currentTarget.style.borderColor = te.orange; e.currentTarget.style.color = te.orange }} onMouseLeave={e => { e.currentTarget.style.borderColor = te.border; e.currentTarget.style.color = te.textMuted }}>
-          <Plus className="size-6" /><span className="text-[10px] font-bold" style={{ fontFamily: te.mono, letterSpacing: '0.06em' }}>DODAJ STRATEGIĘ</span>
+          <Plus className="size-6" /><span className="text-[10px] font-bold" style={{ fontFamily: te.mono, letterSpacing: '0.06em' }}>ADD STRATEGY</span>
         </button>
       </div>
     </div>

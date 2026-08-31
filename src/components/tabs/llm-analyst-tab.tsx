@@ -161,7 +161,7 @@ export default function LlmAnalystTab() {
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }))
-        throw new Error(err.error || 'Analiza nie powiodła się')
+        throw new Error(err.error || 'Analysis failed')
       }
       const data = await res.json()
       setReport(data)
@@ -218,7 +218,7 @@ export default function LlmAnalystTab() {
   }
 
   const clearHistory = async () => {
-    if (!confirm('Wyczyścić historię raportów LLM?')) return
+    if (!confirm('Clear all LLM report history?')) return
     await fetch('/api/llm-analyst', { method: 'DELETE' })
     setHistory([]); setReport(null)
   }
@@ -280,7 +280,7 @@ export default function LlmAnalystTab() {
             }}
           >
             {analyzing ? <RefreshCw className="size-3.5 animate-spin" /> : <Brain className="size-3.5" />}
-            {analyzing ? 'ANALIZUJĘ...' : '🔍 ANALIZUJ SYSTEM'}
+            {analyzing ? 'ANALYZING...' : '🔍 ANALYZE SYSTEM'}
           </button>
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function LlmAnalystTab() {
         <div className="rounded-sm px-3 py-3 flex items-start gap-2" style={{ background: `${te.orange}10`, border: `1px solid ${te.orange}33` }}>
           <AlertTriangle className="size-4 shrink-0 mt-0.5" style={{ color: te.orange }} />
           <div className="text-[11px] font-mono" style={{ color: te.text }}>
-            <strong style={{ color: te.orange }}>Wymagana konfiguracja LLM.</strong> Otwórz Settings → sekcja „LLM Analyst".
+            <strong style={{ color: te.orange }}>LLM configuration required.</strong> Open Settings → "LLM Analyst" section.
           </div>
         </div>
       )}
@@ -382,7 +382,7 @@ export default function LlmAnalystTab() {
                             <div style={{ color: te.textMuted, fontSize: '8px' }}>{h.rationale.slice(0, 200)}</div>
                             {h.invalidators && h.invalidators.length > 0 && (
                               <div className="mt-0.5" style={{ color: te.red, fontSize: '8px' }}>
-                                ❌ Unieważnia: {h.invalidators.join('; ').slice(0, 200)}
+                                ❌ Invalidators: {h.invalidators.join('; ').slice(0, 200)}
                               </div>
                             )}
                           </div>
@@ -427,7 +427,7 @@ export default function LlmAnalystTab() {
                     {/* Convictions */}
                     {convicted.length > 0 && (
                       <div>
-                        <div className="text-[9px] font-bold mb-1 uppercase flex items-center gap-1" style={{ color: te.green }}><CheckCircle2 className="size-3" /> Przekonania ({convicted.length})</div>
+                        <div className="text-[9px] font-bold mb-1 uppercase flex items-center gap-1" style={{ color: te.green }}><CheckCircle2 className="size-3" /> Convictions ({convicted.length})</div>
                         {convicted.map(c => (
                           <div key={c.id} className="text-[9px] px-2 py-1.5 mb-1 rounded-sm flex items-start justify-between gap-2" style={{ fontFamily: te.mono, background: te.bg, border: `1px solid ${te.green}33` }}>
                             <div className="flex-1">
@@ -438,7 +438,7 @@ export default function LlmAnalystTab() {
                               </div>
                               <div style={{ color: te.text }}>{c.thesis.slice(0, 250)}</div>
                             </div>
-                            <button onClick={() => rejectConviction(c.id)} className="shrink-0" style={{ color: te.red }} title="Odrzuć"><XCircle className="size-3" /></button>
+                            <button onClick={() => rejectConviction(c.id)} className="shrink-0" style={{ color: te.red }} title="Reject"><XCircle className="size-3" /></button>
                           </div>
                         ))}
                       </div>
@@ -446,7 +446,7 @@ export default function LlmAnalystTab() {
                     {/* Hypotheses needing validation */}
                     {hypotheses.length > 0 && (
                       <div>
-                        <div className="text-[9px] font-bold mb-1 uppercase flex items-center gap-1" style={{ color: te.orange }}><Lightbulb className="size-3" /> Hipotezy ({hypotheses.length})</div>
+                        <div className="text-[9px] font-bold mb-1 uppercase flex items-center gap-1" style={{ color: te.orange }}><Lightbulb className="size-3" /> Hypotheses ({hypotheses.length})</div>
                         {hypotheses.map(c => (
                           <div key={c.id} className="text-[9px] px-2 py-1.5 mb-1 rounded-sm flex items-start justify-between gap-2" style={{ fontFamily: te.mono, background: te.bg, border: `1px solid ${te.orange}22` }}>
                             <div className="flex-1">
@@ -459,15 +459,15 @@ export default function LlmAnalystTab() {
                               <div style={{ color: te.text }}>{c.thesis.slice(0, 250)}</div>
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
-                              <button onClick={() => promoteConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.green}20`, color: te.green }} title="Awansuj do CONVICTION">✓</button>
-                              <button onClick={() => rejectConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.red}20`, color: te.red }} title="Odrzuć">✗</button>
+                              <button onClick={() => promoteConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.green}20`, color: te.green }} title="Promote to CONVICTION">✓</button>
+                              <button onClick={() => rejectConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.red}20`, color: te.red }} title="Reject">✗</button>
                               <button onClick={() => deleteConviction(c.id)} style={{ color: te.textDim }} title="Delete"><Trash2 className="size-3" /></button>
                             </div>
                           </div>
                         ))}
                       </div>
                     )}
-                    <div className="text-[8px] font-mono" style={{ color: te.textDim }}>Uruchom ANALIZUJ SYSTEM by LLM wygenerował nowe hipotezy.</div>
+                    <div className="text-[8px] font-mono" style={{ color: te.textDim }}>Run ANALYZE SYSTEM for LLM to generate new hypotheses.</div>
                   </div>
                 )}
               </div>
@@ -478,9 +478,9 @@ export default function LlmAnalystTab() {
         {/* Empty state */}
         {(!report?.strategies || report.strategies.length === 0) && convictions.length === 0 && config?.isConfigured && (
           <div className="rounded-sm p-4 text-center col-span-2" style={{ background: te.bgCard, border: `1px solid ${te.border}` }}>
-            <div className="text-[12px] font-bold mb-1" style={{ fontFamily: te.mono, color: te.textDim }}>BRAK DANYCH</div>
+            <div className="text-[12px] font-bold mb-1" style={{ fontFamily: te.mono, color: te.textDim }}>NO DATA</div>
             <div className="text-[10px] font-mono" style={{ color: te.textMuted }}>
-              Kliknij <strong style={{ color: te.purple }}>ANALIZUJ SYSTEM</strong> by uruchomić głęboką analizę per strategia.
+              Click <strong style={{ color: te.purple }}>ANALYZE SYSTEM</strong> to run deep analysis per strategy.
             </div>
           </div>
         )}
@@ -490,7 +490,7 @@ export default function LlmAnalystTab() {
       {report && (
         <details className="rounded-sm" style={{ background: te.bgCard, border: `1px solid ${te.border}` }}>
           <summary className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider cursor-pointer" style={{ fontFamily: te.mono, color: te.text }}>
-            📄 PEŁNY RAPORT ({report.confidence}%) · {report.insights?.length || 0} insightów · {report.recommendations?.length || 0} rekomendacji
+            📄 FULL REPORT ({report.confidence}%) · {report.insights?.length || 0} insights · {report.recommendations?.length || 0} recommendations
           </summary>
           <div className="px-3 pb-3 space-y-2" style={{ borderTop: `1px solid ${te.border}` }}>
             <div className="text-[10px] rounded-sm p-2 mt-2" style={{ background: te.bg, border: `1px solid ${te.border}`, fontFamily: te.mono, color: te.text, whiteSpace: 'pre-wrap', lineHeight: 1.4, maxHeight: 300, overflowY: 'auto' }}>
@@ -542,7 +542,7 @@ export default function LlmAnalystTab() {
           <div className="px-3 pb-2 space-y-1" style={{ borderTop: `1px solid ${te.border}`, maxHeight: 400, overflowY: 'auto' }}>
             {shadowEvals.length === 0 ? (
               <div className="text-[10px] font-mono py-4 text-center" style={{ color: te.textDim }}>
-                No ocen shadow. Uruchom strategie w tle, a shadow automatycznie oceni każdą decyzję ENTER.
+                No shadow evaluations. Run strategies in the background, and shadow will automatically evaluate each ENTER decision.
               </div>
             ) : (
               shadowEvals.map(e => (
@@ -582,14 +582,14 @@ export default function LlmAnalystTab() {
             {/* Config */}
             <div className="flex items-end gap-2 mt-2">
               <div>
-                <label className="text-[9px] font-bold uppercase block mb-0.5" style={{ color: te.textDim }}>Horyzont</label>
+                <label className="text-[9px] font-bold uppercase block mb-0.5" style={{ color: te.textDim }}>Horizon</label>
                 <select value={wfHorizon} onChange={e => setWfHorizon(e.target.value)} className="h-7 px-2 text-[10px] font-mono rounded-sm"
                   style={{ background: te.bgInput, borderColor: te.border, color: te.text }}>
                   {['1H', '4H', '24H', 'FINAL'].map(h => <option key={h} value={h}>{h}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-[9px] font-bold uppercase block mb-0.5" style={{ color: te.textDim }}>Foldy</label>
+                <label className="text-[9px] font-bold uppercase block mb-0.5" style={{ color: te.textDim }}>Folds</label>
                 <select value={wfFolds} onChange={e => setWfFolds(Number(e.target.value))} className="h-7 px-2 text-[10px] font-mono rounded-sm"
                   style={{ background: te.bgInput, borderColor: te.border, color: te.text }}>
                   {[2, 3, 4, 5].map(f => <option key={f} value={f}>{f}</option>)}
@@ -602,7 +602,7 @@ export default function LlmAnalystTab() {
                 style={{ background: te.blue, color: '#fff', borderRadius: '2px' }}
               >
                 {wfRunning ? <RefreshCw className="size-3 animate-spin" /> : <Play className="size-3" />}
-                {wfRunning ? '...' : 'URUCHOM'}
+                {wfRunning ? '...' : 'RUN'}
               </button>
             </div>
             {wfError && <div className="text-[10px] font-mono" style={{ color: te.red }}>{wfError}</div>}
@@ -613,8 +613,8 @@ export default function LlmAnalystTab() {
                 <table className="w-full text-[9px] font-mono" style={{ borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ color: te.textDim, borderBottom: `1px solid ${te.border}` }}>
-                      <th className="text-left py-1 px-1">Data</th>
-                      <th className="text-left py-1 px-1">Horyzont</th>
+                      <th className="text-left py-1 px-1">Date</th>
+                      <th className="text-left py-1 px-1">Horizon</th>
                       <th className="text-left py-1 px-1">Status</th>
                       <th className="text-right py-1 px-1">Sample</th>
                       <th className="text-right py-1 px-1">Base</th>
@@ -659,11 +659,11 @@ export default function LlmAnalystTab() {
             <button onClick={() => setHistoryOpen(o => !o)} className="flex items-center gap-2 px-3 py-2 flex-1 text-left">
               {historyOpen ? <ChevronDown className="size-3.5" style={{ color: te.textDim }} /> : <ChevronRight className="size-3.5" style={{ color: te.textDim }} />}
               <History className="size-3.5" style={{ color: te.textMuted }} />
-              <span className="text-[11px] font-bold uppercase tracking-wider" style={{ fontFamily: te.mono, color: te.text }}>HISTORIA RAPORTÓW ({history.length})</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider" style={{ fontFamily: te.mono, color: te.text }}>REPORT HISTORY ({history.length})</span>
             </button>
             <button onClick={() => void clearHistory()} className="mr-2 flex items-center gap-1 text-[9px] px-2 py-1 rounded-sm font-bold"
               style={{ fontFamily: te.mono, background: `${te.red}10`, color: te.red, border: `1px solid ${te.red}33` }}>
-              <Trash2 className="size-3" /> WYCZYŚĆ
+              <Trash2 className="size-3" /> CLEAR
             </button>
           </div>
           {historyOpen && (

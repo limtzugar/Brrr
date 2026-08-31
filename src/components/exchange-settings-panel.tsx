@@ -138,7 +138,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
         <CardContent className="space-y-2">
           {isBinance && (
             <div className="text-[10px] text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 rounded px-2 py-1 flex items-center gap-2">
-              <span>💰 Opłaty:</span>
+              <span>💰 Fees:</span>
               <span className="font-medium">Maker 0.10%</span>
               <span className="text-muted-foreground">|</span>
               <span className="font-medium">Taker 0.10%</span>
@@ -148,7 +148,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           )}
           {!isBinance && (
             <div className="text-[10px] text-orange-400 bg-orange-500/10 rounded px-2 py-1 flex items-center gap-2">
-              <span>💰 Opłaty Futures:</span>
+              <span>💰 Futures Fees:</span>
               <span className="font-medium">Maker 0.02%</span>
               <span className="text-muted-foreground">|</span>
               <span className="font-medium">Taker 0.055%</span>
@@ -156,7 +156,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           )}
           {configured && masked && (
             <div className="text-xs text-muted-foreground bg-muted/50 rounded px-2 py-1">
-              Aktywny klucz: <span className="font-mono">{masked}</span>
+              Active key: <span className="font-mono">{masked}</span>
             </div>
           )}
           <div className="grid grid-cols-2 gap-2">

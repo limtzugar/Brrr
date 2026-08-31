@@ -5244,7 +5244,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: taSettingsOpen ? te.orange : 'transparent',
                       border: `1px solid ${taSettingsOpen ? 'transparent' : te.orange + '66'}`,
                     }}
-                    title="Settings TP/SL/Leverage dla sygnałów TA (RSI 15m + MACD)"
+                    title="Settings TP/SL/Leverage for TA signals (RSI 15m + MACD)"
                   >
                     {taSettingsOpen ? '×' : '⚙'} TA
                   </button>
@@ -5262,7 +5262,7 @@ export default function CexAnomalyTab() {
                         step={0.1} min={0.1} max={50}
                         className="w-12 text-[10px] font-bold px-1 py-0.5 rounded-sm outline-none text-center"
                         style={{ fontFamily: te.mono, color: te.green, background: '#0a1a0a', border: `1px solid ${te.green}44` }}
-                        title="Take Profit % ruchu ceny (price move, nie PnL)"
+                        title="Take Profit % price move (not PnL)"
                       />
                       <span className="text-[8px]" style={{ fontFamily: te.mono, color: te.textDim }}>% ceny</span>
                     </div>
@@ -5275,7 +5275,7 @@ export default function CexAnomalyTab() {
                         step={0.1} min={0.1} max={100}
                         className="w-12 text-[10px] font-bold px-1 py-0.5 rounded-sm outline-none text-center"
                         style={{ fontFamily: te.mono, color: te.red, background: '#1a0a0a', border: `1px solid ${te.red}44` }}
-                        title="Stop Loss % odległości od entry (price move, nie PnL)"
+                        title="Stop Loss % distance from entry (price move, not PnL)"
                       />
                       <span className="text-[8px]" style={{ fontFamily: te.mono, color: te.textDim }}>% ceny</span>
                     </div>
@@ -6030,7 +6030,7 @@ export default function CexAnomalyTab() {
                         // API keys not configured or connection failed
                         setBybitTrading(false)
                         const errMsg = d.error || 'Unknown error'
-                        logEvent('CRITICAL', 'BYBIT', 'No kluczy API Bybit', `${errMsg} — kliknij Setup API w nagłówku aby skonfigurować klucze.`)
+                        logEvent('CRITICAL', 'BYBIT', 'No Bybit API keys', `${errMsg} — click Setup API in the header to configure keys.`)
                         console.error(`[REAL MODE] ❌ Cannot activate: ${errMsg}`)
                         return
                       }
@@ -6052,11 +6052,11 @@ export default function CexAnomalyTab() {
                         setTestWalletInput(realBalance.toFixed(2))
                         // Reset cumulative PnL so initialCapital = wallet balance at switch time
                         cumulativeRealizedPnlRef.current = 0
-                        logEvent('INFO', 'BYBIT', 'REAL mode aktywny', `Capital: $${realBalance.toFixed(2)} (availableBalance=${d.availableBalance}, totalEquity=${d.totalEquityUsdt})`)
+                        logEvent('INFO', 'BYBIT', 'REAL mode active', `Capital: $${realBalance.toFixed(2)} (availableBalance=${d.availableBalance}, totalEquity=${d.totalEquityUsdt})`)
                       } else {
                         // Balance is 0 — API works but no funds
                         setBybitFuturesBalance(0)
-                        logEvent('WARNING', 'BYBIT', 'Saldo Bybit = $0', 'Connection OK, ale brak USDT on koncie futures. Przelej środki on konto Unified Trading.')
+                        logEvent('WARNING', 'BYBIT', 'Bybit balance = $0', 'Connection OK, but no USDT in futures account. Transfer funds to Unified Trading account.')
                       }
                       // Activate REAL mode regardless of balance (>0 is info, ===0 is warning, both valid)
                       setBybitTrading(true)
@@ -6462,7 +6462,7 @@ export default function CexAnomalyTab() {
                         backgroundColor: tpslInputMode === 'pnl' ? te.cyan : 'transparent',
                         border: `1px solid ${tpslInputMode === 'pnl' ? 'transparent' : te.border}`,
                       }}
-                      title={tpslInputMode === 'pnl' ? 'Wpisujesz % PnL pozycji (automatycznie dzielone przez leverage)' : 'Wpisujesz % ruchu ceny bezpośrednio'}
+                        title={tpslInputMode === 'pnl' ? 'Enter position PnL % (auto-divided by leverage)' : 'Enter price move % directly'}
                     >
                       {tpslInputMode === 'pnl' ? 'PnL%' : 'CENA%'}
                     </button>
@@ -6476,7 +6476,7 @@ export default function CexAnomalyTab() {
                         backgroundColor: useCustomTPSL ? te.green : 'transparent',
                         border: `1px solid ${useCustomTPSL ? 'transparent' : te.border}`,
                       }}
-                      title={useCustomTPSL ? 'Użyj domyślnych ustawień trybu' : 'Użyj własnych ustawień TP i SL'}
+                      title={useCustomTPSL ? 'Use mode default settings' : 'Use custom TP and SL settings'}
                     >
                       {useCustomTPSL ? 'MANUAL' : 'AUTO'}
                     </button>
@@ -6533,8 +6533,8 @@ export default function CexAnomalyTab() {
                           border: `1px solid ${te.red}44`,
                         }}
                         title={tpslInputMode === 'pnl'
-                          ? `Stop Loss jako % PnL pozycji. Przy ${leverage}x: SL ${customSL}% PnL = ${(customSL / leverage).toFixed(2)}% ceny`
-                          : `Stop Loss jako % odległości od entry. Przy ${leverage}x: SL ${customSL}% ceny = ${(customSL * leverage).toFixed(1)}% PnL`}
+                          ? `Stop Loss as % of position PnL. At ${leverage}x: SL ${customSL}% PnL = ${(customSL / leverage).toFixed(2)}% price`
+                          : `Stop Loss as % distance from entry. At ${leverage}x: SL ${customSL}% price = ${(customSL * leverage).toFixed(1)}% PnL`}
                       />
                       <div className="text-[9px] shrink-0" style={{ fontFamily: te.mono, color: tpslInputMode === 'pnl' ? te.cyan : te.textDim }}>
                         {tpslInputMode === 'pnl' ? '% PnL' : '% ceny'}
@@ -6606,7 +6606,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: beEnabled ? te.cyan : 'transparent',
                       border: `1px solid ${beEnabled ? 'transparent' : te.border}`,
                     }}
-                    title={beEnabled ? 'Wyłącz Breakeven Stop' : 'Włącz Breakeven Stop — SL przechodzi on entry+buffer po ruchu w stronę TP'}
+                    title={beEnabled ? 'Disable Breakeven Stop' : 'Enable Breakeven Stop — SL moves to entry+buffer after move toward TP'}
                   >
                     {beEnabled ? 'ON' : 'OFF'}
                   </button>
@@ -6682,7 +6682,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: showTaInfo ? te.cyan : 'transparent',
                       border: `1px solid ${showTaInfo ? 'transparent' : te.border}`,
                     }}
-                    title={showTaInfo ? 'Ukryj panel TA' : 'Pokaż panel TA (VWAP, MOM, SMA)'}
+                    title={showTaInfo ? 'Hide TA panel' : 'Show TA panel (VWAP, MOM, SMA)'}
                   >
                     TA {showTaInfo ? 'ON' : 'OFF'}
                   </button>
@@ -6696,7 +6696,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: soundEnabled ? te.orange : 'transparent',
                       border: `1px solid ${soundEnabled ? 'transparent' : te.border}`,
                     }}
-                    title={soundEnabled ? 'Wyłącz dźwięk' : 'Włącz dźwięk — beep przy otwarciu'}
+                    title={soundEnabled ? 'Disable sound' : 'Enable sound — beep on entry'}
                   >
                     🔊 {soundEnabled ? 'ON' : 'OFF'}
                   </button>
@@ -6710,7 +6710,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: tmoEnabled ? te.red : 'transparent',
                       border: `1px solid ${tmoEnabled ? 'transparent' : te.border}`,
                     }}
-                    title={tmoEnabled ? 'Wyłącz TMO — pozycje bez limitu czasu' : 'Włącz TMO — auto-zamykaj pozycje po czasie'}
+                    title={tmoEnabled ? 'Disable TMO — no time limit on positions' : 'Enable TMO — auto-close positions after time'}
                   >
                     TMO {tmoEnabled ? 'ON' : 'OFF'}
                   </button>
@@ -6736,7 +6736,7 @@ export default function CexAnomalyTab() {
                           background: '#1a0f00',
                           border: `1px solid ${customTMO > 0 ? te.orange + '66' : te.border}`,
                         }}
-                        title="TMO w sekundach. 0 = domyślny trybu (AGG 180s, SCALPER 300s, CONTRA 480s). Wpisz np. 60 by zamknąć po 1 min."
+                        title="TMO in seconds. 0 = mode default (AGG 180s, SCALPER 300s, CONTRA 480s). Enter e.g. 60 to close after 1 min."
                       />
                       <span className="text-[8px]" style={{ fontFamily: te.mono, color: te.textDim }}>s</span>
                     </div>
@@ -6763,9 +6763,9 @@ export default function CexAnomalyTab() {
                           border: `1px solid ${allowedDirection === opt.value ? 'transparent' : te.border}`,
                         }}
                         title={
-                          opt.value === 'BOTH' ? 'Otwieraj LONG i SHORT'
-                          : opt.value === 'LONG' ? 'Tylko pozycje LONG (sygnały SHORT odrzucane)'
-                          : 'Tylko pozycje SHORT (sygnały LONG odrzucane)'
+                          opt.value === 'BOTH' ? 'Open both LONG and SHORT'
+                          : opt.value === 'LONG' ? 'LONG positions only (SHORT signals rejected)'
+                          : 'SHORT positions only (LONG signals rejected)'
                         }
                       >
                         {opt.label}
@@ -6966,7 +6966,7 @@ export default function CexAnomalyTab() {
                       opacity: isEnabled ? 1 : 0.35,
                       textDecoration: isEnabled ? 'none' : 'line-through',
                     }}
-                    title={isEnabled ? `Wyłącz ${pair.symbol} of sygnałów` : `Włącz ${pair.symbol} do sygnałów`}
+                    title={isEnabled ? `Disable ${pair.symbol} from signals` : `Enable ${pair.symbol} in signals`}
                   >
                     {isEnabled ? '●' : '○'} {baseAsset}
                   </button>
@@ -6976,7 +6976,7 @@ export default function CexAnomalyTab() {
                 onClick={() => setEnabledPairs(new Set(ALL_PAIRS.map(p => p.symbol)))}
                 className="px-1 py-1 sm:py-0 text-[8px] font-bold rounded-sm min-h-[32px] sm:min-h-0"
                 style={{ fontFamily: te.mono, color: te.green, border: `1px solid ${te.green}33`, background: `${te.green}10` }}
-                title="Włącz wszystkie pary"
+                title="Enable all pairs"
               >
                 ALL
               </button>
@@ -6984,7 +6984,7 @@ export default function CexAnomalyTab() {
                 onClick={() => setEnabledPairs(new Set())}
                 className="px-1 py-1 sm:py-0 text-[8px] font-bold rounded-sm min-h-[32px] sm:min-h-0"
                 style={{ fontFamily: te.mono, color: te.red, border: `1px solid ${te.red}33`, background: `${te.red}10` }}
-                title="Wyłącz wszystkie pary"
+                title="Disable all pairs"
               >
                 NONE
               </button>
@@ -7053,7 +7053,7 @@ export default function CexAnomalyTab() {
             {walletStats.allTrades.length === 0 && (
               <div className="py-3 flex items-center justify-center">
                 <span className="text-[10px]" style={{ color: te.textDim, fontFamily: te.mono }}>
-                  {!paperTrading ? 'WCIŚNIJ ▶ START ABY ROZPOCZĄĆ PAPER TRADING' : dataSource !== 'LIVE' ? 'CZEKAM NA CENY BINANCE...' : 'CZEKAM NA SYGNAŁY ABSORPTION...'}
+                  {!paperTrading ? 'PRESS ▶ START TO BEGIN PAPER TRADING' : dataSource !== 'LIVE' ? 'WAITING FOR BINANCE PRICES...' : 'WAITING FOR ABSORPTION SIGNALS...'}
                 </span>
               </div>
             )}
@@ -7237,7 +7237,7 @@ export default function CexAnomalyTab() {
               return points.length < 2 ? (
                 <div className="flex items-center justify-center" style={{ height: h }}>
                   <span className="text-[10px]" style={{ color: te.textDim, fontFamily: te.mono }}>
-                    {paperTrading ? 'CZEKAM NA PIERWSZĄ TRANSAKCJĘ...' : 'START PAPER TRADING ABY ZOBACZYĆ KRZYWĄ'}
+                    {paperTrading ? 'WAITING FOR FIRST TRADE...' : 'START PAPER TRADING TO SEE THE CURVE'}
                   </span>
                 </div>
               ) : (
@@ -7565,7 +7565,7 @@ export default function CexAnomalyTab() {
             })()}
           </div>
 
-          {/* Closed Positions — tuż pod Equity Curve — collapsible */}
+          {/* Closed Positions — just below Equity Curve — collapsible */}
           <div className="rounded-sm" style={{ background: te.bgCard, border: `1px solid ${te.border}` }}>
             <div
               onClick={() => setClosedPositionsOpen(o => !o)}

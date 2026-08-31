@@ -107,7 +107,7 @@ export default function WykresyTab() {
       const res = await fetch(`/api/indicators?coin_id=${selectedCoin}&days=${selectedDays}&indicators=hurst,rsi,macd,bb`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Error pobierania wskaźników')
+        throw new Error(data.error || 'Error fetching indicators')
       }
       const data = await res.json()
       setIndicatorData({
@@ -318,7 +318,7 @@ export default function WykresyTab() {
           ) : indicatorsError ? (
             <div className="flex items-center justify-center text-sm py-8" style={{ color: te.red }}><AlertTriangle className="size-4 mr-2" />{indicatorsError}</div>
           ) : hurstChartData.length === 0 ? (
-            <div className="flex items-center justify-center text-sm py-8" style={{ color: te.textDim }}>No data Hurst dla wybranego okresu (wymaga ≥100 punktów)</div>
+            <div className="flex items-center justify-center text-sm py-8" style={{ color: te.textDim }}>No Hurst data for the selected period (requires ≥100 points)</div>
           ) : (
             <ChartContainer config={{ hurst: { color: currentHurst !== null && currentHurst < 0.5 ? te.purple : te.yellow }, rsi: { color: te.textMuted } }} className="h-[200px] w-full">
               <AreaChart data={hurstChartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
@@ -417,7 +417,7 @@ export default function WykresyTab() {
                 </div>
                 <div className="flex justify-between text-[9px] mt-0.5" style={{ color: te.textDim }}><span>0 (MR)</span><span>0.5</span><span>1 (Trend)</span></div>
               </div>
-            ) : <span className="text-sm" style={{ color: te.textDim }}>N/A — wymaga ≥100 punktów danych</span>}
+            ) : <span className="text-sm" style={{ color: te.textDim }}>N/A — requires ≥100 data points</span>}
           </CardContent>
         </Card>
       </div>

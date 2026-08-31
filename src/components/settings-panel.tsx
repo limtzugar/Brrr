@@ -162,7 +162,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
       })
       fetchApis()
       const label = memberId ? `sub-account "${memberName}"` : 'main account'
-      setTestResult(`✅ Przełączono on ${label}`)
+      setTestResult(`✅ Switched to ${label}`)
     } catch {}
   }
 
@@ -377,7 +377,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
         <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: te.orange }}>Quick Start — Demo Trading</div>
         <div>1. Bybit: <a href="https://testnet.bybit.com" target="_blank" rel="noreferrer" style={{ color: te.cyan }}>testnet.bybit.com</a> → API → Create Key (Read + Trade)</div>
         <div>2. Paste key into <span style={{ color: te.yellow }}>Bybit Demo</span> below → Save</div>
-        <div>3. W headerze przełącz on <span style={{ color: te.green }}>DEMO</span> → testnet balance will appear</div>
+        <div>3. In the header, switch to <span style={{ color: te.green }}>DEMO</span> → testnet balance will appear</div>
         <div>4. CEX Anomaly: enable PAPER or REAL (demo) → SCALPER mode</div>
       </div>
 
