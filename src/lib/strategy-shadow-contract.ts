@@ -19,36 +19,36 @@ export function parseStrategyShadowResponse(content: string): StrategyShadowResp
     .replace(/\s*```$/, '')
   const start = cleaned.indexOf('{')
   const end = cleaned.lastIndexOf('}')
-  if (start < 0 || end <= start) throw new Error('Model shadow nie zwrócił obiektu JSON')
+  if (start < 0 || end <= start) throw new Error('Shadow model did not return a JSON object')
 
   let raw: unknown
   try {
     raw = JSON.parse(cleaned.slice(start, end + 1))
   } catch {
-    throw new Error('Model shadow zwrócił nieprawidłowy JSON')
+    throw new Error('Shadow model returned invalid JSON')
   }
 
   const parsed = strategyShadowResponseSchema.safeParse(raw)
   if (!parsed.success) {
     const issue = parsed.error.issues[0]
     throw new Error(
-      `Odpowiedź shadow nie spełnia kontraktu (${issue?.path.join('.') || 'response'}: ${issue?.message || 'invalid'})`,
+      `Shadow response does not match contract (${issue?.path.join('.') || 'response'}: ${issue?.message || 'invalid'})`,
     )
   }
   return parsed.data
 }
 
 export function getStrategyShadowSystemPrompt(): string {
-  return `Jesteś niezależnym recenzentem decyzji strategii tradingowej.
-Decyzja bazowa została już podjęta. Nie wykonujesz transakcji i nie zmieniasz jej.
-Oceń jakość setupu wyłącznie na podstawie przekazanej migawki.
-Zwróć WYŁĄCZNIE poprawny JSON:
+  return `You are an independent reviewer of a trading strategy decision.
+The base decision has already been made. You do not execute trades and you do not change it.
+Assess the quality of the setup based solely on the provided snapshot.
+Return ONLY valid JSON:
 {
   "recommendation": "ALLOW|CAUTION|AVOID",
   "confidence": 0,
-  "thesis": "krótka teza po polsku",
-  "arguments": ["argument oparty na danych"],
-  "invalidators": ["warunek unieważniający tezę"]
+  "thesis": "short thesis",
+  "arguments": ["data-based argument"],
+  "invalidators": ["condition that invalidates the thesis"]
 }
-confidence musi być liczbą 0-100. Nie dopisuj danych, których nie ma w wejściu.`
+confidence must be a number 0-100. Do not invent data not present in the input.`
 }

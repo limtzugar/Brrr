@@ -236,7 +236,7 @@ export class MexcClient {
 
       return {
         success: true,
-        message: `Połączono of MEXC${this.config.mode === 'demo' ? ' (Demo)' : ''}. Saldo USDT: ${usdtBalance.toFixed(2)}`,
+        message: `Connected to MEXC${this.config.mode === 'demo' ? ' (Demo)' : ''}. USDT balance: ${usdtBalance.toFixed(2)}`,
         balance: usdtBalance,
       }
     } catch (err) {
@@ -430,7 +430,7 @@ export async function createMexcClient(mode: MexcMode): Promise<MexcClient> {
   })
 
   if (!api || !api.isConfigured) {
-    throw new Error(`Klucze API MEXC (${mode}) nie są skonfigurowane`)
+    throw new Error(`MEXC API keys (${mode}) are not configured`)
   }
 
   return new MexcClient({

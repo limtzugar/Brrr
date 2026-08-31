@@ -72,7 +72,7 @@ export async function register() {
     }, 15_000)
     console.log(`[INSTRUMENTATION] CEX CROWD engine scheduler: every ${CROWD_TICK_MS / 1000}s`)
 
-    // ── SPOT MACD+RSI engine ("Górki i Dołki") — every 20 min ──
+    // ── SPOT MACD+RSI engine ("Tops and Bottoms") — every 20 min ──
     const SPOT_TICK_MS = parseInt(process.env.SPOT_TICK_MS || '1200000', 10)
     setInterval(() => triggerSpotEngine(BASE_URL, CRON_SECRET), SPOT_TICK_MS)
     setTimeout(() => triggerSpotEngine(BASE_URL, CRON_SECRET), 20_000)

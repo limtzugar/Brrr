@@ -1,11 +1,11 @@
 // ─── Market Regime Analysis API ──────────────────────────────────────────────
 // GET /api/regime/analysis?symbol=BTCUSDT
 //
-// Pobiera świece 5m of Bybit public API, oblicza cechy (returns, volatility, ATR,
-// momentum), a następnie uruchamia uproszczony ukryty model Markova (HMM)
-// w TypeScripcie of 3 reżimami: KONSOLIDACJA / TREND / PANIKA.
+// Fetches 5m candles from Bybit public API, computes features (returns, volatility, ATR,
+// momentum), then runs a simplified Hidden Markov Model (HMM)
+// in TypeScript with 3 regimes: KONSOLIDACJA / TREND / PANIKA.
 //
-// READ-ONLY — nie składa żadnych zleceń, nie wymaga kluczy API.
+// READ-ONLY — places no orders, requires no API keys.
 
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -41,7 +41,7 @@ interface RegimeResult {
 const BYBIT_KLINE_URL = 'https://api.bybit.com/v5/market/kline'
 
 async function fetchBybitKlines(symbol: string, totalCandles = 200): Promise<Kline[]> {
-  // 200 × 5min = ~16.7h — wystarczająco dla HMM, a oszczędza pamięć
+  // 200 × 5min = ~16.7h — enough for HMM, saves memory
   const url = `${BYBIT_KLINE_URL}?category=linear&symbol=${symbol}&interval=5&limit=${Math.min(totalCandles, 200)}`
   const res = await fetch(url, {
     headers: { Accept: 'application/json' },
@@ -124,10 +124,10 @@ function computeFeatures(klines: Kline[]): Features {
     momentum10.push(((klines[i].close / klines[i - 10].close) - 1) * 100)
   }
 
-  // Align: wszystkie mają różne starty → weź overlapping
-  // Wszystkie arrays kończą się on tym samym indeksie klines
+  // Align: all have different starts → take the overlapping range
+  // All arrays end at the same klines index
   // returns: [1..N-1], vol20: [20..N-1], atrPct: [15..N-1], mom10: [11..N-1]
-  // → ostatni element każdego jest ten sam (ostatnia świeca)
+  // → the last element of each is the same (last candle)
   return {
     returns,
     volatility20,
@@ -138,9 +138,9 @@ function computeFeatures(klines: Kline[]): Features {
 }
 
 // ─── Simplified Hidden Markov Model (Viterbi-like) ───────────────────────────
-// Zamiast pełnego EM (który jest powolny i niestabilny w TS),
-// używamy GMM (Gaussian Mixture Model) on zwinność + momentum do inicjalizacji
-// 3 komponentów, a potem Viterbi on łańcuchu Markova of empirycznymi przejściami.
+// Instead of full EM (which is slow and unstable in TS),
+// we use GMM (Gaussian Mixture Model) on volatility + momentum to initialize
+// 3 components, then Viterbi on the Markov chain of empirical transitions.
 
 interface HMMState {
   mu: number
@@ -155,17 +155,17 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
   const N = Math.min(returns.length, volatilities.length)
   if (N < 80) return null
 
-  // Używamy volatilities jako obserwacji — to odróżnia reżimy najlepiej
+  // We use volatilities as observations — this separates regimes best
   const obs = volatilities.slice(-N)
 
   // K-means++ init on 3 klastry
   const nStates = 3
 
-  // Wybierz 3初始 centroidy (k-means++)
+  // Pick 3 initial centroids (k-means++)
   const centroids: number[] = []
-  // Pierwszy centroid — losowy (ale powtarzalny)
+  // First centroid — deterministic (repeatable)
   centroids.push(obs[Math.floor(N * 0.1)])
-  // Drugi — najdalszy od pierwszego
+  // Second — farthest from the first
   let maxDist = -1
   let maxIdx = 1
   for (let i = 0; i < N; i++) {
@@ -173,7 +173,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
     if (d > maxDist) { maxDist = d; maxIdx = i }
   }
   centroids.push(obs[maxIdx])
-  // Trzeci — najdalszy od obu
+  // Third — farthest from both
   maxDist = -1
   maxIdx = 2
   for (let i = 0; i < N; i++) {
@@ -182,7 +182,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
   }
   centroids.push(obs[maxIdx])
 
-  // Sortuj centroidy rosnąco (KONSOLIDACJA < TREND < PANIKA)
+  // Sort centroids ascending (KONSOLIDACJA < TREND < PANIKA)
   centroids.sort((a, b) => a - b)
 
   // EM: kilka iteracji k-means — zero-allocation update (no .filter())
@@ -209,7 +209,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
     }
   }
 
-  // Oblicz parametry Gaussa per stan — zero-allocation
+  // Compute Gaussian parameters per state — zero-allocation
   const params: HMMState[] = []
   for (let k = 0; k < nStates; k++) {
     let sumK = 0, sumSqK = 0, cntK = 0
@@ -225,7 +225,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
     params.push({ mu, sigma: Math.sqrt(Math.max(variance, 0.01)) })
   }
 
-  // Oblicz macierz przejść of przypisań
+  // Compute the transition matrix from assignments
   const transCount = Array.from({ length: nStates }, () => new Array(nStates).fill(1)) // Laplace smoothing
   for (let i = 1; i < N; i++) {
     transCount[assignments[i - 1]][assignments[i]]++
@@ -235,9 +235,9 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
     return row.map(v => v / sum)
   })
 
-  // Forward algorithm: oblicz smoothed probabilities dla ostatniego okresu
-  // (Właściwie używamy Viterbi dla całej sekwencji)
-  // Dla wydajności: tylko Forward on ostatnich 100 obserwacjach
+  // Forward algorithm: compute smoothed probabilities for the last period
+  // (Actually we use Viterbi for the whole sequence)
+  // For performance: only Forward on the last 100 observations
 
   return { states: assignments, params, transitionMatrix }
 }

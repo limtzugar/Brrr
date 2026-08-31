@@ -1,7 +1,7 @@
-// ─── SPOT "Górki i Dołki" engine — headless paper (MACD + RSI) ─────────────
+// ─── SPOT "Tops and Bottoms" engine — headless paper (MACD + RSI) ───────────
 // Plain-vanilla spot buy/sell for BTC / ETH / SOL on Binance spot (public data).
-// BUY  dołek: RSI(14) ≤ 30 AND MACD histogram turning up / bullish cross
-// SELL górka: RSI(14) ≥ 70 AND MACD histogram turning down / bearish cross
+// BUY  bottom: RSI(14) ≤ 30 AND MACD histogram turning up / bullish cross
+// SELL top: RSI(14) ≥ 70 AND MACD histogram turning down / bearish cross
 // Enhancements (parity with organism lib/tactics-macd-n-rsi.mjs):
 //   · Hurst regime guard (no falling knives; no early exit in runaway trend)
 //   · RSI divergence boost · 1D SMA200 trend anchor
@@ -221,7 +221,7 @@ async function ensureStrategy(): Promise<string> {
   const created = await db.activeStrategy.create({
     data: {
       strategyId: SPOT_PROFILE.strategyId,
-      name: 'SPOT Górki i Dołki (paper, MACD+RSI)',
+      name: 'SPOT Tops and Bottoms (paper, MACD+RSI)',
       coinId: 'multi',
       symbol: 'BTC/ETH/SOL',
       mode: 'demo',

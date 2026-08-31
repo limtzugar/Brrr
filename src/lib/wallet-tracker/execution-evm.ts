@@ -40,7 +40,7 @@ export async function executeEvmCopyTrade(
     const chainId = CHAIN_IDS[chain]
 
     if (!chainId) {
-      return { success: false, error: `Nieobsługiwany łańcuch: ${chain}` }
+      return { success: false, error: `Unsupported chain: ${chain}` }
     }
 
     // 1. Determine input/output tokens
@@ -60,7 +60,7 @@ export async function executeEvmCopyTrade(
     if (!quoteResult.success || !quoteResult.data) {
       return {
         success: false,
-        error: quoteResult.error || '1inch quote nie powiodło się',
+        error: quoteResult.error || '1inch quote failed',
       }
     }
 
@@ -79,7 +79,7 @@ export async function executeEvmCopyTrade(
     if (!swapResult.success || !swapResult.data) {
       return {
         success: false,
-        error: swapResult.error || '1inch swap build nie powiodło się',
+        error: swapResult.error || '1inch swap build failed',
       }
     }
 
@@ -97,7 +97,7 @@ export async function executeEvmCopyTrade(
     if (!txHash) {
       return {
         success: false,
-        error: 'Transakcja nie została wysłana',
+        error: 'Transaction was not sent',
       }
     }
 

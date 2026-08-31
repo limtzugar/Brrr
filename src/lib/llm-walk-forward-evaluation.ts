@@ -333,20 +333,20 @@ export function evaluateWalkForwardSamples(
 
   if (outOfSample.length < config.minPromotionSamples) {
     status = 'INSUFFICIENT_DATA'
-    reasons.push(`Za mało próbek out-of-sample: ${outOfSample.length}/${config.minPromotionSamples}.`)
+    reasons.push(`Too few out-of-sample samples: ${outOfSample.length}/${config.minPromotionSamples}.`)
   } else {
     if (!pairedDelta95 || pairedDelta95.lower <= 0) {
-      reasons.push('Dolna granica 95% CI różnicy nie jest dodatnia.')
+      reasons.push('Lower bound of the 95% CI of the difference is not positive.')
     }
     if (baselinePlusLlm.meanReturnPct <= baseline.meanReturnPct) {
-      reasons.push('Średni zwrot baseline+LLM nie przewyższa baseline.')
+      reasons.push('Mean return of baseline+LLM does not exceed baseline.')
     }
     if (baselinePlusLlm.maxDrawdownPct > baseline.maxDrawdownPct) {
-      reasons.push('Baseline+LLM zwiększa maksymalny drawdown.')
+      reasons.push('Baseline+LLM increases maximum drawdown.')
     }
     if (reasons.length === 0) {
       status = 'PROMOTION_CANDIDATE'
-      reasons.push('Kandydat spełnia bramki statystyczne; nadal wymaga ręcznej akceptacji.')
+      reasons.push('Candidate meets statistical gates; still requires manual acceptance.')
     }
   }
 

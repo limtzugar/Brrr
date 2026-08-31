@@ -2,19 +2,19 @@ import { describe, expect, it } from 'vitest'
 import { parseLlmAnalystResponse } from '../llm-contract'
 
 const validResponse = {
-  report: 'Rynek pozostaje zmienny.',
-  insights: ['Ekspozycja jest skoncentrowana.'],
-  recommendations: ['Zmniejszyć maksymalną wielkość pozycji.'],
+  report: 'The market remains volatile.',
+  insights: ['Exposure is concentrated.'],
+  recommendations: ['Reduce the maximum position size.'],
   confidence: 72,
   strategies: [],
   globalHypotheses: [{
-    pattern: 'Wysoki funding może poprzedzać cofnięcie.',
-    rationale: 'W danych wystąpiła zbieżność sygnałów.',
+    pattern: 'High funding can precede a pullback.',
+    rationale: 'Signal convergence occurred in the data.',
     pair: 'BTCUSDT',
     direction: 'NEUTRAL',
     category: 'REGIME',
-    evidence: ['Funding był dodatni przy rosnącym OI.'],
-    invalidators: ['No cofnięcia w następnym oknie walidacyjnym.'],
+    evidence: ['Funding was positive while OI was rising.'],
+    invalidators: ['No pullback in the next validation window.'],
     confidence: 50,
     status: 'UNVALIDATED',
   }],

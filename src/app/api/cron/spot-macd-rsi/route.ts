@@ -1,4 +1,4 @@
-// ─── Cron: SPOT "Górki i Dołki" engine (headless paper, MACD+RSI) ───────────
+// ─── Cron: SPOT "Tops and Bottoms" engine (headless paper, MACD+RSI) ────────
 // POST /api/cron/spot-macd-rsi  → run one tick
 // GET  /api/cron/spot-macd-rsi  → read-only state
 // Guard: CRON_SECRET env (503 when unset — no fallback, audit 2026-07-31).

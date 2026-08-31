@@ -608,7 +608,7 @@ export function computeHurstSignal(
   if (h < 0.0) {
     const strength = Math.min(1, Math.abs(h) * 2 + 0.3)
     return { type: 'UNDERVALUED', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Undervalued: oshort=${h.toFixed(2)} < 0.0 (poniżej kanału) → odwrócenie w górę` }
+      description: `Undervalued: oshort=${h.toFixed(2)} < 0.0 (below channel) → upward reversal` }
   }
 
   // EXHAUSTION: fastOsc was above 1.0 recently, now falling back (overbought exhaustion)

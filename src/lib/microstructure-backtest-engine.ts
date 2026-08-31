@@ -861,14 +861,14 @@ export async function scanHistoricalSignals(
     const pair = config.pairs[pIdx]
     const binanceSymbol = pairToBinanceSymbol(pair)
 
-    config.onProgress?.(`Pobieranie świec: ${pair.split('-')[0]}`, pIdx, totalPairs)
+    config.onProgress?.(`Fetching candles: ${pair.split('-')[0]}`, pIdx, totalPairs)
 
     // Fetch historical klines
     const klines = await fetchHistoricalKlines(binanceSymbol, config.days)
 
     if (klines.length < 50) continue
 
-    config.onProgress?.(`Skanowanie sygnałów: ${pair.split('-')[0]}`, pIdx, totalPairs)
+    config.onProgress?.(`Scanning signals: ${pair.split('-')[0]}`, pIdx, totalPairs)
 
     // Scan for signals
     const pairSignals = scanKlinesForSignals(klines, pair, config)

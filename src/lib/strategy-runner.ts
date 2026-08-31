@@ -188,7 +188,7 @@ export async function activateStrategyWithConfig(config: {
   const existingKey = `${strategyId}:${mode}`
 
   if (runningStrategiessss.has(existingKey)) {
-    return { success: false, message: `Strategia jest już aktywna w trybie ${mode}` }
+    return { success: false, message: `Strategy is already active in ${mode} mode` }
   }
 
   // Create exchange client
@@ -403,7 +403,7 @@ export async function deactivateStrategy(strategyId: string, mode: BybitMode): P
     if (closeError) {
       await db.activeStrategy.update({
         where: { id: running.dbId },
-        data: { status: 'error', errorMessage: `Error zamknięcia: ${closeError.message}` },
+        data: { status: 'error', errorMessage: `Error closing: ${closeError.message}` },
       })
     } else {
       await db.activeStrategy.update({

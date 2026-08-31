@@ -39,7 +39,7 @@ export async function executeSolanaCopyTrade(
     if (!inputMint || !outputMint) {
       return {
         success: false,
-        error: 'Nie można określić tokenów wejścia/wyjścia',
+        error: 'Cannot determine input/output tokens',
       }
     }
 
@@ -54,7 +54,7 @@ export async function executeSolanaCopyTrade(
     if (!quoteResult.success || !quoteResult.quote) {
       return {
         success: false,
-        error: quoteResult.error || 'Nie udało się uzyskać cytatu Jupiter',
+        error: quoteResult.error || 'Failed to get Jupiter quote',
       }
     }
 
@@ -68,7 +68,7 @@ export async function executeSolanaCopyTrade(
     if (!swapResult.success || !swapResult.swapTransaction) {
       return {
         success: false,
-        error: swapResult.error || 'Nie udało się utworzyć transakcji swap',
+        error: swapResult.error || 'Failed to create swap transaction',
       }
     }
 
@@ -81,7 +81,7 @@ export async function executeSolanaCopyTrade(
     if (!txResult.success) {
       return {
         success: false,
-        error: txResult.error || 'Transakcja nie powiodła się',
+        error: txResult.error || 'Transaction failed',
       }
     }
 

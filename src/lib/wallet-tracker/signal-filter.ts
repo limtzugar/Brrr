@@ -33,7 +33,7 @@ export async function filterSignal(
 
   if (!safetyInfo) {
     // If we can't get safety info, be conservative
-    reasons.push('No data bezpieczeństwa tokena (safety score niedostępny)')
+    reasons.push('No token safety data available (safety score unavailable)')
     riskLevel = 'high'
     recommendedAction = 'skip'
     return { passed: false, reasons, safetyInfo: null, riskLevel, recommendedAction }
@@ -42,7 +42,7 @@ export async function filterSignal(
   // 2. Safety score check
   if (safetyInfo.safetyScore < config.minSafetyScore) {
     reasons.push(
-      `Niski safety score: ${safetyInfo.safetyScore}/100 (min: ${config.minSafetyScore})`
+      `Low safety score: ${safetyInfo.safetyScore}/100 (min: ${config.minSafetyScore})`
     )
     riskLevel = 'high'
     recommendedAction = 'skip'
@@ -50,14 +50,14 @@ export async function filterSignal(
 
   // 3. Honeypot check
   if (config.blockHoneypot && safetyInfo.isHoneypot) {
-    reasons.push('Token jest honeypotem — nie można sprzedać')
+    reasons.push('Token is a honeypot — cannot be sold')
     riskLevel = 'critical'
     recommendedAction = 'block'
   }
 
   // 4. Rug pull check
   if (config.blockRugPull && safetyInfo.isRugPull) {
-    reasons.push('Wysokie ryzyko rug pull')
+    reasons.push('High rug pull risk')
     riskLevel = 'critical'
     recommendedAction = 'block'
   }
@@ -65,7 +65,7 @@ export async function filterSignal(
   // 5. Liquidity check
   if (safetyInfo.liquidityUsd < config.minLiquidityUsd) {
     reasons.push(
-      `Niska płynność: $${safetyInfo.liquidityUsd.toLocaleString()} (min: $${config.minLiquidityUsd.toLocaleString()})`
+      `Low liquidity: $${safetyInfo.liquidityUsd.toLocaleString()} (min: $${config.minLiquidityUsd.toLocaleString()})`
     )
     riskLevel = riskLevel === 'critical' ? 'critical' : 'high'
     recommendedAction = recommendedAction === 'block' ? 'block' : 'skip'
@@ -74,7 +74,7 @@ export async function filterSignal(
   // 6. Holder count check
   if (safetyInfo.holderCount < config.minHolderCount) {
     reasons.push(
-      `Mało posiadaczy: ${safetyInfo.holderCount} (min: ${config.minHolderCount})`
+      `Few holders: ${safetyInfo.holderCount} (min: ${config.minHolderCount})`
     )
     if (riskLevel === 'low') riskLevel = 'medium'
     if (recommendedAction === 'copy') recommendedAction = 'watch'
@@ -83,7 +83,7 @@ export async function filterSignal(
   // 7. New token check
   if (config.blockNewToken && safetyInfo.ageHours !== null && safetyInfo.ageHours < config.newTokenMaxAgeHours) {
     reasons.push(
-      `Nowy token: ${safetyInfo.ageHours.toFixed(1)}h (max: ${config.newTokenMaxAgeHours}h)`
+      `New token: ${safetyInfo.ageHours.toFixed(1)}h (max: ${config.newTokenMaxAgeHours}h)`
     )
     riskLevel = riskLevel === 'critical' ? 'critical' : 'high'
     recommendedAction = recommendedAction === 'block' ? 'block' : 'skip'
@@ -92,12 +92,12 @@ export async function filterSignal(
   // 8. Solana-specific: Mint/Freeze authority check
   if (activity.chain === 'solana') {
     if (safetyInfo.mintAuthority && safetyInfo.mintAuthority !== 'null') {
-      reasons.push('Mint authority nie zrewokowana — ryzyko inflacji')
+      reasons.push('Mint authority not revoked — inflation risk')
       if (riskLevel === 'low') riskLevel = 'medium'
       if (recommendedAction === 'copy') recommendedAction = 'watch'
     }
     if (safetyInfo.freezeAuthority && safetyInfo.freezeAuthority !== 'null') {
-      reasons.push('Freeze authority aktywna — ryzyko zamrożenia kont')
+      reasons.push('Freeze authority active — account freeze risk')
       if (riskLevel === 'low') riskLevel = 'medium'
       if (recommendedAction === 'copy') recommendedAction = 'watch'
     }
@@ -105,13 +105,13 @@ export async function filterSignal(
 
   // 9. EVM-specific: Contract not renounced
   if ((activity.chain === 'ethereum' || activity.chain === 'base' || activity.chain === 'bsc') && !safetyInfo.isRenounced) {
-    reasons.push('Własność kontraktu nie zrewokowana — ryzyko zmian parametrów')
+    reasons.push('Contract ownership not revoked — parameter change risk')
     if (riskLevel === 'low') riskLevel = 'medium'
   }
 
   // 10. Position size risk check
   if (activity.amountUsd && activity.amountUsd > 100000) {
-    reasons.push(`Duża pozycja: $${activity.amountUsd.toLocaleString()} — potencjalny wpływ on cenę`)
+    reasons.push(`Large position: $${activity.amountUsd.toLocaleString()} — potential price impact`)
     if (riskLevel === 'low') riskLevel = 'medium'
   }
 

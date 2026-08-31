@@ -60,7 +60,7 @@ export function parseLlmAnalystResponse(content: string): LlmAnalystResponse {
   if (!parsed.success) {
     const issue = parsed.error.issues[0]
     const path = issue?.path.join('.') || 'response'
-    throw new Error(`Odpowiedź modelu nie spełnia kontraktu (${path}: ${issue?.message || 'invalid'})`)
+    throw new Error(`Model response does not match contract (${path}: ${issue?.message || 'invalid'})`)
   }
   return parsed.data
 }
@@ -72,12 +72,12 @@ Return ONLY valid JSON exactly matching this contract:
 
 {
   "report": "full report in English (max 20000 chars)",
-  "insights": ["wniosek oparty na danych"],
-  "recommendations": ["konkretna rekomendacja do weryfikacji"],
+  "insights": ["data-based insight"],
+  "recommendations": ["specific recommendation to verify"],
   "confidence": 0,
   "strategies": [
     {
-      "strategyType": "identyfikator_strategii",
+      "strategyType": "strategy_identifier",
       "strategyName": "display name",
       "summary": "short analysis of this strategy",
       "strengths": ["what works well"],
@@ -86,23 +86,23 @@ Return ONLY valid JSON exactly matching this contract:
         {
           "pattern": "potential dependency",
           "rationale": "why it is worth checking",
-          "pair": "opcjonalna para",
+          "pair": "optional pair",
           "direction": "LONG|SHORT|NEUTRAL",
           "category": "ENTRY|EXIT|SIZING|TIMING|REGIME|PAIR_SELECTION",
-          "evidence": ["obserwacja z danych"],
+          "evidence": ["observation from data"],
           "invalidators": ["condition that invalidates hypothesis"],
           "confidence": 50,
           "status": "UNVALIDATED"
         }
       ],
-      "recommendations": ["rekomendacja dla tej strategii"],
+      "recommendations": ["recommendation for this strategy"],
       "confidence": 0
     }
   ],
   "globalHypotheses": [
     {
-      "pattern": "hipoteza przekrojowa (ponad strategiami)",
-      "rationale": "dlaczego",
+      "pattern": "cross-cutting hypothesis (across strategies)",
+      "rationale": "why",
       "direction": "NEUTRAL",
       "category": "REGIME",
       "evidence": [],
@@ -113,12 +113,12 @@ Return ONLY valid JSON exactly matching this contract:
   ]
 }
 
-WAŻNE ZASADY:
-- confidence: liczba 0-100. Bazuj na twardości danych (50=spekulacja, 80=solidne dane).
-- Dla każdej aktywnej strategii (dip_buying, momentum, hurst_hcoo_lb, cex_anomaly, itd.) stwórz wpis w tablicy "strategies".
-- Każda hipoteza MUSI mieć "invalidators" — warunki, przy których hipoteza jest fałszywa.
-- Hipotezy MUSZĄ mieć status "UNVALIDATED". Będą później walidowane przez system shadow i walk-forward.
-- Hipotezy z kategorii ENTRY dotyczą kiedy wchodzić, EXIT — kiedy wychodzić, SIZING — wielkość pozycji, TIMING — timing rynkowy, REGIME — reżim rynku, PAIR_SELECTION — które pary wybierać.
-- direction: LONG jeśli hipoteza sugeruje zajęcie długiej pozycji, SHORT jeśli krótkiej, NEUTRAL jeśli nie dotyczy kierunku.
-- "globalHypotheses" to hipotezy które dotyczą całego systemu, nie pojedynczej strategii.`
+KEY RULES:
+- confidence: number 0-100. Base it on data solidity (50=speculation, 80=solid data).
+- For each active strategy (dip_buying, momentum, hurst_hcoo_lb, cex_anomaly, etc.) create an entry in the "strategies" array.
+- Every hypothesis MUST have "invalidators" — conditions under which the hypothesis is false.
+- Hypotheses MUST have status "UNVALIDATED". They will be validated later by the shadow system and walk-forward evaluation.
+- ENTRY hypotheses concern when to enter, EXIT — when to exit, SIZING — position size, TIMING — market timing, REGIME — market regime, PAIR_SELECTION — which pairs to pick.
+- direction: LONG if the hypothesis suggests a long position, SHORT if short, NEUTRAL if direction-agnostic.
+- "globalHypotheses" are hypotheses that concern the whole system, not a single strategy.`
 }

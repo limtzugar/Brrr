@@ -107,7 +107,7 @@ export function parsePineScript(code: string): ParsedPineScript {
   } else if (indicatorMatch) {
     name = indicatorMatch[1]
     type = 'indicator'
-    warnings.push('Skrypt jest indykatorem, nie strategią — warunki wejścia/wyjścia mogą wymagać ręcznego mapowania')
+    warnings.push('Script is an indicator, not a strategy — entry/exit conditions may require manual mapping')
   }
 
   // Extract description from strategy/indicator call
@@ -382,7 +382,7 @@ function mapToTradingStrategy(context: {
           fee_pct: 0.1,
         },
         confidence: 55,
-        notes: `RSI-based dip buying: RSI period=${rsiPeriod}. Mapowanie przybliżone — RSI conditions → dip thresholds.`,
+        notes: `RSI-based dip buying: RSI period=${rsiPeriod}. Approximate mapping — RSI conditions → dip thresholds.`,
       }
     }
   }
@@ -411,7 +411,7 @@ function mapToTradingStrategy(context: {
         _pine_macd_signal: signalInput ? Number(signalInput.default) : 9,
       },
       confidence: 50,
-      notes: `MACD momentum: fast=${fastInput?.default || 12}, slow=${slowInput?.default || 26}, signal=${signalInput?.default || 9}. Mapowanie przybliżone — MACD → momentum strategy.`,
+      notes: `MACD momentum: fast=${fastInput?.default || 12}, slow=${slowInput?.default || 26}, signal=${signalInput?.default || 9}. Approximate mapping — MACD → momentum strategy.`,
     }
   }
 
@@ -457,7 +457,7 @@ function mapToTradingStrategy(context: {
         fee_pct: 0.1,
       },
       confidence: 45,
-      notes: `Grid/DCA strategy detected. Mapowanie przybliżone — grid/ladder → DCA Ladder.`,
+      notes: `Grid/DCA strategy detected. Approximate mapping — grid/ladder → DCA Ladder.`,
     }
   }
 
@@ -486,7 +486,7 @@ function mapToTradingStrategy(context: {
 
   // ─── Fallback: Generic with AI analysis needed ────────────────────────
   if (strategyCalls.length > 0 || conditions.length > 0) {
-    warnings.push('Nie udało się automatycznie zmapować strategii — wymaga analizy AI')
+    warnings.push('Failed to map strategy automatically — requires AI analysis')
     return {
       strategyType: 'dip_buying',
       params: {
@@ -502,11 +502,11 @@ function mapToTradingStrategy(context: {
         _pine_inputs: inputs.map(i => `${i.name}=${i.default}`),
       },
       confidence: 20,
-      notes: `Złożona strategia Pine Script — wymaga ręcznego dostrojenia. ${conditions.length} warunków, ${inputs.length} parametrów.`,
+      notes: `Complex Pine Script strategy — requires manual tuning. ${conditions.length} conditions, ${inputs.length} parameters.`,
     }
   }
 
-  warnings.push('Nie wykryto żadnej znanej strategii — Pine Script nie zawiera wystarczających sygnałów')
+  warnings.push('No known strategy detected — Pine Script lacks sufficient signals')
   return null
 }
 

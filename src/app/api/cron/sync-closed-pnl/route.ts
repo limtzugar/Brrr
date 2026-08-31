@@ -1,6 +1,6 @@
 // ─── Cron: Sync Closed PnL from Bybit ────────────────────────────────
-// Wywoływany co 2 minuty przez scheduler. Pobiera zamknięte pozycje of Bybit
-// i zapisuje je do bazy danych (AppSettings) jako authoritative PnL source.
+// Called every 2 minutes by the scheduler. Fetches closed positions from Bybit
+// and stores them in the database (AppSettings) as the authoritative PnL source.
 //
 // GET /api/cron/sync-closed-pnl?token=xxx&mode=real|demo
 //

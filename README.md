@@ -10,17 +10,29 @@
 
 ## Screenshots
 
-| Login | CEX Anomaly (default) | Sygnały |
-|:---:|:---:|:---:|
-| ![login](screenshots/01-login.png) | ![cexanomaly](screenshots/02-main-cexanomaly.png) | ![signals](screenshots/03-tab-signals.png) |
+**Login**
+<p><img src="screenshots/01-login.png" alt="Login" width="960"></p>
 
-| Hurst | Strategie | Backtest |
-|:---:|:---:|:---:|
-| ![hurst](screenshots/03-tab-hurst.png) | ![strategie](screenshots/03-tab-strategies.png) | ![backtest](screenshots/03-tab-backtest.png) |
+**CEX Anomaly (default view)**
+<p><img src="screenshots/02-main-cexanomaly.png" alt="CEX Anomaly" width="960"></p>
 
-| Historia | LLM Analyst |
-|:---:|:---:|
-| ![history](screenshots/03-tab-history.png) | ![llm](screenshots/03-tab-llm.png) |
+**Signals**
+<p><img src="screenshots/03-tab-signals.png" alt="Signals" width="960"></p>
+
+**Hurst**
+<p><img src="screenshots/03-tab-hurst.png" alt="Hurst" width="960"></p>
+
+**Strategies**
+<p><img src="screenshots/03-tab-strategies.png" alt="Strategies" width="960"></p>
+
+**Backtest**
+<p><img src="screenshots/03-tab-backtest.png" alt="Backtest" width="960"></p>
+
+**Trade History**
+<p><img src="screenshots/03-tab-history.png" alt="Trade History" width="960"></p>
+
+**LLM Analyst**
+<p><img src="screenshots/03-tab-llm.png" alt="LLM Analyst" width="960"></p>
 
 > Screenshots generated via Playwright (`screenshots/*.png`) on `localhost:3005`.
 
@@ -37,11 +49,11 @@
 
 | Tab | What it does |
 |---|---|
-| **Sygnały** (`/api/signals`) | Dip-buying classification, indicators (EMA/MA/StdDev/Hurst), market regime |
+| **Signals** (`/api/signals`) | Dip-buying classification, indicators (EMA/MA/StdDev/Hurst), market regime |
 | **Hurst** (`hurst-backtest`) | BTC Hurst dual-trigger backtest (60s maxDuration) |
-| **Strategie** (`/api/strategies/*`) | Universal framework (`dip_buying`, `momentum`, `mean_reversion`, `breakout`, `grid`, `hurst_hcoo_lb`, `futures_compound`) — activate/deactivate, live `strategy-runner` |
+| **Strategies** (`/api/strategies/*`) | Universal framework (`dip_buying`, `momentum`, `mean_reversion`, `breakout`, `grid`, `hurst_hcoo_lb`, `futures_compound`) — activate/deactivate, live `strategy-runner` |
 | **Backtest** (`/api/backtest/*`) | Single / bulk (1-15 coins) / optimize (grid search) — `backtest-engine` |
-| **Historia** (`/api/trades/*`) | `TradeLog` / `ImportedTrade` (CSV), analytics, PnL |
+| **Trade History** (`/api/trades/*`) | `TradeLog` / `ImportedTrade` (CSV), analytics, PnL |
 | **CEX Anomaly** (`/api/cex-anomaly/*`, `ccxt`, `hyperliquid`) | Order-book walls, CVD, funding extremes, liquidation heatmap — main trading view |
 | **LLM Analyst** (`/api/llm-*`, `ai-assistant`) | Multi-provider (OpenAI/Groq/OpenRouter/Gemini/Mistral/Ollama) + shadow evaluation / walk-forward |
 
@@ -97,7 +109,7 @@ ENCRYPTION_KEY= # required — AES-256-GCM for ExchangeApi (fail-closed in prod)
 
 ```
 src/app/api/*        # 59 API routes
-src/app/page.tsx     # tab shell (signals, hurst, strategies, backtest, history, cexanomaly, llm)
+src/app/page.tsx     # tab shell (signals, hurst, strategies, backtest, trade history, cexanomaly, llm)
 src/components/tabs/ # per-tab UI
 src/lib/*            # strategy-runner, backtest-engine, cex-anomaly-*, llm-*, bybit.ts, binance.ts
 prisma/schema.prisma # SQLite models

@@ -4,9 +4,9 @@ import { parseStrategyShadowResponse } from '../strategy-shadow-contract'
 const valid = {
   recommendation: 'CAUTION',
   confidence: 68,
-  thesis: 'Momentum jest dodatnie, ale zmienność pozostaje wysoka.',
+  thesis: 'Momentum is positive, but volatility remains high.',
   arguments: ['Zmiana 1h jest dodatnia.'],
-  invalidators: ['Spadek ceny poniżej minimum 24h.'],
+  invalidators: ['Price drop below the 24h low.'],
 }
 
 describe('parseStrategyShadowResponse', () => {
