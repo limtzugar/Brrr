@@ -1,0 +1,328 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* TE Design System tokens */
+  --color-te-orange: #FF6600;
+  --color-te-bg: #0a0a0a;
+  --color-te-card: #111111;
+  --color-te-card-hover: #1a1a1a;
+  --color-te-input: #1a1a1a;
+  --color-te-border: #222222;
+  --color-te-border-light: #333333;
+  --color-te-text: #e0e0e0;
+  --color-te-muted: #888888;
+  --color-te-dim: #555555;
+  --color-te-green: #10b981;
+  --color-te-red: #ef4444;
+  --color-te-blue: #3b82f6;
+  --color-te-purple: #8b5cf6;
+  --color-te-yellow: #eab308;
+  --color-te-cyan: #06b6d4;
+  --color-te-pink: #ec4899;
+  --color-te-teal: #14b8a6;
+}
+
+/* ─── TE Design System: Light & Dark ──────────────────────────────────────── */
+
+:root {
+  --radius: 0.375rem;
+}
+
+/* Light theme (default when .light class on html) */
+.light {
+  --background: #f5f5f0;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #E85D00;
+  --primary-foreground: #ffffff;
+  --secondary: #eeeee8;
+  --secondary-foreground: #1a1a1a;
+  --muted: #eeeee8;
+  --muted-foreground: #666660;
+  --accent: #eeeee8;
+  --accent-foreground: #1a1a1a;
+  --destructive: #dc2626;
+  --border: #d5d5d0;
+  --input: #eeeee8;
+  --ring: #E85D00;
+  --chart-1: #E85D00;
+  --chart-2: #0d9668;
+  --chart-3: #2563eb;
+  --chart-4: #7c3aed;
+  --chart-5: #ca8a04;
+  --sidebar: #f5f5f0;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #E85D00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eeeee8;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #d5d5d0;
+  --sidebar-ring: #E85D00;
+}
+
+/* Dark theme */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #e0e0e0;
+  --card: #111111;
+  --card-foreground: #e0e0e0;
+  --popover: #111111;
+  --popover-foreground: #e0e0e0;
+  --primary: #FF6600;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #e0e0e0;
+  --muted: #1a1a1a;
+  --muted-foreground: #888888;
+  --accent: #1a1a1a;
+  --accent-foreground: #e0e0e0;
+  --destructive: #ef4444;
+  --border: #222222;
+  --input: #1a1a1a;
+  --ring: #FF6600;
+  --chart-1: #FF6600;
+  --chart-2: #10b981;
+  --chart-3: #3b82f6;
+  --chart-4: #8b5cf6;
+  --chart-5: #eab308;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #e0e0e0;
+  --sidebar-primary: #FF6600;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #e0e0e0;
+  --sidebar-border: #222222;
+  --sidebar-ring: #FF6600;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "tnum" on, "lnum" on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Hide scrollbar for ticker bar */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── TE Design System: Global Utilities ────────────────────────────────────── */
+
+/* Monospace numbers for data tables */
+.te-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* TE-style card — theme-aware */
+.te-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.te-card-hover:hover {
+  border-color: var(--border);
+  background: var(--muted);
+}
+
+/* TE-style input — theme-aware */
+.te-input {
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--foreground);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  transition: border-color 0.15s;
+}
+.te-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* TE-style badge */
+.te-badge {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* TE-style section header — theme-aware */
+.te-section {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* TE scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+/* TE scrollbar — dark */
+.dark ::-webkit-scrollbar-track { background: #0a0a0a; }
+.dark ::-webkit-scrollbar-thumb { background: #333333; border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #555555; }
+/* TE scrollbar — light */
+.light ::-webkit-scrollbar-track { background: #e8e8e0; }
+.light ::-webkit-scrollbar-thumb { background: #c0c0b8; border-radius: 3px; }
+.light ::-webkit-scrollbar-thumb:hover { background: #a0a098; }
+
+/* Blink animation for debate agents */
+@keyframes te-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.te-blink {
+  animation: te-blink 1.5s ease-in-out infinite;
+}
+
+/* Pulse glow for active elements */
+@keyframes te-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); }
+  50% { box-shadow: 0 0 8px 2px rgba(255, 102, 0, 0.15); }
+}
+.te-pulse-glow {
+  animation: te-pulse-glow 2s ease-in-out infinite;
+}
+
+/* ─── Signaly thin sliders ──────────────────────────────────────────────────── */
+/* Dark theme: thin white track line; Light theme: thin dark track line */
+.signaly-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: transparent;
+  outline: none;
+  border: none;
+  padding: 0;
+}
+
+/* Webkit (Chrome/Safari) track */
+.signaly-slider::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 1px;
+}
+.dark .signaly-slider::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+.light .signaly-slider::-webkit-slider-runnable-track {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Webkit thumb */
+.signaly-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px;
+  border: none;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+/* Firefox track */
+.signaly-slider::-moz-range-track {
+  height: 2px;
+  border-radius: 1px;
+  border: none;
+}
+.dark .signaly-slider::-moz-range-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+.light .signaly-slider::-moz-range-track {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Firefox thumb */
+.signaly-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+/* Pulse animation for CLOSING status indicators */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* TA confirm pulse — green pulsing badge for TA convergence (RSI + MACD BOTH) */
+@keyframes ta-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+  50% { opacity: 0.85; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
+}

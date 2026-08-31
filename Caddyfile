@@ -1,0 +1,16 @@
+:81 {
+        header {
+                X-Content-Type-Options nosniff
+                X-Frame-Options DENY
+                Referrer-Policy strict-origin-when-cross-origin
+                Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        }
+        handle {
+                reverse_proxy localhost:3020 {
+                        header_up Host {host}
+                        header_up X-Forwarded-For {remote_host}
+                        header_up X-Forwarded-Proto {scheme}
+                        header_up X-Real-IP {remote_host}
+                }
+        }
+}

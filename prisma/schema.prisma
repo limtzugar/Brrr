@@ -1,0 +1,731 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Dip Hunter: Exchange API Keys ──────────────────────────────────────────
+
+model ExchangeApi {
+  id           String   @id @default(cuid())
+  exchange     String   @default("bybit") // bybit, binance, okx
+  mode         String // "demo" or "real"
+  apiKey       String // encrypted
+  apiSecret    String // encrypted
+  isConfigured Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([exchange, mode])
+}
+
+// ─── Dip Hunter: Active Strategies ──────────────────────────────────────────
+
+model ActiveStrategy {
+  id         String @id @default(cuid())
+  strategyId String // matches StrategyConfig.id from localStorage
+  name       String
+  coinId     String
+  symbol     String // Bybit symbol e.g. SOLUSDT
+  mode       String // "demo" or "real"
+  exchange   String @default("bybit")
+
+  // Strategy type (universal multi-strategy framework)
+  strategyType   String  @default("dip_buying") // dip_buying, momentum, mean_reversion, breakout, dca, grid
+  strategyParams String? // JSON string with type-specific parameters
+
+  // Strategy parameters (legacy dip-buying fields kept for backward compat)
+  dipThreshold1h  Float   @default(0)
+  dipThreshold24h Float   @default(-3)
+  takeProfitPct   Float   @default(5)
+  stopLossPct     Float   @default(2)
+  maxHoldingHours Int     @default(48)
+  feePct          Float   @default(0.1)
+  initialCapital  Float   @default(1000)
+  compound        Boolean @default(true)
+
+  // Runtime state
+  status         String  @default("running") // running, paused, stopped, error
+  currentCapital Float   @default(0)
+  totalPnl       Float   @default(0)
+  totalTrades    Int     @default(0)
+  winningTrades  Int     @default(0)
+  lastSignalAt   String? // ISO timestamp of last detected signal
+  lastTradeAt    String? // ISO timestamp of last executed trade
+  errorMessage   String?
+
+  // Current position
+  inPosition   Boolean @default(false)
+  entryPrice   Float?
+  entryDate    String?
+  positionSize Float?
+
+  tradeLogs TradeLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Dip Hunter: Trade Log ──────────────────────────────────────────────────
+
+model TradeLog {
+  id               String @id @default(cuid())
+  activeStrategyId String
+  mode             String // "demo" or "real"
+  coinId           String
+  symbol           String
+
+  // Trade details
+  side         String // "buy" or "sell"
+  entryPrice   Float?
+  exitPrice    Float?
+  entryDate    String?
+  exitDate     String?
+  exitReason   String? // take_profit, stop_loss, time_stop
+  quantity     Float
+  positionSize Float
+  profitPct    Float   @default(0)
+  netProfitPct Float   @default(0)
+  feesPaid     Float   @default(0)
+  capitalAfter Float?
+
+  // Exchange order info
+  orderId     String?
+  orderStatus String? // New, PartiallyFilled, Filled, Cancelled
+
+  createdAt DateTime @default(now())
+
+  activeStrategy ActiveStrategy @relation(fields: [activeStrategyId], references: [id])
+}
+
+// ─── Imported Trade History (CSV) ───────────────────────────────────────────
+
+model ImportedTrade {
+  id          String   @id @default(cuid())
+  source      String   @default("csv")
+  importBatch String?
+  pair        String
+  side        String // LONG | SHORT
+  leverage    Int      @default(10)
+  entryPrice  Float
+  exitPrice   Float
+  margin      Float
+  notional    Float
+  fees        Float    @default(0)
+  pnl         Float
+  result      String // TP | STOP
+  trigger     String
+  openedAt    String
+  closedAt    String
+  durationSec Float?
+  movePct     Float?
+  createdAt   DateTime @default(now())
+
+  @@index([pair])
+  @@index([trigger])
+  @@index([result])
+  @@index([importBatch])
+}
+
+// ─── Dex Radar: DEX Tokens ────────────────────────────────────────────────
+
+model DexToken {
+  id       String  @id @default(cuid())
+  address  String // On-chain token contract address
+  chain    String // "solana", "ethereum", "bsc"
+  symbol   String
+  name     String
+  decimals Int     @default(18)
+  logoUrl  String?
+
+  // Token metadata
+  totalSupply     String? // Raw string for large numbers
+  holderCount     Int     @default(0)
+  isScam          Boolean @default(false)
+  isHoneypot      Boolean @default(false)
+  isRenounced     Boolean @default(false)
+  mintAuthority   String? // Solana: mint authority address
+  freezeAuthority String? // Solana: freeze authority address
+
+  // Discovery
+  discoveredAt  DateTime @default(now())
+  discoveredVia String? // "raydium", "pumpfun", "uniswap_v2", "uniswap_v3", "pancakeswap"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([address, chain])
+  @@index([chain, discoveredAt])
+  @@index([symbol])
+}
+
+// ─── Dex Radar: DEX Trading Pairs ──────────────────────────────────────────
+
+model DexPair {
+  id          String @id @default(cuid())
+  pairAddress String // On-chain pair/pool address
+  chain       String // "solana", "ethereum", "bsc"
+  dex         String // "raydium", "uniswap_v2", "uniswap_v3", "pancakeswap", "pumpfun", "meteora"
+
+  // Token references
+  token0Address String
+  token0Symbol  String
+  token1Address String
+  token1Symbol  String
+
+  // Reserves (updated periodically)
+  reserve0      String? // Raw reserve as string
+  reserve1      String? // Raw reserve as string
+  reserve0Usd   Float? // USD value of reserve0
+  reserve1Usd   Float? // USD value of reserve1
+  liquidityUsd  Float? // Total liquidity in USD
+  liquidityPrev Float? // Previous liquidity snapshot (for delta)
+
+  // Price
+  priceUsd       Float? // Current token0 price in USD
+  priceChange5m  Float? // 5-minute price change %
+  priceChange1h  Float? // 1-hour price change %
+  priceChange24h Float? // 24-hour price change %
+
+  // Volume
+  volume5m    Float? @default(0)
+  volume1h    Float? @default(0)
+  volume24h   Float? @default(0)
+  txns5mBuys  Int    @default(0)
+  txns5mSells Int    @default(0)
+  txns1hBuys  Int    @default(0)
+  txns1hSells Int    @default(0)
+
+  // Creation
+  createdAtBlock String? // Block number of pair creation
+  createdAtTx    String? // Transaction hash
+  discoveredAt   DateTime @default(now())
+
+  // Status
+  isActive   Boolean   @default(true)
+  lastSwapAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pairAddress, chain])
+  @@index([chain, dex, discoveredAt])
+  @@index([chain, liquidityUsd])
+  @@index([chain, volume24h])
+  @@index([chain, discoveredAt])
+}
+
+// ─── Dex Radar: DEX Swaps ─────────────────────────────────────────────────
+
+model DexSwap {
+  id          String @id @default(cuid())
+  txHash      String
+  chain       String // "solana", "ethereum", "bsc"
+  pairAddress String
+  dex         String
+
+  // Swap details
+  sender     String?
+  amount0In  String? // Raw amounts as strings (BigInt)
+  amount1In  String?
+  amount0Out String?
+  amount1Out String?
+  amountUsd  Float? // USD value of swap
+
+  // Classification
+  side String // "buy" or "sell" (from token0 perspective)
+
+  blockNumber String?
+  logIndex    Int?
+  timestamp   DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([pairAddress, chain, timestamp])
+  @@index([chain, timestamp])
+  @@index([txHash])
+}
+
+// ─── Wallet Tracker: Tracked Wallets (Smart Money) ────────────────────────
+
+model TrackedWallet {
+  id      String  @id @default(cuid())
+  address String // On-chain wallet address
+  chain   String // "solana", "ethereum", "base", "bsc"
+  label   String? // User-assigned label e.g. "Whale X"
+  tags    String? // JSON array of tags: ["smart_money", "whale", "dev"]
+
+  // GMGN integration
+  gmgnId          String? // GMGN.ai profile ID
+  smartMoneyScore Float? // 0-100 score from GMGN
+  pnl24h          Float? // 24h PnL from GMGN
+  pnl7d           Float? // 7d PnL from GMGN
+  winRate         Float? // Win rate from GMGN
+  totalTrades     Int? // Total trades tracked by GMGN
+
+  // Tracking config
+  isActive         Boolean @default(true)
+  copyTradeEnabled Boolean @default(false) // Auto-copy this wallet?
+  copyTradeAmount  String? // Amount to copy per trade (e.g. "0.1" SOL)
+  copyTradeMode    String  @default("fixed") // "fixed" or "proportional"
+  copyTradePct     Float   @default(10) // Percentage of their position (if proportional)
+  maxSlippageBps   Int     @default(300) // Max slippage in basis points (3%)
+  priorityFee      String  @default("auto") // "auto", "fast", "instant" (Solana)
+  mevProtection    Boolean @default(true) // Flashbots/MEV protection (EVM)
+
+  // Signal filter config
+  minSafetyScore  Int     @default(60) // Minimum GMGN safety score (0-100)
+  minLiquidityUsd Float   @default(50000) // Min pool liquidity USD
+  minHolderCount  Int     @default(100) // Min token holders
+  maxPositionPct  Float   @default(5) // Max % of portfolio per trade
+  blockRugPull    Boolean @default(true) // Block tokens with rug pull risk
+  blockHoneypot   Boolean @default(true) // Block honeypot tokens
+  blockNewToken   Boolean @default(true) // Block tokens < 1h old
+
+  // Runtime status
+  status            String    @default("active") // active, paused, error
+  lastActivityAt    DateTime? // Last detected activity
+  lastCopiedAt      DateTime? // Last copied trade
+  totalCopiedTrades Int       @default(0)
+  totalCopiedPnl    Float     @default(0)
+  errorMessage      String?
+  wsConnectionId    String? // WebSocket connection identifier
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  copiedTrades CopiedTrade[]
+
+  @@unique([address, chain])
+  @@index([chain, isActive])
+  @@index([smartMoneyScore])
+  @@index([lastActivityAt])
+}
+
+// ─── Wallet Tracker: Copied Trades ──────────────────────────────────────
+
+model CopiedTrade {
+  id              String @id @default(cuid())
+  trackedWalletId String
+
+  // Source trade (what the tracked wallet did)
+  sourceTxHash      String // Original transaction hash
+  sourceChain       String // "solana", "ethereum", "base", "bsc"
+  sourceAction      String // "buy" or "sell"
+  sourceToken       String // Token address
+  sourceTokenSymbol String?
+  sourceAmount      String // Amount the tracked wallet traded
+  sourceAmountUsd   Float? // USD value of source trade
+  sourceDex         String? // DEX used by source
+
+  // Our copy trade
+  copyTxHash    String? // Our transaction hash
+  copyAction    String // "buy" or "sell"
+  copyAmount    String // Amount we traded
+  copyAmountUsd Float? // USD value of our trade
+  copyDex       String? // DEX we used (Jupiter, 1inch, etc.)
+  copyStatus    String  @default("pending") // pending, submitted, confirmed, failed, skipped
+
+  // Execution details
+  executionPrice  Float? // Price at execution
+  currentPrice    Float? // Current token price (for PnL)
+  slippageBps     Int? // Actual slippage in bps
+  priorityFeeUsed String? // Priority fee paid
+  gasUsed         String? // Gas used (EVM)
+  mevProtected    Boolean @default(false) // Was MEV protection used?
+
+  // Safety checks
+  safetyScore  Int? // GMGN safety score at time of trade
+  liquidityUsd Float? // Pool liquidity at time of trade
+  holderCount  Int? // Token holders at time of trade
+  filterPassed Boolean @default(true) // Did it pass all filters?
+  filterReason String? // If skipped, why?
+
+  // PnL tracking
+  realizedPnlUsd Float? // Realized PnL (after sell)
+  realizedPnlPct Float? // Realized PnL %
+  feesPaid       Float  @default(0) // Total fees paid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trackedWallet TrackedWallet @relation(fields: [trackedWalletId], references: [id])
+
+  @@index([trackedWalletId, createdAt])
+  @@index([sourceChain, createdAt])
+  @@index([copyStatus])
+  @@index([sourceTxHash])
+}
+
+// ─── Wallet Tracker: Activity Feed ──────────────────────────────────────
+
+model WalletActivity {
+  id              String  @id @default(cuid())
+  trackedWalletId String?
+
+  // Activity details
+  walletAddress String
+  chain         String
+  txHash        String
+  action        String // "buy", "sell", "transfer"
+  token         String // Token address
+  tokenSymbol   String?
+  amount        String
+  amountUsd     Float?
+  dex           String?
+
+  // Metadata
+  blockNumber String?
+  slot        Int? // Solana slot
+  logLevel    String  @default("info") // info, warning, critical
+  isCopied    Boolean @default(false) // Was this trade copied?
+  copyTradeId String? // FK to CopiedTrade if copied
+
+  timestamp DateTime
+  createdAt DateTime @default(now())
+
+  @@index([walletAddress, chain, timestamp])
+  @@index([chain, timestamp])
+  @@index([txHash])
+}
+
+// ─── App Settings (key-value store) ──────────────────────────────────────
+
+model AppSettings {
+  key       String   @id
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Strategy learning telemetry ───────────────────────────────────────────
+
+model StrategyDecision {
+  id                   String    @id @default(cuid())
+  tacticRunId          String?
+  eventKey             String?   @unique
+  activeStrategyId     String
+  strategyId           String
+  strategyType         String
+  symbol               String
+  mode                 String
+  exchange             String
+  action               String // ENTER | EXIT | HOLD | NO_TRADE
+  reason               String
+  reasonCode           String?
+  rulesJson            String    @default("[]")
+  algorithmVersion     String
+  featureSchemaVersion String    @default("market-features-v1")
+  parametersJson       String
+  sourceDataJson       String    @default("{}")
+  dataTimestamp        DateTime?
+  decidedAt            DateTime  @default(now())
+
+  tacticRun        TacticRun?        @relation(fields: [tacticRunId], references: [id], onDelete: SetNull)
+  snapshot         MarketSnapshot?
+  outcomes         TradeOutcome[]
+  shadowEvaluation ShadowEvaluation?
+
+  @@index([tacticRunId, decidedAt])
+  @@index([activeStrategyId, decidedAt])
+  @@index([strategyId, action, decidedAt])
+  @@index([symbol, decidedAt])
+}
+
+model MarketSnapshot {
+  id             String   @id @default(cuid())
+  decisionId     String   @unique
+  price          Float
+  priceChange1h  Float?
+  priceChange24h Float?
+  priceChange7d  Float?
+  volume24h      Float?
+  marketCap      Float?
+  high24h        Float?
+  low24h         Float?
+  featuresJson   String
+  capturedAt     DateTime @default(now())
+
+  decision StrategyDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  @@index([capturedAt])
+}
+
+model TradeOutcome {
+  id               String    @id @default(cuid())
+  decisionId       String
+  tradeLogId       String?
+  horizon          String // FINAL; later: 1H | 4H | 24H
+  returnPct        Float?
+  netPnl           Float?
+  price            Float?
+  capitalAfter     Float?
+  targetAt         DateTime?
+  observedAt       DateTime?
+  observationLagMs Int?
+  priceSource      String?
+  isValid          Boolean   @default(true)
+  invalidReason    String?
+  evaluatedAt      DateTime  @default(now())
+
+  decision StrategyDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  @@unique([decisionId, horizon])
+  @@index([evaluatedAt])
+  @@index([isValid, horizon, targetAt])
+}
+
+// ─── TradingStrategyBench: auditable strategy-learning substrate ───────────
+
+model TacticRun {
+  id                   String    @id @default(cuid())
+  runKey               String    @unique
+  activeStrategyId     String?
+  strategyId           String
+  strategyType         String
+  symbol               String
+  mode                 String
+  exchange             String
+  status               String    @default("RUNNING") // RUNNING | COMPLETED | ERROR | ABORTED
+  algorithmVersion     String
+  featureSchemaVersion String
+  parametersJson       String
+  parametersHash       String
+  metadataJson         String    @default("{}")
+  startedAt            DateTime  @default(now())
+  endedAt              DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  decisions StrategyDecision[]
+  episodes  TradeEpisode[]
+
+  @@index([activeStrategyId, status, startedAt])
+  @@index([strategyType, symbol, startedAt])
+}
+
+model TradeEpisode {
+  id               String    @id @default(cuid())
+  episodeKey       String    @unique
+  tacticRunId      String?
+  activeStrategyId String
+  strategyId       String
+  strategyType     String
+  symbol           String
+  side             String    @default("LONG")
+  status           String    @default("OPEN") // OPEN | CLOSED | ABORTED | ERROR
+  entryPrice       Float?
+  exitPrice        Float?
+  quantity         Float?
+  grossPnl         Float?
+  netPnl           Float?
+  feesPaid         Float     @default(0)
+  openedAt         DateTime
+  closedAt         DateTime?
+  metadataJson     String    @default("{}")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  tacticRun TacticRun? @relation(fields: [tacticRunId], references: [id], onDelete: SetNull)
+  legs      TradeLeg[]
+
+  @@index([activeStrategyId, status, openedAt])
+  @@index([strategyType, symbol, openedAt])
+}
+
+model TradeLeg {
+  id             String   @id @default(cuid())
+  episodeId      String
+  idempotencyKey String   @unique
+  decisionId     String?
+  tradeLogId     String?
+  kind           String // ENTER | ADD | REDUCE | EXIT
+  orderId        String?
+  price          Float
+  quantity       Float
+  notional       Float
+  fee            Float    @default(0)
+  slippageBps    Float?
+  executedAt     DateTime
+  metadataJson   String   @default("{}")
+  createdAt      DateTime @default(now())
+
+  episode TradeEpisode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@index([episodeId, executedAt])
+  @@index([decisionId])
+  @@index([tradeLogId])
+}
+
+model LearningJob {
+  id          String    @id @default(cuid())
+  dedupeKey   String    @unique
+  type        String // SHADOW_EVALUATION | OUTCOME_BACKFILL | EXPERIMENT
+  status      String    @default("PENDING") // PENDING | RUNNING | RETRY | DONE | DEAD
+  entityType  String
+  entityId    String
+  payloadJson String    @default("{}")
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(5)
+  availableAt DateTime  @default(now())
+  lockedAt    DateTime?
+  lockToken   String?
+  lastError   String?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, availableAt])
+  @@index([type, status, availableAt])
+  @@index([entityType, entityId])
+}
+
+model StrategyExperiment {
+  id                   String    @id @default(cuid())
+  experimentKey        String    @unique
+  hypothesis           String
+  source               String    @default("LLM")
+  strategyType         String
+  symbol               String?
+  status               String    @default("DRAFT") // DRAFT | QUEUED | RUNNING | VERIFIED | REJECTED | ERROR
+  artifactJson         String
+  artifactHash         String
+  datasetVersion       String
+  trainWindowJson      String
+  validationWindowJson String
+  verifierVersion      String
+  promptVersion        String?
+  provider             String?
+  model                String?
+  resultJson           String    @default("{}")
+  failureClass         String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  completedAt          DateTime?
+
+  trials ExperimentTrial[]
+
+  @@index([status, createdAt])
+  @@index([strategyType, symbol, createdAt])
+}
+
+model ExperimentTrial {
+  id           String    @id @default(cuid())
+  experimentId String
+  trialKey     String    @unique
+  fold         Int
+  seed         Int
+  status       String    @default("PENDING")
+  metricsJson  String    @default("{}")
+  traceJson    String    @default("[]")
+  failureClass String?
+  errorMessage String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  experiment StrategyExperiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+
+  @@index([experimentId, fold])
+  @@index([status, createdAt])
+}
+
+model ShadowEvaluation {
+  id               String    @id @default(cuid())
+  decisionId       String    @unique
+  status           String // PENDING | COMPLETED | ERROR
+  recommendation   String? // ALLOW | CAUTION | AVOID
+  confidence       Int?
+  thesis           String?
+  argumentsJson    String    @default("[]")
+  invalidatorsJson String    @default("[]")
+  promptVersion    String
+  invocationId     String?
+  provider         String?
+  model            String?
+  attempts         Int       @default(1)
+  errorMessage     String?
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  decision StrategyDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([recommendation, createdAt])
+}
+
+model EvaluationRun {
+  id                 String   @id @default(cuid())
+  evaluationVersion  String
+  horizon            String
+  status             String // INSUFFICIENT_DATA | NOT_PROMOTED | PROMOTION_CANDIDATE
+  sampleCount        Int
+  outOfSampleCount   Int
+  foldCount          Int
+  baselineMeanReturn Float?
+  llmMeanReturn      Float?
+  deltaMeanReturn    Float?
+  confidenceLower95  Float?
+  confidenceUpper95  Float?
+  configJson         String
+  resultJson         String
+  completedAt        DateTime @default(now())
+
+  @@index([completedAt])
+  @@index([status, completedAt])
+}
+
+model LlmInvocation {
+  id            String   @id @default(cuid())
+  operation     String
+  provider      String
+  model         String
+  promptVersion String?
+  status        String // SUCCESS | ERROR
+  inputTokens   Int?
+  outputTokens  Int?
+  costUsd       Float?
+  latencyMs     Int
+  errorMessage  String?
+  metadataJson  String
+  createdAt     DateTime @default(now())
+
+  @@index([operation, createdAt])
+  @@index([provider, model, createdAt])
+  @@index([status, createdAt])
+}
+
+// ─── LLM Convictions (hypothesis → conviction pipeline) ──────────────────────
+
+model Conviction {
+  id                 String    @id @default(cuid())
+  source             String    @default("LLM_ANALYST") // LLM_ANALYST, SHADOW, WALK_FORWARD, MANUAL
+  status             String    @default("HYPOTHESIS") // HYPOTHESIS, VALIDATING, CONVICTION, REJECTED
+  strategyType       String // dip_buying, momentum, mean_reversion, hurst_hcoo_lb, cex_anomaly, gravity_scalper
+  symbol             String? // optional pair/symbol
+  direction          String    @default("NEUTRAL") // LONG, SHORT, NEUTRAL
+  thesis             String // core conviction statement (max 2000 chars)
+  confidence         Int       @default(0) // 0-100
+  evidence           String    @default("[]") // JSON array of supporting evidence
+  invalidators       String    @default("[]") // JSON array of conditions that would break the conviction
+  category           String? // optional tag: ENTRY, EXIT, SIZING, TIMING, REGIME, PAIR_SELECTION
+  parentId           String? // FK to parent hypothesis (for promoted hypotheses)
+  reportId           String? // FK to LlmInvocation that generated this
+  validatedAt        DateTime?
+  validationBy       String? // source of validation: SHADOW, WALK_FORWARD, MANUAL
+  convictionStrength Float     @default(0) // 0.0-1.0 for sorting/weighting
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([status, strategyType])
+  @@index([source, status])
+  @@index([confidence])
+}
