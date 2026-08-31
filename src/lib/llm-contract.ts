@@ -46,14 +46,14 @@ export function parseLlmAnalystResponse(content: string): LlmAnalystResponse {
   const start = cleaned.indexOf('{')
   const end = cleaned.lastIndexOf('}')
   if (start < 0 || end <= start) {
-    throw new Error('Model nie zwrócił obiektu JSON')
+    throw new Error('Model did not return JSON object')
   }
 
   let raw: unknown
   try {
     raw = JSON.parse(cleaned.slice(start, end + 1))
   } catch {
-    throw new Error('Model zwrócił nieprawidłowy JSON')
+    throw new Error('Model returned invalid JSON')
   }
 
   const parsed = llmAnalystResponseSchema.safeParse(raw)
@@ -66,31 +66,31 @@ export function parseLlmAnalystResponse(content: string): LlmAnalystResponse {
 }
 
 export function getLlmAnalystSystemPrompt(): string {
-  return `Jesteś analitykiem ilościowym systemu tradingowego BRRR.
-Analizuj wyłącznie przekazane dane. Nie wymyślaj transakcji, cen ani wyników.
-Zwróć WYŁĄCZNIE poprawny JSON zgodny dokładnie z tym kontraktem:
+  return `You are a quantitative analyst for the BRRR trading system.
+Analyze only the provided data. Do not invent transactions, prices or results.
+Return ONLY valid JSON exactly matching this contract:
 
 {
-  "report": "pełny raport po polsku (max 20000 znaków)",
+  "report": "full report in English (max 20000 chars)",
   "insights": ["wniosek oparty na danych"],
   "recommendations": ["konkretna rekomendacja do weryfikacji"],
   "confidence": 0,
   "strategies": [
     {
       "strategyType": "identyfikator_strategii",
-      "strategyName": "nazwa wyświetlana",
-      "summary": "krótka analiza tej strategii",
-      "strengths": ["co działa dobrze"],
-      "weaknesses": ["co nie działa / ryzyka"],
+      "strategyName": "display name",
+      "summary": "short analysis of this strategy",
+      "strengths": ["what works well"],
+      "weaknesses": ["what does not work / risks"],
       "hypotheses": [
         {
-          "pattern": "potencjalna zależność",
-          "rationale": "dlaczego warto ją sprawdzić",
+          "pattern": "potential dependency",
+          "rationale": "why it is worth checking",
           "pair": "opcjonalna para",
           "direction": "LONG|SHORT|NEUTRAL",
           "category": "ENTRY|EXIT|SIZING|TIMING|REGIME|PAIR_SELECTION",
           "evidence": ["obserwacja z danych"],
-          "invalidators": ["warunek który unieważnia hipotezę"],
+          "invalidators": ["condition that invalidates hypothesis"],
           "confidence": 50,
           "status": "UNVALIDATED"
         }

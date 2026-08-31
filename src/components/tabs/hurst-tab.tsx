@@ -1938,13 +1938,13 @@ plot(close, offset = -25, color=#FFFF00, title="Lagging Span")`}</pre>
               const prices = priceHistoryRef.current[tf.key]
               return (
                 <div key={tf.key} className="rounded-sm p-2" style={{ background: isPrimary ? `${te.orange}08` : te.bgCard, border: `1px solid ${isPrimary ? `${te.orange}33` : te.border}` }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '32px 28px auto 48px 48px 44px 36px 36px auto 1fr', alignItems: 'center', gap: '6px' }}>
-                    <span className="text-[12px] font-bold" style={{ color: isPrimary ? te.orange : te.textMuted, letterSpacing: '0.08em' }}>{tf.label}</span>
-                    {isPrimary && <span className="text-[7px] px-1 py-0.5 rounded-sm text-center" style={{ color: te.orange, background: `${te.orange}1a`, border: `1px solid ${te.orange}33` }}>PRI</span>}
+                  <div style={{ display: 'grid', gridTemplateColumns: '28px 22px 36px minmax(62px, 82px) 36px 36px 36px 28px 28px minmax(48px, 64px) 1fr', alignItems: 'center', gap: '4px' }}>
+                    <span className="text-[11px] font-bold" style={{ color: isPrimary ? te.orange : te.textMuted, letterSpacing: '0.06em' }}>{tf.label}</span>
+                    {isPrimary && <span className="text-[6px] px-1 py-0.5 rounded-sm text-center" style={{ color: te.orange, background: `${te.orange}1a`, border: `1px solid ${te.orange}33` }}>PRI</span>}
                     {!isPrimary && <span />}
-                    <span className="text-[8px]" style={{ color: te.textDim }}>{prices.length} bars</span>
-                    <div className="flex items-center gap-1 px-1 py-0.5 rounded-sm" style={{ background: sc.bg, border: `1px solid ${sc.text}33`, color: sc.text }}>
-                      <span className="text-[10px]">{getSignalIcon(data.signal.type)}</span><span className="text-[9px] font-bold">{data.signal.type}</span>
+                    <span className="text-[7px]" style={{ color: te.textDim, whiteSpace: 'nowrap' }}>{prices.length} bars</span>
+                    <div className="flex items-center gap-0.5 px-1 py-0.5 rounded-sm min-w-0 overflow-hidden" style={{ background: sc.bg, border: `1px solid ${sc.text}33`, color: sc.text }}>
+                      <span className="text-[8px] shrink-0">{getSignalIcon(data.signal.type)}</span><span className="text-[7px] font-bold truncate" style={{ minWidth: 0 }}>{data.signal.type}</span>
                     </div>
                     <div className="flex flex-col items-center"><span className="text-[7px]" style={{ color: te.textDim }}>H</span><span className="text-[11px] font-bold" style={{ color: data.signal.hurst < 0.45 ? te.green : data.signal.hurst > 0.55 ? te.orange : te.textMuted }}>{data.signal.hurst.toFixed(3)}</span></div>
                     <div className="flex flex-col items-center"><span className="text-[7px]" style={{ color: te.textDim }}>dH</span><span className="text-[11px] font-bold" style={{ color: data.signal.hurstSlope > 0 ? te.cyan : data.signal.hurstSlope < -0.02 ? te.red : te.textDim }}>{data.signal.hurstSlope >= 0 ? '+' : ''}{data.signal.hurstSlope.toFixed(3)}</span></div>
@@ -1962,7 +1962,7 @@ plot(close, offset = -25, color=#FFFF00, title="Lagging Span")`}</pre>
                           <div className="flex flex-col items-center"><span className="text-[7px]" style={{ color: te.textDim }}>F</span><span className="text-[11px] font-bold" style={{ color: fv !== null ? (fv > 1.0 ? '#a855f7' : fv > 0.5 ? te.red : fv < 0.0 ? '#a855f7' : te.green) : te.textDim }}>{fv !== null ? fv.toFixed(2) : '—'}</span></div>
                           <div className="flex flex-col items-center"><span className="text-[7px]" style={{ color: te.textDim }}>S</span><span className="text-[11px] font-bold" style={{ color: sv !== null ? te.green : te.textDim }}>{sv !== null ? sv.toFixed(2) : '—'}</span></div>
                           {hsc2.type !== 'NEUTRAL' ? (
-                            <span className="text-[7px] font-bold px-1 py-0.5 rounded-sm text-center" style={{ background: HCCCO_SIGNAL_COLORS[hsc2.type].bg, color: hColor, border: `1px solid ${hColor}33` }}>{hsc2.type}</span>
+                            <span className="text-[6px] font-bold px-1 py-0.5 rounded-sm text-center truncate min-w-0 overflow-hidden" style={{ background: HCCCO_SIGNAL_COLORS[hsc2.type].bg, color: hColor, border: `1px solid ${hColor}33`, maxWidth: '64px' }}>{hsc2.type}</span>
                           ) : (
                             <span />
                           )}

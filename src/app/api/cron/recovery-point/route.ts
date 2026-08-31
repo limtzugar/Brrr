@@ -9,7 +9,7 @@ const BACKUP_DIR = process.env.BACKUP_DIR || `${PROJECT_DIR}/upload`
 const LOG_FILE = process.env.BACKUP_LOG_FILE || `${PROJECT_DIR}/backup-log.txt`
 
 export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get('token') || req.headers.get('x-cron-secret') || ''
+  const token = req.headers.get('x-cron-secret') || ''
   if (!CRON_SECRET) return NextResponse.json({ error: 'CRON_SECRET env var not set — recovery point disabled' }, { status: 503 })
   if (token !== CRON_SECRET) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 

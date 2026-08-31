@@ -485,7 +485,7 @@ export function getDefaultParamsForType(type: string): Partial<StrategyConfig> {
   }
 }
 
-// ─── Default Strategies ──────────────────────────────────────────────────────
+// ─── Default Strategiessss ──────────────────────────────────────────────────────
 
 export const DEFAULT_STRATEGIES: StrategyConfig[] = [
   {
@@ -705,8 +705,8 @@ export function fearGreedLabel(value: number): string {
   if (value <= 25) return 'Ekstremalny Strach'
   if (value <= 45) return 'Strach'
   if (value <= 55) return 'Neutralnie'
-  if (value <= 75) return 'Chciwość'
-  return 'Ekstremalna Chciwość'
+  if (value <= 75) return 'Greed'
+  return 'Ekstremalna Greed'
 }
 
 // ─── Mini Sparkline Chart ────────────────────────────────────────────────────

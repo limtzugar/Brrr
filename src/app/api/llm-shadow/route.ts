@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Nie udało się pobrać ocen shadow' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch shadow evaluations' },
       { status: 500 },
     )
   }
@@ -85,7 +85,7 @@ export async function PATCH(request: Request) {
   try {
     const body = await request.json()
     if (typeof body.enabled !== 'boolean') {
-      return NextResponse.json({ error: 'Pole enabled musi być wartością boolean' }, { status: 400 })
+      return NextResponse.json({ error: 'Field enabled must be a boolean' }, { status: 400 })
     }
     await db.appSettings.upsert({
       where: { key: 'llm_shadow_enabled' },
@@ -95,7 +95,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ enabled: body.enabled })
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Nie udało się zmienić shadow mode' },
+      { error: error instanceof Error ? error.message : 'Failed to change shadow mode' },
       { status: 500 },
     )
   }

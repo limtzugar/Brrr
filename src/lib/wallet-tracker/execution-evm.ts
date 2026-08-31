@@ -112,7 +112,7 @@ export async function executeEvmCopyTrade(
   } catch (err) {
     return {
       success: false,
-      error: `Błąd wykonania EVM: ${String(err)}`,
+      error: `Error wykonania EVM: ${String(err)}`,
     }
   }
 }

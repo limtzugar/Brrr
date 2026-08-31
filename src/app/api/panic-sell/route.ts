@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     if ((body as { confirm?: string }).confirm !== 'SELL_ALL') {
       return NextResponse.json(
         {
-          error: 'Wymagane potwierdzenie: wyślij { "confirm": "SELL_ALL" }. Ta operacja anuluje wszystkie zlecenia i sprzedaje WSZYSTKIE pozycje nie-USDT na WSZYSTKICH skonfigurowanych giełdach.',
+          error: 'Confirmation required: send { "confirm": "SELL_ALL" }. This operation cancels all orders and sells ALL non-USDT positions on ALL configured exchanges.',
         },
         { status: 400 }
       )
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
     if (apis.length === 0) {
       return NextResponse.json(
-        { error: 'Brak skonfigurowanych kluczy API' },
+        { error: 'No API keys configured' },
         { status: 400 }
       )
     }
@@ -111,14 +111,14 @@ export async function POST(request: Request) {
                       exchange: 'binance',
                       symbol,
                       success: true,
-                      message: `Anulowano zlecenie ${order.orderId}`,
+                      message: `Cancelled order ${order.orderId}`,
                     })
                   } catch (err) {
                     cancelResults.push({
                       exchange: 'binance',
                       symbol,
                       success: false,
-                      message: err instanceof Error ? err.message : 'Błąd anulowania',
+                      message: err instanceof Error ? err.message : 'Cancel failed',
                     })
                   }
                 }
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: true,
-                  message: `Sprzedano ${holding.free} ${holding.coin} na Binance`,
+                  message: `Sold ${holding.free} ${holding.coin} on Binance`,
                   amount: holding.free,
                   details: order,
                 })
@@ -152,10 +152,10 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: false,
-                  message: err instanceof Error ? err.message : 'Błąd sprzedaży',
+                  message: err instanceof Error ? err.message : 'Sell failed',
                   amount: holding.free,
                 })
-                errors.push(`Binance ${holding.coin}: ${err instanceof Error ? err.message : 'Błąd'}`)
+                errors.push(`Binance ${holding.coin}: ${err instanceof Error ? err.message : 'Error'}`)
               }
             }
           } else if (api.exchange === 'mexc') {
@@ -177,14 +177,14 @@ export async function POST(request: Request) {
                       exchange: 'mexc',
                       symbol,
                       success: true,
-                      message: `Anulowano zlecenie ${order.orderId}`,
+                      message: `Cancelled order ${order.orderId}`,
                     })
                   } catch (err) {
                     cancelResults.push({
                       exchange: 'mexc',
                       symbol,
                       success: false,
-                      message: err instanceof Error ? err.message : 'Błąd anulowania',
+                      message: err instanceof Error ? err.message : 'Cancel failed',
                     })
                   }
                 }
@@ -208,7 +208,7 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: true,
-                  message: `Sprzedano ${holding.free} ${holding.coin} na MEXC`,
+                  message: `Sold ${holding.free} ${holding.coin} on MEXC`,
                   amount: holding.free,
                   details: order,
                 })
@@ -218,10 +218,10 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: false,
-                  message: err instanceof Error ? err.message : 'Błąd sprzedaży',
+                  message: err instanceof Error ? err.message : 'Sell failed',
                   amount: holding.free,
                 })
-                errors.push(`MEXC ${holding.coin}: ${err instanceof Error ? err.message : 'Błąd'}`)
+                errors.push(`MEXC ${holding.coin}: ${err instanceof Error ? err.message : 'Error'}`)
               }
             }
           } else {
@@ -240,14 +240,14 @@ export async function POST(request: Request) {
                       exchange: 'bybit',
                       symbol,
                       success: true,
-                      message: `Anulowano zlecenie ${order.orderId}`,
+                      message: `Cancelled order ${order.orderId}`,
                     })
                   } catch (err) {
                     cancelResults.push({
                       exchange: 'bybit',
                       symbol,
                       success: false,
-                      message: err instanceof Error ? err.message : 'Błąd anulowania',
+                      message: err instanceof Error ? err.message : 'Cancel failed',
                     })
                   }
                 }
@@ -271,7 +271,7 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: true,
-                  message: `Sprzedano ${holding.free} ${holding.coin} na Bybit`,
+                  message: `Sold ${holding.free} ${holding.coin} on Bybit`,
                   amount: holding.free,
                   details: order,
                 })
@@ -281,15 +281,15 @@ export async function POST(request: Request) {
                   coin: holding.coin,
                   symbol,
                   success: false,
-                  message: err instanceof Error ? err.message : 'Błąd sprzedaży',
+                  message: err instanceof Error ? err.message : 'Sell failed',
                   amount: holding.free,
                 })
-                errors.push(`Bybit ${holding.coin}: ${err instanceof Error ? err.message : 'Błąd'}`)
+                errors.push(`Bybit ${holding.coin}: ${err instanceof Error ? err.message : 'Error'}`)
               }
             }
           }
         } catch (err) {
-          errors.push(`${api.exchange} (${api.mode}): ${err instanceof Error ? err.message : 'Błąd krytyczny'}`)
+          errors.push(`${api.exchange} (${api.mode}): ${err instanceof Error ? err.message : 'Critical error'}`)
         }
       })
     )
@@ -313,7 +313,7 @@ export async function POST(request: Request) {
   } catch (error) {
     logError('[/api/panic-sell] error:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Błąd panic sell' },
+      { error: error instanceof Error ? error.message : 'Panic sell error' },
       { status: 500 }
     )
   }

@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
     if (!chart.prices || chart.prices.length < 10) {
       return NextResponse.json(
-        { error: "Brak wystarczających danych historycznych dla tej monety." },
+        { error: "Not enough historical data for this coin." },
         { status: 404 }
       );
     }
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("[/api/backtest] Error:", error);
     return NextResponse.json(
-      { error: "Backtest nie powiódł się. Spróbuj ponownie później." },
+      { error: "Backtest failed. Try again later." },
       { status: 502 }
     );
   }

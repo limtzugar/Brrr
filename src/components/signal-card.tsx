@@ -61,7 +61,7 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
         <img
           src={sanitizeImageUrl(signal.image)} alt={signal.symbol} className="size-5 rounded-full shrink-0"
           onClick={(e) => { e.stopPropagation(); onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h) }}
-          title="Otwórz wykres TradingView"
+          title="Open TradingView chart"
           style={{ cursor: 'pointer' }}
         />
         <div className="flex-1 min-w-0">
@@ -127,7 +127,7 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
             <Separator className="my-3" />
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted-foreground">Pewność sygnału</span>
+                <span className="text-xs text-muted-foreground">Signal confidence</span>
                 <span className={`text-xs font-bold ${confidenceTextColor(confScore)}`}>{confScore}/100</span>
               </div>
               <div className="h-2.5 bg-muted rounded-full overflow-hidden">
@@ -175,7 +175,7 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
                 <div className="flex items-end gap-1 mb-2 h-8">
                   <div className="flex-1 flex flex-col items-center justify-end h-full">
                     <div className="w-full bg-emerald-500/40 rounded-t" style={{ height: '100%' }} />
-                    <span className="text-[9px] text-muted-foreground mt-0.5">Wejście</span>
+                    <span className="text-[9px] text-muted-foreground mt-0.5">Entry</span>
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-end h-full">
                     <div className="w-full bg-orange-500/40 rounded-t" style={{ height: `${Math.max(10, 100 - trailingPct * 8)}%` }} />
@@ -188,7 +188,7 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <div className="text-muted-foreground">Cena wejścia</div>
+                    <div className="text-muted-foreground">Entry price</div>
                     <div className="font-medium">{formatPrice(signal.current_price)}</div>
                   </div>
                   <div>
@@ -209,16 +209,16 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
             <div className="mb-3">
               <div className="flex items-center gap-2 mb-2">
                 <Calculator className="size-3.5 text-purple-500" />
-                <span className="text-xs font-medium">Kalkulator wielkości pozycji</span>
+                <span className="text-xs font-medium">Position size calculator</span>
               </div>
               <div className="bg-muted/30 rounded-lg p-3">
                 <div className="grid grid-cols-2 gap-3 text-xs mb-2">
                   <div>
-                    <Label className="text-[10px]">Kapitał ($)</Label>
+                    <Label className="text-[10px]">Capital ($)</Label>
                     <Input type="number" value={accountBalance} readOnly className="h-7 text-xs bg-muted" />
                   </div>
                   <div>
-                    <Label className="text-[10px]">Ryzyko na trade (%)</Label>
+                    <Label className="text-[10px]">Ryzyko on trade (%)</Label>
                     <div className="flex items-center gap-1">
                       <Slider value={[riskPct]} onValueChange={v => setRiskPct(v[0])} min={0.5} max={5} step={0.5} className="flex-1" />
                       <span className="text-xs font-medium w-8 text-right">{riskPct}%</span>
@@ -231,18 +231,18 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
                     <div className="font-medium">{stopLossPct.toFixed(1)}%</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Zmienność (ATR proxy)</span>
+                    <span className="text-muted-foreground">Volatility (ATR proxy)</span>
                     <div className="font-medium">{formatPrice(atrProxy)}</div>
                   </div>
                 </div>
                 <Separator className="my-2" />
                 <div className="grid grid-cols-3 gap-3 text-xs">
                   <div className="text-center p-2 rounded bg-purple-500/10">
-                    <div className="text-muted-foreground text-[10px]">Wielkość pozycji</div>
+                    <div className="text-muted-foreground text-[10px]">Position size</div>
                     <div className="font-bold text-purple-600">${positionSizeUsd.toFixed(0)}</div>
                   </div>
                   <div className="text-center p-2 rounded bg-purple-500/10">
-                    <div className="text-muted-foreground text-[10px]">Ilość monet</div>
+                    <div className="text-muted-foreground text-[10px]">Coin amount</div>
                     <div className="font-bold text-purple-600">{positionSizeCoins < 1 ? positionSizeCoins.toFixed(4) : positionSizeCoins.toFixed(2)}</div>
                   </div>
                   <div className="text-center p-2 rounded bg-purple-500/10">
@@ -261,7 +261,7 @@ export default function SignalCard({ signal, onOpenChart, fearGreedValue, hasCus
                 onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)}
               >
                 <LineChartIcon className="size-3.5" />
-                Otwórz wykres TradingView
+                Open TradingView chart
               </Button>
             </div>
           </div>

@@ -329,7 +329,7 @@ function mapToTradingStrategy(context: {
         fee_pct: 0.1,
       },
       confidence: 75,
-      notes: `EMA Crossover: fast=${fastPeriod}, slow=${slowPeriod}. Mapowanie automatyczne z Pine Script.`,
+      notes: `EMA Crossover: fast=${fastPeriod}, slow=${slowPeriod}. Mapowanie automatyczne of Pine Script.`,
     }
   }
 
@@ -480,7 +480,7 @@ function mapToTradingStrategy(context: {
         fee_pct: 0.1,
       },
       confidence: 50,
-      notes: `Breakout strategy detected. Mapowanie z highest/lowest → breakout.`,
+      notes: `Breakout strategy detected. Mapowanie of highest/lowest → breakout.`,
     }
   }
 

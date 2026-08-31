@@ -8,7 +8,7 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import MarketTickerBar from '@/components/market-ticker-bar'
 import SettingsPanel from '@/components/settings-panel'
 import SignalyTab from '@/components/tabs/signaly-tab'
-import StrategiesTab from '@/components/tabs/strategie-tab'
+import StrategiessssTab from '@/components/tabs/strategie-tab'
 import BacktestTab from '@/components/tabs/backtest-tab'
 import TradeHistoryTab from '@/components/tabs/trade-history-tab'
 
@@ -31,7 +31,7 @@ export default function Home() {
   const te = useTE()
   const { theme, toggleTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('cexanomaly')
-  const [activeStrategies, setActiveStrategies] = useState<ActiveStrategyInfo[]>([])
+  const [activeStrategiessss, setActiveStrategiessss] = useState<ActiveStrategyInfo[]>([])
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [navCollapsed, setNavCollapsed] = useState(false)
 
@@ -47,10 +47,10 @@ export default function Home() {
   const [apiKilled, setApiKilled] = useState(false)
 
   // Fetch active strategies
-  const fetchActiveStrategies = useCallback(async () => {
+  const fetchActiveStrategiessss = useCallback(async () => {
     try {
       const res = await fetch('/api/strategies/status')
-      if (res.ok) { const data = await res.json(); setActiveStrategies(data.strategies || []) }
+      if (res.ok) { const data = await res.json(); setActiveStrategiessss(data.strategies || []) }
     } catch {}
   }, [])
 
@@ -82,19 +82,19 @@ export default function Home() {
         setCapital({ mode: activeMode, totalEquityUsdt: data.totalEquityUsdt || 0, coins: data.coins || [], lastUpdated: data.lastUpdated, error: null, loading: false })
       } else {
         const data = await res.json()
-        setCapital(prev => ({ ...prev, error: data.error || 'Błąd pobierania salda', loading: false }))
+        setCapital(prev => ({ ...prev, error: data.error || 'Failed to fetch balance', loading: false }))
       }
-    } catch { setCapital(prev => ({ ...prev, error: 'Błąd połączenia', loading: false })) }
+    } catch { setCapital(prev => ({ ...prev, error: 'Connection error', loading: false })) }
   }, [apiConfigured, activeMode, apiKilled])
 
   useEffect(() => { void checkApiConfig() }, [checkApiConfig])
   useEffect(() => {
     if (apiConfigured) { void fetchBalance(); const interval = setInterval(() => void fetchBalance(), 30000); return () => clearInterval(interval) }
   }, [apiConfigured, fetchBalance])
-  useEffect(() => { void fetchActiveStrategies(); const interval = setInterval(() => void fetchActiveStrategies(), 30000); return () => clearInterval(interval) }, [fetchActiveStrategies])
+  useEffect(() => { void fetchActiveStrategiessss(); const interval = setInterval(() => void fetchActiveStrategiessss(), 30000); return () => clearInterval(interval) }, [fetchActiveStrategiessss])
   useEffect(() => { if (!settingsOpen) { void checkApiConfig(); if (apiConfigured) void fetchBalance() } }, [settingsOpen, checkApiConfig, apiConfigured, fetchBalance])
 
-  const runningCount = activeStrategies.filter(s => s.status === 'running').length
+  const runningCount = activeStrategiessss.filter(s => s.status === 'running').length
   const usdtCoin = capital.coins.find(c => c.coin === 'USDT')
   const nonUsdtCoins = capital.coins.filter(c => c.coin !== 'USDT' && Number(c.equity) > 0)
 
@@ -105,11 +105,11 @@ export default function Home() {
     {
       label: 'TRADE',
       tabs: [
-        { value: 'signals', icon: Bell, label: 'Sygnały' },
+        { value: 'signals', icon: Bell, label: 'Signals' },
         { value: 'hurst', icon: Activity, label: 'Hurst' },
-        { value: 'strategies', icon: Target, label: 'Strategie' },
+        { value: 'strategies', icon: Target, label: 'Strategiessss' },
         { value: 'backtest', icon: Brain, label: 'Backtest' },
-        { value: 'history', icon: Wallet, label: 'Historia' },
+        { value: 'history', icon: Wallet, label: 'History' },
         { value: 'cexanomaly', icon: Scan, label: 'CEX Anomaly' },
         { value: 'llm', icon: Sparkles, label: 'LLM Analyst' },
       ],
@@ -201,7 +201,7 @@ export default function Home() {
 
                 {capital.error ? (
                   <span className="text-[10px] max-w-[120px] truncate" style={{ color: te.red }} title={capital.error}>
-                    {capital.error.includes('sign') || capital.error.includes('10004') ? 'Błąd podpisu' : capital.error}
+                    {capital.error.includes('sign') || capital.error.includes('10004') ? 'Signature error' : capital.error}
                   </span>
                 ) : (
                   <>
@@ -333,7 +333,7 @@ export default function Home() {
               </DialogTrigger>
               <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto" style={{ background: te.bgCard, borderColor: te.border }}>
                 <DialogHeader className="sr-only">
-                  <DialogTitle><VisuallyHidden.Root>Ustawienia API — Bybit</VisuallyHidden.Root></DialogTitle>
+                  <DialogTitle><VisuallyHidden.Root>API Settings — Bybit</VisuallyHidden.Root></DialogTitle>
                 </DialogHeader>
                 <SettingsPanel onClose={() => setSettingsOpen(false)} />
               </DialogContent>
@@ -386,7 +386,7 @@ export default function Home() {
               }}
               onMouseEnter={e => { e.currentTarget.style.background = te.bgCardHover; e.currentTarget.style.color = te.text }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = te.textMuted }}
-              title={navCollapsed ? 'Rozwiń menu' : 'Zwiń menu'}
+              title={navCollapsed ? 'Expand menu' : 'Collapse menu'}
             >
               {navCollapsed ? <PanelLeftOpen className="size-3.5" /> : <PanelLeftClose className="size-3.5" />}
             </button>
@@ -449,15 +449,11 @@ export default function Home() {
             </div>
           ))}
 
-          {/* TE Footer */}
           <div className="mt-auto pt-4 px-3 border-t" style={{ borderColor: te.border }}>
             {!navCollapsed && (
               <div>
                 <p className="te-badge" style={{ color: te.textDim, letterSpacing: '0.12em' }}>
                   BRRR v2.0
-                </p>
-                <p className="text-[8px] mt-1" style={{ color: te.textDim, fontFamily: te.mono }}>
-                  TE DESIGN SYSTEM
                 </p>
               </div>
             )}
@@ -467,7 +463,7 @@ export default function Home() {
         {/* Content Area */}
         <main className="flex-1 min-w-0 p-4 sm:p-6" style={{ background: te.bg }}>
           {activeTab === 'signals' && <ErrorBoundary><SignalyTab /></ErrorBoundary>}
-          {activeTab === 'strategies' && <ErrorBoundary><StrategiesTab activeStrategies={activeStrategies} onStrategyChange={fetchActiveStrategies} /></ErrorBoundary>}
+          {activeTab === 'strategies' && <ErrorBoundary><StrategiessssTab activeStrategiessss={activeStrategiessss} onStrategyChange={fetchActiveStrategiessss} /></ErrorBoundary>}
           {activeTab === 'backtest' && <ErrorBoundary><BacktestTab /></ErrorBoundary>}
           {activeTab === 'history' && <ErrorBoundary><TradeHistoryTab /></ErrorBoundary>}
           {activeTab === 'cexanomaly' && <ErrorBoundary><CexAnomalyTab /></ErrorBoundary>}

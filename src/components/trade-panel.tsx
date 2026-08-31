@@ -135,7 +135,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
       const data = await res.json()
       setOrderResult(data)
     } catch (err) {
-      setOrderResult({ success: false, error: err instanceof Error ? err.message : 'Błąd połączenia' })
+      setOrderResult({ success: false, error: err instanceof Error ? err.message : 'Connection error' })
     } finally {
       setSubmitting(false)
     }
@@ -367,7 +367,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
                 display: 'flex', alignItems: 'center', gap: '4px',
               }}>
                 <PixelIcon grid={PIXEL_ICONS.warning} color={te.red} size={10} />
-                TRYB REAL — prawdziwe środki
+                TRYB REAL — real funds
               </div>
             )}
           </div>
@@ -572,7 +572,7 @@ export default function TradePanel({ open, onClose, target, defaultExchange, def
                 </div>
               ) : (
                 <div style={{ fontFamily: te.mono, fontSize: '9px', color: te.red }}>
-                  {orderResult.error || 'Nieznany błąd'}
+                  {orderResult.error || 'Unknown error'}
                 </div>
               )}
             </div>

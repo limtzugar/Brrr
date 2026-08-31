@@ -152,7 +152,7 @@ export async function GET(request: Request) {
             usdtBalance: 0,
             coins: [],
             fees: api.exchange === 'mexc' ? { ...MEXC_FEES } : api.exchange === 'binance' ? { ...BINANCE_FEES } : { maker: 0.1, taker: 0.1 },
-            error: err instanceof Error ? err.message : 'Błąd pobierania salda',
+            error: err instanceof Error ? err.message : 'Failed to fetch balance',
           }
         }
       })
@@ -235,7 +235,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('[/api/portfolio] error:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Błąd pobierania portfela' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch portfolio' },
       { status: 500 }
     )
   }

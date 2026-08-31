@@ -2,7 +2,7 @@
 // GET: Get status of all active strategies + trade history from DB
 
 import { NextResponse } from 'next/server'
-import { getActiveStrategiesStatus } from '@/lib/strategy-runner'
+import { getActiveStrategiessssStatus } from '@/lib/strategy-runner'
 import { db } from '@/lib/db'
 import { checkRateLimit } from '@/lib/rate-limit'
 
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   }
   try {
     // Get in-memory running strategies
-    const activeStatus = getActiveStrategiesStatus()
+    const activeStatus = getActiveStrategiessssStatus()
 
     // Get all DB records (including recently stopped)
     const dbRecords = await db.activeStrategy.findMany({
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('[/api/strategies/status] Error:', error)
     return NextResponse.json(
-      { error: 'Błąd pobierania statusu strategii.' },
+      { error: 'Failed to fetch strategy status.' },
       { status: 500 }
     )
   }

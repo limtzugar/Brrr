@@ -39,13 +39,13 @@ import {
   DEFAULT_STRATEGIES,
 } from '@/lib/crypto-shared'
 
-interface StrategiesTabProps {
-  activeStrategies: ActiveStrategyInfo[]
+interface StrategiessssTabProps {
+  activeStrategiessss: ActiveStrategyInfo[]
   onStrategyChange: () => void
 }
 
-export default function StrategiesTab({ activeStrategies, onStrategyChange }: StrategiesTabProps) {
-  const [strategies, setStrategies] = useState<StrategyConfig[]>(DEFAULT_STRATEGIES)
+export default function StrategiessssTab({ activeStrategiessss, onStrategyChange }: StrategiessssTabProps) {
+  const [strategies, setStrategiessss] = useState<StrategyConfig[]>(DEFAULT_STRATEGIES)
   const [results, setResults] = useState<Map<string, StrategyResult>>(new Map())
   const [running, setRunning] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -78,7 +78,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
             hurst_threshold: s.hurst_threshold ?? 0.5, bb_period: s.bb_period ?? 20, bb_std: s.bb_std ?? 2,
             slippage_pct: s.slippage_pct ?? 0.05, simulate_wicks: s.simulate_wicks ?? true,
           }))
-          setStrategies(migrated)
+          setStrategiessss(migrated)
         }
       }
     } catch {}
@@ -110,7 +110,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
-        const errMsg = errData.error || errData.details || `Błąd HTTP ${res.status}`
+        const errMsg = errData.error || errData.details || `Error HTTP ${res.status}`
         if ((res.status === 429 || res.status === 502) && retryCount < maxRetries) {
           await new Promise(r => setTimeout(r, 2000 * Math.pow(2, retryCount)))
           return runSingleBacktest(strategy, retryCount + 1)
@@ -120,7 +120,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       const data = await res.json()
       return { strategyId: strategy.id, loading: false, error: null, data, retryCount }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : 'Błąd połączenia z serwerem'
+      const errMsg = err instanceof Error ? err.message : 'Server connection error'
       if (retryCount < maxRetries) {
         await new Promise(r => setTimeout(r, 2000 * Math.pow(2, retryCount)))
         return runSingleBacktest(strategy, retryCount + 1)
@@ -162,19 +162,19 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       leverage: 3, futures_alloc_pct: 50, ema_fast: 9, ema_slow: 21, rsi_period: 14, rsi_overbought: 70, rsi_oversold: 30,
       futures_sl_pct: 2, futures_tp_pct: 4, max_futures_hours: 24, funding_rate_pct: 0.01,
     }
-    setStrategies([...strategies, newStrategy])
+    setStrategiessss([...strategies, newStrategy])
     setEditingId(id); setEditForm(newStrategy)
   }
 
   const deleteStrategy = (id: string) => {
-    setStrategies(strategies.filter(s => s.id !== id))
+    setStrategiessss(strategies.filter(s => s.id !== id))
     const newResults = new Map(results); newResults.delete(id); setResults(newResults)
     if (editingId === id) { setEditingId(null); setEditForm(null) }
   }
 
   const saveStrategy = () => {
     if (!editForm) return
-    setStrategies(strategies.map(s => s.id === editForm.id ? editForm : s))
+    setStrategiessss(strategies.map(s => s.id === editForm.id ? editForm : s))
     setEditingId(null); setEditForm(null)
   }
 
@@ -185,9 +185,9 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ coin_id: optimizeCoin, days: optimizeDays, initial_capital: 1000, compound: true, fee_pct: 0.1, strategy_type: optimizeStrategyType }),
       })
-      if (!res.ok) { const d = await res.json().catch(() => ({})); setOptimizeError(d.error || 'Błąd optymalizacji') }
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setOptimizeError(d.error || 'Optimization error') }
       else { setOptimizeResult(await res.json()) }
-    } catch (err) { setOptimizeError(err instanceof Error ? err.message : 'Błąd optymalizacji') }
+    } catch (err) { setOptimizeError(err instanceof Error ? err.message : 'Optimization error') }
     finally { setOptimizing(false) }
   }
 
@@ -208,7 +208,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       hurst_threshold: best.params.hurst_threshold ?? 0.5, bb_period: best.params.bb_period ?? 20, bb_std: best.params.bb_std ?? 2,
       slippage_pct: 0.05, simulate_wicks: true,
     }
-    setStrategies([...strategies, newStrategy])
+    setStrategiessss([...strategies, newStrategy])
   }
 
   const addOptimizedStrategy = (item: OptimizeResultItem, rank: number) => {
@@ -226,7 +226,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       hurst_threshold: item.params.hurst_threshold ?? 0.5, bb_period: item.params.bb_period ?? 20, bb_std: item.params.bb_std ?? 2,
       slippage_pct: 0.05, simulate_wicks: true,
     }
-    setStrategies([...strategies, newStrategy])
+    setStrategiessss([...strategies, newStrategy])
   }
 
   const bestStrategy = strategies.reduce((best, s) => {
@@ -250,9 +250,9 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         }),
       })
       const data = await res.json()
-      if (!res.ok) setActivationError(data.error || 'Błąd aktywacji strategii')
+      if (!res.ok) setActivationError(data.error || 'Failed to activate strategy')
       else onStrategyChange()
-    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Błąd połączenia z serwerem') }
+    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Server connection error') }
     finally { setActivatingStrategy(null) }
   }
 
@@ -264,9 +264,9 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         body: JSON.stringify({ strategyId, mode }),
       })
       const data = await res.json()
-      if (!res.ok) setActivationError(data.error || 'Błąd dezaktywacji')
+      if (!res.ok) setActivationError(data.error || 'Failed to deactivate')
       else onStrategyChange()
-    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Błąd połączenia') }
+    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Connection error') }
     finally { setActivatingStrategy(null) }
   }
 
@@ -291,17 +291,17 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
           <div style={{ padding: '0 14px 14px', borderTop: '1px solid #DDDDDD' }}>
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
               <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
-                <div><Label className="text-xs">Moneta</Label><Select value={optimizeCoin} onValueChange={setOptimizeCoin}><SelectTrigger className="h-9"><SelectValue /></SelectTrigger><SelectContent>{COIN_OPTIONS.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}</SelectContent></Select></div>
+                <div><Label className="text-xs">Coin</Label><Select value={optimizeCoin} onValueChange={setOptimizeCoin}><SelectTrigger className="h-9"><SelectValue /></SelectTrigger><SelectContent>{COIN_OPTIONS.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}</SelectContent></Select></div>
                 <div><Label className="text-xs">Strategia</Label><Select value={optimizeStrategyType} onValueChange={setOptimizeStrategyType}><SelectTrigger className="h-9"><SelectValue /></SelectTrigger><SelectContent>{STRATEGY_TYPE_OPTIONS.map(t => { const Icon = t.icon; return <SelectItem key={t.id} value={t.id}><span className="flex items-center gap-1.5"><Icon className="size-3" />{t.label}</span></SelectItem> })}</SelectContent></Select></div>
-                <div><Label className="text-xs">Okres (dni)</Label><Select value={String(optimizeDays)} onValueChange={v => setOptimizeDays(Number(v))}><SelectTrigger className="h-9"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="30">30 dni</SelectItem><SelectItem value="90">90 dni</SelectItem><SelectItem value="180">180 dni</SelectItem><SelectItem value="365">365 dni</SelectItem></SelectContent></Select></div>
-                <div><button className="w-full h-9" style={{ fontFamily: 'inherit', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', background: optimizing ? '#999' : '#FF6600', color: '#000', border: 'none', cursor: optimizing ? 'not-allowed' : 'pointer', padding: '0 12px' }} onClick={runOptimize} disabled={optimizing}>{optimizing ? 'SZUKAM…' : 'WYKRYJ NAJLEPSZĄ'}</button></div>
+                <div><Label className="text-xs">Period (days)</Label><Select value={String(optimizeDays)} onValueChange={v => setOptimizeDays(Number(v))}><SelectTrigger className="h-9"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="30">30 dni</SelectItem><SelectItem value="90">90 dni</SelectItem><SelectItem value="180">180 dni</SelectItem><SelectItem value="365">365 dni</SelectItem></SelectContent></Select></div>
+                <div><button className="w-full h-9" style={{ fontFamily: 'inherit', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', background: optimizing ? '#999' : '#FF6600', color: '#000', border: 'none', cursor: optimizing ? 'not-allowed' : 'pointer', padding: '0 12px' }} onClick={runOptimize} disabled={optimizing}>{optimizing ? 'SEARCHING...' : 'DETECT BEST'}</button></div>
               </div>
             </div>
             {optimizeError && <div style={{ fontSize: 9, color: '#E8003D', background: 'rgba(232,0,61,0.08)', border: '1px solid #E8003D', padding: '8px 10px', marginTop: 8, letterSpacing: '0.04em' }}>{optimizeError}</div>}
-            {optimizing && <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 9, color: '#999', background: '#F5F5F5', border: '1px solid #DDDDDD', padding: '8px 10px', marginTop: 8, letterSpacing: '0.04em' }}><RefreshCw className="size-3.5 animate-spin" /><span>Testuję kombinacje parametrów ({getStrategyTypeInfo(optimizeStrategyType).label})... To może potrwać 10-30s</span></div>}
+            {optimizing && <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 9, color: '#999', background: '#F5F5F5', border: '1px solid #DDDDDD', padding: '8px 10px', marginTop: 8, letterSpacing: '0.04em' }}><RefreshCw className="size-3.5 animate-spin" /><span>Testing parameter combinations ({getStrategyTypeInfo(optimizeStrategyType).label})... May take 10-30s</span></div>}
             {optimizeResult && !optimizing && (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground"><span>Przetestowano <strong>{optimizeResult.total_combinations}</strong> kombinacji</span><span className="text-muted-foreground/50">|</span><span>Ważne strategie: <strong>{optimizeResult.valid_strategies}</strong></span></div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground"><span>Tested <strong>{optimizeResult.total_combinations}</strong> combinations</span><span className="text-muted-foreground/50">|</span><span>Valid strategies: <strong>{optimizeResult.valid_strategies}</strong></span></div>
                 {optimizeResult.best && (
                   <div style={{ background: 'rgba(26,161,103,0.06)', border: '1px solid rgba(26,161,103,0.3)', padding: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -309,7 +309,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
                       <button onClick={addBestStrategy} style={{ fontFamily: 'inherit', fontSize: 8, letterSpacing: '0.08em', textTransform: 'uppercase', background: 'transparent', border: '1px solid #1AA167', color: '#1AA167', padding: '3px 8px', cursor: 'pointer' }}>+ Dodaj do listy</button>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {[{ label: 'ZWROT', value: `${optimizeResult.best.total_return_pct >= 0 ? '+' : ''}${optimizeResult.best.total_return_pct.toFixed(2)}%`, color: optimizeResult.best.total_return_pct >= 0 ? '#1AA167' : '#E8003D' }, { label: 'WIN RATE', value: `${optimizeResult.best.win_rate.toFixed(1)}%`, color: optimizeResult.best.win_rate >= 50 ? '#1AA167' : '#D97706' }, { label: 'PROFIT FACTOR', value: optimizeResult.best.profit_factor >= 999 ? '999+' : optimizeResult.best.profit_factor.toFixed(2), color: optimizeResult.best.profit_factor >= 1.5 ? '#1AA167' : '#D97706' }, { label: 'MAX DRAWDOWN', value: `-${optimizeResult.best.max_drawdown_pct.toFixed(2)}%`, color: '#E8003D' }].map((stat, i) => (
+                      {[{ label: 'RETURN', value: `${optimizeResult.best.total_return_pct >= 0 ? '+' : ''}${optimizeResult.best.total_return_pct.toFixed(2)}%`, color: optimizeResult.best.total_return_pct >= 0 ? '#1AA167' : '#E8003D' }, { label: 'WIN RATE', value: `${optimizeResult.best.win_rate.toFixed(1)}%`, color: optimizeResult.best.win_rate >= 50 ? '#1AA167' : '#D97706' }, { label: 'PROFIT FACTOR', value: optimizeResult.best.profit_factor >= 999 ? '999+' : optimizeResult.best.profit_factor.toFixed(2), color: optimizeResult.best.profit_factor >= 1.5 ? '#1AA167' : '#D97706' }, { label: 'MAX DRAWDOWN', value: `-${optimizeResult.best.max_drawdown_pct.toFixed(2)}%`, color: '#E8003D' }].map((stat, i) => (
                         <div key={i} style={{ background: '#FFFFFF', border: '1px solid #DDDDDD', padding: '6px 8px' }}><div style={{ fontSize: 7, letterSpacing: '0.1em', color: '#999', textTransform: 'uppercase' }}>{stat.label}</div><div style={{ fontSize: 16, fontWeight: 700, color: stat.color, fontVariantNumeric: 'tabular-nums' }}>{stat.value}</div></div>
                       ))}
                     </div>
@@ -370,13 +370,13 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
 
       {/* Active Trading */}
       {(() => {
-        const runningStrategies = activeStrategies.filter(s => s.status === 'running')
-        const stoppedStrategies = activeStrategies.filter(s => s.status !== 'running')
+        const runningStrategiessss = activeStrategiessss.filter(s => s.status === 'running')
+        const stoppedStrategiessss = activeStrategiessss.filter(s => s.status !== 'running')
         return (
           <>
-            {runningStrategies.length > 0 && (
-              <div><div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', color: '#999', textTransform: 'uppercase', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}><div style={{ width: 4, height: 4, borderRadius: '50%', background: '#1AA167', boxShadow: '0 0 4px #1AA167' }} />AKTYWNE STRATEGIE ({runningStrategies.length})</div>
-                <div className="flex gap-2 overflow-x-auto pb-2">{runningStrategies.map(s => (
+            {runningStrategiessss.length > 0 && (
+              <div><div style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', color: '#999', textTransform: 'uppercase', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}><div style={{ width: 4, height: 4, borderRadius: '50%', background: '#1AA167', boxShadow: '0 0 4px #1AA167' }} />AKTYWNE STRATEGIE ({runningStrategiessss.length})</div>
+                <div className="flex gap-2 overflow-x-auto pb-2">{runningStrategiessss.map(s => (
                   <div key={`${s.strategyId}:${s.mode}`} style={{ border: '1px solid #DDDDDD', background: '#FFFFFF', padding: 8, minWidth: 200, flexShrink: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}><div style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', background: s.mode === 'demo' ? '#3B82F6' : '#E8003D' }}>{s.mode === 'demo' ? <FlaskConical className="size-2.5 text-white" /> : <DollarSign className="size-2.5 text-white" />}</div><div style={{ minWidth: 0 }}><div style={{ display: 'flex', alignItems: 'center', gap: 3 }}><span style={{ fontSize: 9, fontWeight: 700, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name}</span>{s.inPosition && <span style={{ fontSize: 6, background: '#D97706', color: '#FFF', padding: '1px 3px', letterSpacing: '0.08em' }}>POS</span>}</div><div style={{ fontSize: 7, color: '#999', letterSpacing: '0.04em' }}>{s.symbol} · {s.mode.toUpperCase()}</div></div></div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 8 }}><span style={{ fontWeight: 700, color: s.totalPnl >= 0 ? '#1AA167' : '#E8003D' }}>${s.totalPnl.toFixed(2)}</span><span style={{ color: '#999' }}>{s.totalTrades}t · {s.totalTrades > 0 ? ((s.winningTrades / s.totalTrades) * 100).toFixed(0) : 0}%</span></div>
@@ -384,8 +384,8 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
                 ))}</div>
               </div>
             )}
-            {stoppedStrategies.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto" style={{ marginTop: 6 }}>{stoppedStrategies.map(s => (
+            {stoppedStrategiessss.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto" style={{ marginTop: 6 }}>{stoppedStrategiessss.map(s => (
                 <div key={`${s.strategyId}:${s.mode}`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 8, color: '#999', border: '1px solid #E8E8E8', padding: '3px 8px', flexShrink: 0, letterSpacing: '0.04em' }}><span style={{ fontWeight: 600 }}>{s.name}</span><span>PnL: <span style={{ color: s.totalPnl >= 0 ? '#1AA167' : '#E8003D' }}>${s.totalPnl.toFixed(2)}</span></span></div>
               ))}</div>
             )}
@@ -399,11 +399,11 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
           <StrategyCard key={strategy.id} strategy={strategy} result={results.get(strategy.id) || null}
             onEdit={() => { setEditingId(strategy.id); setEditForm({ ...strategy }) }} onDelete={() => deleteStrategy(strategy.id)}
             isEditing={editingId === strategy.id} editForm={editForm} onEditFormChange={setEditForm} onSave={saveStrategy}
-            onCancel={() => { setEditingId(null); setEditForm(null) }} activeInfo={activeStrategies} activatingKey={activatingStrategy}
+            onCancel={() => { setEditingId(null); setEditForm(null) }} activeInfo={activeStrategiessss} activatingKey={activatingStrategy}
             onActivate={activateStrategy} onDeactivate={deactivateStrategyHandler} onRetry={retryStrategy} />
         ))}
         <button onClick={addStrategy} style={{ border: '1px dashed #FF6600', background: '#FFFFFF', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#FF6600', cursor: 'pointer', minHeight: 200, fontFamily: 'inherit' }}>
-          <Plus className="size-6" style={{ color: '#FF6600' }} /><span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#FF6600' }}>Dodaj strategię</span>
+          <Plus className="size-6" style={{ color: '#FF6600' }} /><span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#FF6600' }}>Add strategy</span>
         </button>
       </div>
     </div>
@@ -434,17 +434,17 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
         </div>
         <div style={{ padding: '10px 14px' }}>
           <div><Label className="text-xs">Typ strategii</Label><Select value={currentType} onValueChange={handleTypeChange}><SelectTrigger className="h-8"><SelectValue /></SelectTrigger><SelectContent>{STRATEGY_TYPE_OPTIONS.map(t => { const Icon = t.icon; return <SelectItem key={t.id} value={t.id}><div className="flex items-center gap-2"><Icon className="size-3.5" /><span>{t.label}</span></div></SelectItem> })}</SelectContent></Select></div>
-          <div><Label className="text-xs">Moneta</Label><Select value={editForm.coin_id} onValueChange={v => onEditFormChange({ ...editForm, coin_id: v })}><SelectTrigger className="h-8"><SelectValue /></SelectTrigger><SelectContent>{COIN_OPTIONS.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}</SelectContent></Select></div>
+          <div><Label className="text-xs">Coin</Label><Select value={editForm.coin_id} onValueChange={v => onEditFormChange({ ...editForm, coin_id: v })}><SelectTrigger className="h-8"><SelectValue /></SelectTrigger><SelectContent>{COIN_OPTIONS.map(c => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}</SelectContent></Select></div>
           {(currentType === 'dip_buying') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Dip 1h (%)</Label><Input type="number" value={editForm.dip_threshold_1h} onChange={e => onEditFormChange({ ...editForm, dip_threshold_1h: Number(e.target.value) })} className="h-8" /></div><div><Label className="text-xs">Dip 24h (%)</Label><Input type="number" value={editForm.dip_threshold_24h} onChange={e => onEditFormChange({ ...editForm, dip_threshold_24h: Number(e.target.value) })} className="h-8" /></div></div>}
-          {(currentType === 'momentum') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Okres MA</Label><Input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="h-8" min={2} /></div><div><Label className="text-xs">Próg wolumenu</Label><Input type="number" value={editForm.volume_threshold} onChange={e => onEditFormChange({ ...editForm, volume_threshold: Number(e.target.value) })} className="h-8" step={0.1} min={0.1} /></div></div>}
-          {(currentType === 'mean_reversion') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Okres MA</Label><Input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="h-8" min={2} /></div><div><Label className="text-xs">Próg odchylenia (σ)</Label><Input type="number" value={editForm.deviation_threshold} onChange={e => onEditFormChange({ ...editForm, deviation_threshold: Number(e.target.value) })} className="h-8" step={0.5} min={0.5} /></div></div>}
+          {(currentType === 'momentum') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">MA period</Label><Input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="h-8" min={2} /></div><div><Label className="text-xs">Volume threshold</Label><Input type="number" value={editForm.volume_threshold} onChange={e => onEditFormChange({ ...editForm, volume_threshold: Number(e.target.value) })} className="h-8" step={0.1} min={0.1} /></div></div>}
+          {(currentType === 'mean_reversion') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">MA period</Label><Input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="h-8" min={2} /></div><div><Label className="text-xs">Deviation threshold (σ)</Label><Input type="number" value={editForm.deviation_threshold} onChange={e => onEditFormChange({ ...editForm, deviation_threshold: Number(e.target.value) })} className="h-8" step={0.5} min={0.5} /></div></div>}
           {(currentType === 'breakout') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Okresy lookback</Label><Input type="number" value={editForm.lookback_periods} onChange={e => onEditFormChange({ ...editForm, lookback_periods: Number(e.target.value) })} className="h-8" min={2} /></div><div><Label className="text-xs">Paski potwierdzenia</Label><Input type="number" value={editForm.breakout_confirm_bars} onChange={e => onEditFormChange({ ...editForm, breakout_confirm_bars: Number(e.target.value) })} className="h-8" min={1} /></div></div>}
-          {(currentType === 'grid') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Odstęp siatki (%)</Label><Input type="number" value={editForm.grid_spacing_pct} onChange={e => onEditFormChange({ ...editForm, grid_spacing_pct: Number(e.target.value) })} className="h-8" step={0.5} min={0.5} /></div><div><Label className="text-xs">Poziomy siatki</Label><Input type="number" value={editForm.grid_levels} onChange={e => onEditFormChange({ ...editForm, grid_levels: Number(e.target.value) })} className="h-8" min={2} /></div></div>}
+          {(currentType === 'grid') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Grid spacing (%)</Label><Input type="number" value={editForm.grid_spacing_pct} onChange={e => onEditFormChange({ ...editForm, grid_spacing_pct: Number(e.target.value) })} className="h-8" step={0.5} min={0.5} /></div><div><Label className="text-xs">Grid levels</Label><Input type="number" value={editForm.grid_levels} onChange={e => onEditFormChange({ ...editForm, grid_levels: Number(e.target.value) })} className="h-8" min={2} /></div></div>}
           {(currentType === 'hurst_hcoo_lb') && <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Okres Hurst</Label><Input type="number" value={editForm.hurst_period} onChange={e => onEditFormChange({ ...editForm, hurst_period: Number(e.target.value) })} className="h-8" /></div><div><Label className="text-xs">H prog (0.1-0.9)</Label><Input type="number" step={0.05} value={editForm.hurst_threshold} onChange={e => onEditFormChange({ ...editForm, hurst_threshold: Number(e.target.value) })} className="h-8" /></div><div><Label className="text-xs">BB okres</Label><Input type="number" value={editForm.bb_period} onChange={e => onEditFormChange({ ...editForm, bb_period: Number(e.target.value) })} className="h-8" /></div><div><Label className="text-xs">BB σ</Label><Input type="number" step={0.5} value={editForm.bb_std} onChange={e => onEditFormChange({ ...editForm, bb_std: Number(e.target.value) })} className="h-8" /></div></div>}
           <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Take Profit (%)</Label><Input type="number" value={editForm.take_profit_pct} onChange={e => onEditFormChange({ ...editForm, take_profit_pct: Number(e.target.value) })} step={0.5} className="h-8" /></div><div><Label className="text-xs">Stop Loss (%)</Label><Input type="number" value={editForm.stop_loss_pct} onChange={e => onEditFormChange({ ...editForm, stop_loss_pct: Number(e.target.value) })} step={0.5} className="h-8" /></div></div>
           <div className="grid grid-cols-3 gap-2"><div><Label className="text-xs">Max hold (h)</Label><Input type="number" value={editForm.max_holding_hours} onChange={e => onEditFormChange({ ...editForm, max_holding_hours: Number(e.target.value) })} className="h-8" /></div><div><Label className="text-xs">Fee (%)</Label><Input type="number" value={editForm.fee_pct} onChange={e => onEditFormChange({ ...editForm, fee_pct: Number(e.target.value) })} step={0.01} className="h-8" /></div><div><Label className="text-xs">Dni</Label><Input type="number" value={editForm.days} onChange={e => onEditFormChange({ ...editForm, days: Number(e.target.value) })} className="h-8" /></div></div>
-          <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Kapitał ($)</Label><Input type="number" value={editForm.initial_capital} onChange={e => onEditFormChange({ ...editForm, initial_capital: Number(e.target.value) })} className="h-8" /></div><div className="flex items-end gap-2 pb-0.5"><Switch checked={editForm.compound} onCheckedChange={v => onEditFormChange({ ...editForm, compound: v })} /><Label className="text-xs">Compound</Label></div></div>
-          <div className="border-t pt-2 mt-1"><div className="flex items-center gap-2 mb-2"><Thermometer className="size-3.5 text-orange-500" /><Label className="text-xs font-medium">Trailing Stop-Loss</Label><span className="text-[10px] text-muted-foreground">(0 = wyłączony)</span></div><div><Label className="text-xs">Trailing SL (%)</Label><Input type="number" value={editForm.trailing_stop_pct} onChange={e => onEditFormChange({ ...editForm, trailing_stop_pct: Number(e.target.value) })} step={0.5} min={0} className="h-8" /></div></div>
+          <div className="grid grid-cols-2 gap-2"><div><Label className="text-xs">Capital ($)</Label><Input type="number" value={editForm.initial_capital} onChange={e => onEditFormChange({ ...editForm, initial_capital: Number(e.target.value) })} className="h-8" /></div><div className="flex items-end gap-2 pb-0.5"><Switch checked={editForm.compound} onCheckedChange={v => onEditFormChange({ ...editForm, compound: v })} /><Label className="text-xs">Compound</Label></div></div>
+          <div className="border-t pt-2 mt-1"><div className="flex items-center gap-2 mb-2"><Thermometer className="size-3.5 text-orange-500" /><Label className="text-xs font-medium">Trailing Stop-Loss</Label><span className="text-[10px] text-muted-foreground">(0 = disabled)</span></div><div><Label className="text-xs">Trailing SL (%)</Label><Input type="number" value={editForm.trailing_stop_pct} onChange={e => onEditFormChange({ ...editForm, trailing_stop_pct: Number(e.target.value) })} step={0.5} min={0} className="h-8" /></div></div>
           <div style={{ display: 'flex', gap: 4, paddingTop: 4 }}><button onClick={onSave} style={{ flex: 1, fontFamily: 'inherit', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 0', background: '#FF6600', border: 'none', color: '#000', cursor: 'pointer' }}>Zapisz</button><button onClick={onCancel} style={{ fontFamily: 'inherit', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px', background: 'transparent', border: '1px solid #DDDDDD', color: '#666', cursor: 'pointer' }}>Anuluj</button></div>
         </div>
       </div>
@@ -485,16 +485,16 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           {strategy.strategy_type === 'momentum' && <><div><span className="text-muted-foreground">MA okres:</span> <span className="font-medium">{strategy.ma_period}</span></div><div><span className="text-muted-foreground">Wolumen:</span> <span className="font-medium">{strategy.volume_threshold}x</span></div></>}
           {strategy.strategy_type === 'mean_reversion' && <><div><span className="text-muted-foreground">MA okres:</span> <span className="font-medium">{strategy.ma_period}</span></div><div><span className="text-muted-foreground">Odchylenie:</span> <span className="font-medium">{strategy.deviation_threshold}σ</span></div></>}
           {strategy.strategy_type === 'breakout' && <><div><span className="text-muted-foreground">Lookback:</span> <span className="font-medium">{strategy.lookback_periods}</span></div><div><span className="text-muted-foreground">Potwierdzenie:</span> <span className="font-medium">{strategy.breakout_confirm_bars} bar</span></div></>}
-          {strategy.strategy_type === 'grid' && <><div><span className="text-muted-foreground">Odstęp:</span> <span className="font-medium">{strategy.grid_spacing_pct}%</span></div><div><span className="text-muted-foreground">Poziomy:</span> <span className="font-medium">{strategy.grid_levels}</span></div></>}
+          {strategy.strategy_type === 'grid' && <><div><span className="text-muted-foreground">Spacing:</span> <span className="font-medium">{strategy.grid_spacing_pct}%</span></div><div><span className="text-muted-foreground">Levels:</span> <span className="font-medium">{strategy.grid_levels}</span></div></>}
           {strategy.strategy_type === 'hurst_hcoo_lb' && <><div><span className="text-muted-foreground">Hurst ok:</span> <span className="font-medium">{strategy.hurst_period}</span></div><div><span className="text-muted-foreground">H prog:</span> <span className="font-medium">{strategy.hurst_threshold}</span></div><div><span className="text-muted-foreground">BB:</span> <span className="font-medium">{strategy.bb_period}/{strategy.bb_std}σ</span></div></>}
           <div><span className="text-muted-foreground">TP:</span> <span className="font-medium text-emerald-600">+{strategy.take_profit_pct}%</span></div>
           <div><span className="text-muted-foreground">SL:</span> <span className="font-medium text-red-600">-{strategy.stop_loss_pct}%</span></div>
           <div><span className="text-muted-foreground">Hold:</span> <span className="font-medium">{strategy.max_holding_hours}h</span></div>
           <div><span className="text-muted-foreground">Fee:</span> <span className="font-medium">{strategy.fee_pct}%</span></div>
-          <div><span className="text-muted-foreground">Kapitał:</span> <span className="font-medium">${strategy.initial_capital}</span></div>
+          <div><span className="text-muted-foreground">Capital:</span> <span className="font-medium">${strategy.initial_capital}</span></div>
           <div><span className="text-muted-foreground">Dni:</span> <span className="font-medium">{strategy.days}</span></div>
           <div><span className="text-muted-foreground">Compound:</span> <span className="font-medium">{strategy.compound ? 'Tak' : 'Nie'}</span></div>
-          <div><span className="text-muted-foreground">Trailing SL:</span> <span className="font-medium">{strategy.trailing_stop_pct > 0 ? `${strategy.trailing_stop_pct}%` : 'Wyłączony'}</span></div>
+          <div><span className="text-muted-foreground">Trailing SL:</span> <span className="font-medium">{strategy.trailing_stop_pct > 0 ? `${strategy.trailing_stop_pct}%` : 'Disabled'}</span></div>
           <div><span className="text-muted-foreground">Slippage:</span> <span className="font-medium text-amber-500">{(strategy.slippage_pct ?? 0.05).toFixed(2)}%</span></div>
           <div><span className="text-muted-foreground">Wick sim:</span> <span className={`font-medium ${strategy.simulate_wicks !== false ? 'text-emerald-500' : 'text-red-500'}`}>{strategy.simulate_wicks !== false ? 'TAK' : 'NIE'}</span></div>
         </div>
@@ -502,7 +502,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
         {result?.error && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, fontSize: 8, color: '#E8003D', paddingTop: 6, borderTop: '1px solid #DDDDDD' }}><div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><AlertTriangle className="size-3 shrink-0" /><span>{result.error}</span>{result.retryCount && result.retryCount > 0 && <span style={{ color: '#999' }}>({result.retryCount}x retry)</span>}</div><button onClick={() => onRetry(strategy.id)} style={{ fontFamily: 'inherit', fontSize: 7, letterSpacing: '0.08em', textTransform: 'uppercase', background: 'transparent', border: '1px solid #3B82F6', color: '#3B82F6', padding: '2px 5px', cursor: 'pointer' }}>Retry</button></div>}
         {result?.data && (
           <div className="grid grid-cols-2 gap-1" style={{ paddingTop: 6, borderTop: '1px solid #DDDDDD' }}>
-            {[{ label: 'ZWROT', value: `${result.data.results.total_return_pct >= 0 ? '+' : ''}${result.data.results.total_return_pct.toFixed(2)}%`, color: result.data.results.total_return_pct >= 0 ? '#1AA167' : '#E8003D' }, { label: 'WIN RATE', value: `${result.data.results.win_rate.toFixed(1)}%`, color: result.data.results.win_rate >= 50 ? '#1AA167' : '#D97706' }, { label: 'MAX DD', value: `-${result.data.results.max_drawdown_pct.toFixed(2)}%`, color: '#E8003D' }, { label: 'SHARPE', value: result.data.results.sharpe_ratio.toFixed(2), color: result.data.results.sharpe_ratio >= 1 ? '#1AA167' : '#D97706' }, { label: "TRADE'Y", value: String(result.data.results.total_trades), color: '#111' }, { label: 'KAPITAŁ', value: `$${result.data.results.final_capital.toFixed(0)}`, color: result.data.results.final_capital > (result.data.parameters?.initial_capital as number ?? 0) ? '#1AA167' : '#E8003D' }].map((stat, i) => (
+            {[{ label: 'RETURN', value: `${result.data.results.total_return_pct >= 0 ? '+' : ''}${result.data.results.total_return_pct.toFixed(2)}%`, color: result.data.results.total_return_pct >= 0 ? '#1AA167' : '#E8003D' }, { label: 'WIN RATE', value: `${result.data.results.win_rate.toFixed(1)}%`, color: result.data.results.win_rate >= 50 ? '#1AA167' : '#D97706' }, { label: 'MAX DD', value: `-${result.data.results.max_drawdown_pct.toFixed(2)}%`, color: '#E8003D' }, { label: 'SHARPE', value: result.data.results.sharpe_ratio.toFixed(2), color: result.data.results.sharpe_ratio >= 1 ? '#1AA167' : '#D97706' }, { label: "TRADES", value: String(result.data.results.total_trades), color: '#111' }, { label: 'CAPITAL', value: `$${result.data.results.final_capital.toFixed(0)}`, color: result.data.results.final_capital > (result.data.parameters?.initial_capital as number ?? 0) ? '#1AA167' : '#E8003D' }].map((stat, i) => (
               <div key={i} style={{ background: '#F5F5F5', border: '1px solid #E8E8E8', padding: '4px 6px', textAlign: 'center' }}><div style={{ fontSize: 6, letterSpacing: '0.1em', color: '#999', textTransform: 'uppercase' }}>{stat.label}</div><div style={{ fontSize: 14, fontWeight: 700, color: stat.color, fontVariantNumeric: 'tabular-nums' }}>{stat.value}</div></div>
             ))}
           </div>

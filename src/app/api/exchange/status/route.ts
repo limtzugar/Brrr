@@ -61,9 +61,9 @@ export async function GET() {
       readyForTrading: hasDemo || hasReal,
       exchanges: results,
       hint: !results.length
-        ? 'Dodaj klucze API w Ustawieniach → Bybit Demo (testnet.bybit.com)'
+        ? 'Dodaj klucze API w Settingsch → Bybit Demo (testnet.bybit.com)'
         : !hasDemo && !hasReal
-          ? 'Klucze skonfigurowane ale połączenie nie działa — sprawdź uprawnienia API'
+          ? 'Keys configured but connection failed — check API permissions'
           : null,
     })
   } catch (error) {

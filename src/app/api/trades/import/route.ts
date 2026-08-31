@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     const clearExisting: boolean = body.clearExisting === true
 
     if (!csvText.trim()) {
-      return NextResponse.json({ error: 'Brak danych CSV' }, { status: 400 })
+      return NextResponse.json({ error: 'No CSV data' }, { status: 400 })
     }
 
     if (clearExisting) {

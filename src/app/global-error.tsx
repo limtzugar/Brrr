@@ -20,8 +20,8 @@ export default function GlobalError({
   console.error('[GlobalError] Unhandled client error:', error?.message, error?.stack)
 
   return (
-    <html lang="pl">
-      <body style={{ margin: 0, padding: 0, background: '#0a0a0a' }}>
+    <html lang="en" className="dark">
+      <body style={{ margin: 0, padding: 0, background: '#0a0a0a' }} className="dark">
         <div style={{
           minHeight: '100vh',
           background: '#0a0a0a',

@@ -228,7 +228,7 @@ export async function GET(request: Request) {
       })
     }
     return NextResponse.json(
-      { error: 'Błąd pobierania danych z Binance', anomalies: [] },
+      { error: 'Failed to fetch data of Binance', anomalies: [] },
       { status: 502 }
     )
   }

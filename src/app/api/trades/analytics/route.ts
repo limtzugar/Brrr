@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     if (trades.length === 0) {
       return NextResponse.json({
         total: 0,
-        message: 'Brak zaimportowanych transakcji. Użyj Import CSV.',
+        message: 'No imported transactions. Use Import CSV.',
       })
     }
 

@@ -5,17 +5,13 @@
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'crypto'
 
 const ALGORITHM = 'aes-256-gcm'
-const IV_LENGTH = 16
+const IV_LENGTH = 12 // NIST SP 800-38D recommended 12-byte IV for GCM (hardware accelerated)
 const AUTH_TAG_LENGTH = 16
 
 function getEncryptionKey(): Buffer {
   const secret = process.env.ENCRYPTION_KEY
   if (!secret) {
     if (process.env.NODE_ENV === 'production') {
-      // SECURITY: fail closed — the hardcoded dev key lets anyone with the source
-      // decrypt exchange API keys from the database.
-      // NOTE: keys previously stored with the dev key must be RE-ENTERED after
-      // setting ENCRYPTION_KEY (they are not migratable by design).
       throw new Error(
         'ENCRYPTION_KEY env var not set — refusing to encrypt/decrypt in production. ' +
         'Set it in .env; API keys stored with the dev key must be re-entered.'
@@ -24,7 +20,10 @@ function getEncryptionKey(): Buffer {
     console.warn('[ENCRYPTION] ENCRYPTION_KEY not set — using INSECURE dev key (development only)')
   }
   const keySource = secret || 'trading-dev-key-change-in-production-32ch'
-  return scryptSync(keySource, 'trading-salt', 32)
+  // Per-deployment salt: ENCRYPTION_SALT env var, else deterministic but isolated per ENCRYPTION_KEY
+  // Previously hardcoded 'trading-salt' meant every install with same ENCRYPTION_KEY derived same AES key.
+  const salt = process.env.ENCRYPTION_SALT || `brrr-${keySource.slice(0, 8)}-salt`
+  return scryptSync(keySource, salt, 32, { N: 16384, r: 8, p: 1, maxmem: 32 * 1024 * 1024 })
 }
 
 export function encrypt(plaintext: string): string {

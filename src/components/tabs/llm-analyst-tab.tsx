@@ -168,7 +168,7 @@ export default function LlmAnalystTab() {
       setExpandedCards({})
       await refreshAll()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Błąd analizy')
+      setError(err instanceof Error ? err.message : 'Error analizy')
     } finally { setAnalyzing(false) }
   }, [config, refreshAll])
 
@@ -202,10 +202,10 @@ export default function LlmAnalystTab() {
           horizon: wfHorizon, foldCount: wfFolds, feePct: 0.1, slippagePct: 0.05,
         }),
       })
-      if (!res.ok) throw new Error((await res.json().catch(() => ({ error: 'Błąd' }))).error)
+      if (!res.ok) throw new Error((await res.json().catch(() => ({ error: 'Error' }))).error)
       await refreshAll()
     } catch (err) {
-      setWfError(err instanceof Error ? err.message : 'Błąd walk-forward')
+      setWfError(err instanceof Error ? err.message : 'Error walk-forward')
     } finally { setWfRunning(false) }
   }
 
@@ -290,7 +290,7 @@ export default function LlmAnalystTab() {
         <div className="rounded-sm px-3 py-3 flex items-start gap-2" style={{ background: `${te.orange}10`, border: `1px solid ${te.orange}33` }}>
           <AlertTriangle className="size-4 shrink-0 mt-0.5" style={{ color: te.orange }} />
           <div className="text-[11px] font-mono" style={{ color: te.text }}>
-            <strong style={{ color: te.orange }}>Wymagana konfiguracja LLM.</strong> Otwórz Ustawienia → sekcja „LLM Analyst".
+            <strong style={{ color: te.orange }}>Wymagana konfiguracja LLM.</strong> Otwórz Settings → sekcja „LLM Analyst".
           </div>
         </div>
       )}
@@ -349,7 +349,7 @@ export default function LlmAnalystTab() {
                   )}
                   {strat.weaknesses.length > 0 && (
                     <div>
-                      <div className="text-[9px] font-bold mb-0.5 uppercase" style={{ color: te.red }}>Słabości</div>
+                      <div className="text-[9px] font-bold mb-0.5 uppercase" style={{ color: te.red }}>Weaknesses</div>
                       {strat.weaknesses.map((w, i) => <div key={i} className="text-[9px] font-mono" style={{ color: te.textMuted }}>- {w}</div>)}
                     </div>
                   )}
@@ -461,7 +461,7 @@ export default function LlmAnalystTab() {
                             <div className="flex items-center gap-1 shrink-0">
                               <button onClick={() => promoteConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.green}20`, color: te.green }} title="Awansuj do CONVICTION">✓</button>
                               <button onClick={() => rejectConviction(c.id)} className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase" style={{ background: `${te.red}20`, color: te.red }} title="Odrzuć">✗</button>
-                              <button onClick={() => deleteConviction(c.id)} style={{ color: te.textDim }} title="Usuń"><Trash2 className="size-3" /></button>
+                              <button onClick={() => deleteConviction(c.id)} style={{ color: te.textDim }} title="Delete"><Trash2 className="size-3" /></button>
                             </div>
                           </div>
                         ))}
@@ -542,7 +542,7 @@ export default function LlmAnalystTab() {
           <div className="px-3 pb-2 space-y-1" style={{ borderTop: `1px solid ${te.border}`, maxHeight: 400, overflowY: 'auto' }}>
             {shadowEvals.length === 0 ? (
               <div className="text-[10px] font-mono py-4 text-center" style={{ color: te.textDim }}>
-                Brak ocen shadow. Uruchom strategie w tle, a shadow automatycznie oceni każdą decyzję ENTER.
+                No ocen shadow. Uruchom strategie w tle, a shadow automatycznie oceni każdą decyzję ENTER.
               </div>
             ) : (
               shadowEvals.map(e => (

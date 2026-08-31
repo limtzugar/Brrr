@@ -17,7 +17,7 @@ const CACHE_TTL = 60_000 // 1 minute
 
 // Yahoo Finance symbol mappings
 const YAHOO_SYMBOLS: Record<string, { yahooSymbol: string; name: string; currency: string }> = {
-  gold: { yahooSymbol: 'GC=F', name: 'Złoto', currency: 'USD' },
+  gold: { yahooSymbol: 'GC=F', name: 'Gold', currency: 'USD' },
   nasdaq: { yahooSymbol: '^IXIC', name: 'NASDAQ', currency: 'USD' },
   sp500: { yahooSymbol: '^GSPC', name: 'S&P 500', currency: 'USD' },
   silver: { yahooSymbol: 'SI=F', name: 'Srebro', currency: 'USD' },
@@ -124,7 +124,7 @@ export async function GET(request: Request) {
     const result: Record<string, { price: number; change: number; changePercent: number; symbol: string; name: string }> = {}
 
     if (goldData) {
-      result.gold = { ...goldData, symbol: 'XAU/USD', name: 'Złoto' }
+      result.gold = { ...goldData, symbol: 'XAU/USD', name: 'Gold' }
     }
     if (nasdaqData) {
       result.nasdaq = { ...nasdaqData, symbol: 'NASDAQ', name: 'NASDAQ' }
@@ -153,7 +153,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ tickers: cachedData.data, cached: true, stale: true })
     }
     return NextResponse.json(
-      { error: 'Błąd pobierania kursów rynkowych', tickers: {} },
+      { error: 'Failed to fetch market rates', tickers: {} },
       { status: 500 }
     )
   }

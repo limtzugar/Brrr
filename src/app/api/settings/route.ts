@@ -27,7 +27,7 @@ export async function GET() {
     })
   } catch (error) {
     console.error('[/api/settings] GET error:', error)
-    return NextResponse.json({ error: 'Błąd pobierania ustawień' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 })
   }
 }
 
@@ -41,7 +41,7 @@ export async function PATCH(request: Request) {
     const { key, value } = body
 
     if (!key || value === undefined) {
-      return NextResponse.json({ error: 'Brak key lub value' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing key or value' }, { status: 400 })
     }
 
     // SECURITY: allowlist — arbitrary key/value upsert could overwrite internal
@@ -57,7 +57,7 @@ export async function PATCH(request: Request) {
     if (!isAllowed) {
       return NextResponse.json(
         {
-          error: `Klucz '${String(key).slice(0, 64)}' nie jest dozwolony`,
+          error: `Key '${String(key).slice(0, 64)}' is not allowed`,
           allowedKeys: [...ALLOWED_KEYS],
           allowedPrefixes: ALLOWED_PREFIXES,
         },
@@ -87,6 +87,6 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ success: true, key: setting.key, value: setting.value })
   } catch (error) {
     console.error('[/api/settings] PATCH error:', error)
-    return NextResponse.json({ error: 'Błąd aktualizacji ustawień' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 })
   }
 }

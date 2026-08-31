@@ -23,7 +23,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createBybitClient, type BybitMode } from '@/lib/bybit'
-import { checkRateLimit } from '@/lib/rate-limit'
+import { checkRateLimitAsync } from '@/lib/rate-limit'
+import { futuresOpenSchema } from '@/lib/validation'
 import {
   getCachedInstrument,
   setCachedInstrumentFromRaw,
@@ -60,8 +61,8 @@ const MAX_ORDER_RETRIES = 1  // Only 1 retry — after that price has likely mov
 const RETRY_BASE_DELAY = 1000 // 1s delay before single retry
 
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown'
-  const rateResult = checkRateLimit(ip, 20, 60_000)
+  const ip = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for')?.split(',').pop()?.trim() || 'unknown'
+  const rateResult = await checkRateLimitAsync(`bybit-open:${ip}`, 10, 60_000)
   if (!rateResult.allowed) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   }
@@ -69,40 +70,11 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now()
 
   try {
-    const body = await request.json() as OpenRequest
-    const { symbol, side, leverage, size, mode, stopLossPrice, takeProfitPrice } = body
-
-    // ── Validate ──
-    if (!symbol || !side || !leverage || !size || !mode) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields: symbol, side, leverage, size, mode' },
-        { status: 400 }
-      )
+    const parsed = futuresOpenSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      return NextResponse.json({ success: false, error: parsed.error.issues[0]?.message || 'Validation failed' }, { status: 400 })
     }
-    if (!['Buy', 'Sell'].includes(side)) {
-      return NextResponse.json(
-        { success: false, error: 'Side must be "Buy" or "Sell"' },
-        { status: 400 }
-      )
-    }
-    if (!['demo', 'real'].includes(mode)) {
-      return NextResponse.json(
-        { success: false, error: 'Mode must be "demo" or "real"' },
-        { status: 400 }
-      )
-    }
-    if (leverage < 1 || leverage > 100) {
-      return NextResponse.json(
-        { success: false, error: 'Leverage must be 1-100' },
-        { status: 400 }
-      )
-    }
-    if (size < 1) {
-      return NextResponse.json(
-        { success: false, error: 'Size must be at least $1' },
-        { status: 400 }
-      )
-    }
+    const { symbol, side, leverage, size, mode, stopLossPrice, takeProfitPrice } = parsed.data
 
     const client = await createBybitClient(mode)
 
@@ -472,7 +444,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     logError('[/api/bybit/futures/open] error:', error.message)
     return NextResponse.json(
-      { success: false, error: error.message, latency: Date.now() - startTime },
+      { success: false, error: 'Failed to open position', latency: Date.now() - startTime },
       { status: 500 }
     )
   }

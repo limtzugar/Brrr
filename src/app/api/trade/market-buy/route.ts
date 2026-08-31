@@ -23,16 +23,16 @@ export async function POST(request: NextRequest) {
 
     // Validation
     if (!coinId || !symbol) {
-      return NextResponse.json({ error: 'Brak ID monety lub symbolu' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing coin ID or symbol' }, { status: 400 })
     }
     if (!exchange || !['bybit', 'mexc'].includes(exchange)) {
-      return NextResponse.json({ error: 'Nieobsługiwana giełda' }, { status: 400 })
+      return NextResponse.json({ error: 'Unsupported exchange' }, { status: 400 })
     }
     if (!mode || !['demo', 'real'].includes(mode)) {
-      return NextResponse.json({ error: 'Nieprawidłowy tryb' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid mode' }, { status: 400 })
     }
     if (!amountUsdt || amountUsdt <= 0) {
-      return NextResponse.json({ error: 'Kwota musi być większa niż 0' }, { status: 400 })
+      return NextResponse.json({ error: 'Amount must be greater than 0' }, { status: 400 })
     }
     // Cap at $10000 to prevent fat-finger
     if (amountUsdt > 10000) {
@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
       // We need to calculate base qty from USDT amount + current price
       const ticker = await client.getTicker(bybitSymbol)
       if (!ticker || !ticker.lastPrice) {
-        return NextResponse.json({ error: `Nie udało się pobrać ceny ${bybitSymbol} z Bybit` }, { status: 404 })
+        return NextResponse.json({ error: `Failed to fetch price for ${bybitSymbol} of Bybit` }, { status: 404 })
       }
       const price = Number(ticker.lastPrice)
       if (price <= 0) {
-        return NextResponse.json({ error: `Nieprawidłowa cena ${bybitSymbol}: ${price}` }, { status: 400 })
+        return NextResponse.json({ error: `Invalid price ${bybitSymbol}: ${price}` }, { status: 400 })
       }
       // Calculate quantity in base currency
       const qty = amountUsdt / price
@@ -94,9 +94,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    return NextResponse.json({ error: 'Nieobsługiwana giełda' }, { status: 400 })
+    return NextResponse.json({ error: 'Unsupported exchange' }, { status: 400 })
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Nieznany błąd'
+    const message = err instanceof Error ? err.message : 'Unknown error'
     console.error('[Market Buy] Error:', message)
     return NextResponse.json({ error: message }, { status: 500 })
   }

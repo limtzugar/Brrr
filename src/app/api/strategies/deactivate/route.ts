@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const rateResult = checkRateLimit(ip, 10, 60 * 1000)
     if (!rateResult.allowed) {
       return NextResponse.json(
-        { error: 'Zbyt wiele żądań.' },
+        { error: 'Too many requests.' },
         { status: 429 }
       )
     }
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[/api/strategies/deactivate] Error:', error)
     return NextResponse.json(
-      { error: 'Błąd dezaktywacji strategii.' },
+      { error: 'Failed to deactivate strategy.' },
       { status: 500 }
     )
   }

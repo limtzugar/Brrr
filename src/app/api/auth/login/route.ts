@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const configuredKey = process.env.BRRR_API_KEY
   if (!configuredKey) {
     return NextResponse.json(
-      { error: 'BRRR_API_KEY nie jest skonfigurowany na serwerze.' },
+      { error: 'BRRR_API_KEY nie jest skonfigurowany on serwerze.' },
       { status: 503 },
     )
   }
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const apiKey = typeof body?.apiKey === 'string' ? body.apiKey : ''
   if (!matchesSecret(apiKey, configuredKey)) {
     return NextResponse.json(
-      { error: 'Nieprawidłowy klucz dostępu.' },
+      { error: 'Invalid access key.' },
       { status: 401 },
     )
   }

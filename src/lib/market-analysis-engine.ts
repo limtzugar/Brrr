@@ -167,11 +167,11 @@ export const THEMES: Theme[] = [
       { id: 'ai_robotics', name: 'Robotyka', weight: 0.1 },
     ],
     companies: [
-      { symbol: 'NVDA', name: 'NVIDIA', marketCap: 2200, sector: 'Półprzewodniki', relevance: 0.95 },
+      { symbol: 'NVDA', name: 'NVIDIA', marketCap: 2200, sector: 'Semiconductors', relevance: 0.95 },
       { symbol: 'MSFT', name: 'Microsoft', marketCap: 2800, sector: 'Software', relevance: 0.9 },
       { symbol: 'GOOGL', name: 'Alphabet', marketCap: 1900, sector: 'Internet', relevance: 0.85 },
       { symbol: 'META', name: 'Meta', marketCap: 1200, sector: 'Social Media', relevance: 0.8 },
-      { symbol: 'AMD', name: 'AMD', marketCap: 250, sector: 'Półprzewodniki', relevance: 0.8 },
+      { symbol: 'AMD', name: 'AMD', marketCap: 250, sector: 'Semiconductors', relevance: 0.8 },
       { symbol: 'PLTR', name: 'Palantir', marketCap: 50, sector: 'Data Analytics', relevance: 0.75 },
       { symbol: 'SNOW', name: 'Snowflake', marketCap: 60, sector: 'Cloud Data', relevance: 0.7 },
       { symbol: 'MDB', name: 'MongoDB', marketCap: 20, sector: 'Databases', relevance: 0.65 },
@@ -184,7 +184,7 @@ export const THEMES: Theme[] = [
     pixelIcon: PIXEL_ICONS.health,
     subThemes: [
       { id: 'health_pharma', name: 'Pharma', weight: 0.35 },
-      { id: 'health_devices', name: 'Urządzenia medyczne', weight: 0.25 },
+      { id: 'health_devices', name: 'Medical devices', weight: 0.25 },
       { id: 'health_biotech', name: 'Biotech', weight: 0.2 },
       { id: 'health_insurance', name: 'Ubezpieczenia zdrowotne', weight: 0.2 },
     ],
@@ -224,7 +224,7 @@ export const THEMES: Theme[] = [
     pixelIcon: PIXEL_ICONS.military,
     subThemes: [
       { id: 'mil_aero', name: 'Lotnictwo wojskowe', weight: 0.35 },
-      { id: 'mil_cyber', name: 'Cyberbezpieczeństwo', weight: 0.25 },
+      { id: 'mil_cyber', name: 'Cybersecurity', weight: 0.25 },
       { id: 'mil_weapons', name: 'Uzbrojenie', weight: 0.25 },
       { id: 'mil_space', name: 'Space / Kosmos', weight: 0.15 },
     ],
@@ -243,8 +243,8 @@ export const THEMES: Theme[] = [
     color: '#10B981',
     pixelIcon: PIXEL_ICONS.finance,
     subThemes: [
-      { id: 'fin_banking', name: 'Bankowość', weight: 0.35 },
-      { id: 'fin_payments', name: 'Płatności', weight: 0.25 },
+      { id: 'fin_banking', name: 'Banking', weight: 0.35 },
+      { id: 'fin_payments', name: 'Payments', weight: 0.25 },
       { id: 'fin_insurance', name: 'Ubezpieczenia', weight: 0.2 },
       { id: 'fin_fintech', name: 'FinTech', weight: 0.2 },
     ],
@@ -264,7 +264,7 @@ export const THEMES: Theme[] = [
     pixelIcon: PIXEL_ICONS.infra,
     subThemes: [
       { id: 'infra_construction', name: 'Budownictwo', weight: 0.3 },
-      { id: 'infra_materials', name: 'Materiały', weight: 0.25 },
+      { id: 'infra_materials', name: 'Materials', weight: 0.25 },
       { id: 'infra_transport', name: 'Transport', weight: 0.25 },
       { id: 'infra_telecom', name: 'Telekomunikacja', weight: 0.2 },
     ],
@@ -279,14 +279,14 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'esg',
-    name: 'ESG / Zrównoważony Rozwój',
+    name: 'ESG / Sustainable Development',
     color: '#22C55E',
     pixelIcon: PIXEL_ICONS.esg,
     subThemes: [
       { id: 'esg_carbon', name: 'Redukcja CO2', weight: 0.3 },
       { id: 'esg_water', name: 'Gospodarka wodna', weight: 0.2 },
       { id: 'esg_waste', name: 'Recykling', weight: 0.25 },
-      { id: 'esg_social', name: 'Społeczna odpowiedzialność', weight: 0.25 },
+      { id: 'esg_social', name: 'Social responsibility', weight: 0.25 },
     ],
     companies: [
       { symbol: 'TSLA', name: 'Tesla', marketCap: 800, sector: 'EV', relevance: 0.9 },
@@ -319,14 +319,14 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'semi',
-    name: 'Półprzewodniki / Semiconductors',
+    name: 'Semiconductors / Semiconductors',
     color: '#3B82F6',
     pixelIcon: PIXEL_ICONS.semi,
     subThemes: [
       { id: 'semi_design', name: 'Projektowanie chipów', weight: 0.3 },
       { id: 'semi_fab', name: 'Fabrykacja', weight: 0.3 },
       { id: 'semi_equipment', name: 'Equipment', weight: 0.2 },
-      { id: 'semi_materials', name: 'Materiały', weight: 0.2 },
+      { id: 'semi_materials', name: 'Materials', weight: 0.2 },
     ],
     companies: [
       { symbol: 'NVDA', name: 'NVIDIA', marketCap: 2200, sector: 'GPU', relevance: 0.95 },
@@ -379,7 +379,7 @@ export const WHAT_IF_SCENARIOS: WhatIfScenario[] = [
     id: 'trade_war',
     name: 'Wojna handlowa',
     emoji: '⚔️',
-    description: 'Cła na półprzewodniki, łańcuchy dostaw w chaosie',
+    description: 'Cła on półprzewodniki, łańcuchy dostaw w chaosie',
     impacts: { ai: -10, semi: -25, finance: -8, health: -3, energy: -5, esg: -5, biotech: -5, infra: -10, military: 10 },
   },
   {
@@ -393,7 +393,7 @@ export const WHAT_IF_SCENARIOS: WhatIfScenario[] = [
     id: 'crypto_crash',
     name: 'Krach krypto',
     emoji: '💥',
-    description: 'Kapitał ucieka z krypto do tradycyjnych aktywów',
+    description: 'Capital ucieka of krypto do tradycyjnych assets',
     impacts: { ai: -5, semi: -8, finance: 10, health: 5, energy: 3, esg: 3, biotech: 5, infra: 3, military: 2 },
   },
   {
@@ -421,7 +421,7 @@ export function runMonteCarlo(
     const path = [currentPrice]
     let price = currentPrice
     for (let d = 1; d < horizonDays; d++) {
-      const z = randn()
+      const of = randn()
       const drift = (dailyReturn - 0.5 * dailyVol * dailyVol) * dt
       const diffusion = dailyVol * Math.sqrt(dt) * z
       price = price * Math.exp(drift + diffusion)

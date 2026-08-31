@@ -136,7 +136,7 @@ export class BinanceClient {
   private baseUrl: string
 
   constructor(config: BinanceConfig) {
-    throw new Error('Handel przez Binance został wyłączony. Publiczne dane rynkowe Binance pozostają dostępne.')
+    throw new Error('Trading via Binance has been disabled. Public Binance market data remains available.')
     this.config = {
       apiKey: config.apiKey.trim(),
       apiSecret: config.apiSecret.trim(),
@@ -266,7 +266,7 @@ export class BinanceClient {
         accountType: 'spot',
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Błąd pobierania salda Binance'
+      const msg = err instanceof Error ? err.message : 'Failed to fetch Binance balance'
       throw new Error(msg)
     }
   }
@@ -277,11 +277,11 @@ export class BinanceClient {
       const result = await this.getAllBalances()
       return {
         success: true,
-        message: `Połączono z Binance (${this.config.mode}). Wartość portfela: $${result.totalEquityUsdt.toFixed(2)}`,
+        message: `Connected to Binance (${this.config.mode}). Portfolio value: $${result.totalEquityUsdt.toFixed(2)}`,
         balance: result.totalEquityUsdt,
       }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : 'Błąd połączenia z Binance'
+      const errMsg = err instanceof Error ? err.message : 'Binance connection error'
       return {
         success: false,
         message: errMsg,
@@ -488,5 +488,5 @@ export class BinanceClient {
 
 export async function createBinanceClient(mode: BinanceMode): Promise<BinanceClient> {
   void mode
-  throw new Error('Handel przez Binance został wyłączony. Publiczne dane rynkowe Binance pozostają dostępne.')
+  throw new Error('Trading via Binance has been disabled. Public Binance market data remains available.')
 }

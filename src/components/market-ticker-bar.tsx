@@ -53,7 +53,7 @@ export default function MarketTickerBar() {
     return (
       <div className="border-b bg-muted/30 h-7 flex items-center px-4">
         <div className="flex items-center gap-6 text-[10px] text-muted-foreground animate-pulse">
-          <span>Ładowanie kursów...</span>
+          <span>Loading rates...</span>
         </div>
       </div>
     )

@@ -33,9 +33,17 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
 }
 
 function getClientIp(request: NextRequest): string {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    || request.headers.get('x-real-ip')
-    || 'unknown'
+  // Trust x-real-ip (set by Caddy: header_up X-Real-IP {remote_host}) first.
+  // x-forwarded-for can be spoofed by clients (Caddy appends but doesn't strip prepended values),
+  // so we take the LAST entry (closest proxy) not the first. Fallback to unknown.
+  const realIp = request.headers.get('x-real-ip')?.trim()
+  if (realIp) return realIp
+  const xff = request.headers.get('x-forwarded-for')
+  if (xff) {
+    const parts = xff.split(',').map(s => s.trim()).filter(Boolean)
+    return parts[parts.length - 1] || 'unknown'
+  }
+  return 'unknown'
 }
 
 async function checkAuth(request: NextRequest): Promise<boolean> {
@@ -82,11 +90,9 @@ export async function proxy(request: NextRequest) {
       { status: 503 },
     )
   }
+  // SECURITY: only x-cron-secret header — token in URL leaks to access logs / proxy logs
   const isAuthorizedCron = isCronPath
-    && (
-      request.headers.get('x-cron-secret') === CRON_SECRET
-      || request.nextUrl.searchParams.get('token') === CRON_SECRET
-    )
+    && request.headers.get('x-cron-secret') === CRON_SECRET
 
   // Internal schedulers authenticate with a dedicated secret and must not need
   // an interactive BRRR session cookie or the general API key.
@@ -116,7 +122,7 @@ export async function proxy(request: NextRequest) {
     )
     if (!rateResult.allowed) {
       return NextResponse.json(
-        { error: 'Zbyt wiele zapytań.' },
+        { error: 'Too many requests.' },
         {
           status: 429,
           headers: {
@@ -137,7 +143,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  return NextResponse.next()
+  const res = NextResponse.next()
+  // Security headers (also set in Caddyfile, but defense in depth for direct Next access)
+  res.headers.set('X-Content-Type-Options', 'nosniff')
+  res.headers.set('X-Frame-Options', 'DENY')
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  return res
 }
 
 export const config = {

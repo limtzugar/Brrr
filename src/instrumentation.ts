@@ -3,9 +3,14 @@
 
 import { BRRR_BASE_URL } from '@/lib/server-config'
 
+let schedulersRegistered = false
 export async function register() {
   // Only run on the primary server instance (not edge, not build)
+  // Idempotency: Next.js may call register() multiple times in dev (HMR) — dedupe via global flag
+  if (schedulersRegistered) return
   if (process.env.NEXT_RUNTIME === 'nodejs') {
+    schedulersRegistered = true
+    ;(globalThis as unknown as { __brrrSchedulersRegistered?: boolean }).__brrrSchedulersRegistered = true
     console.log('[INSTRUMENTATION] Registering background schedulers...')
 
     // ── Recovery Point Scheduler — every 8 hours ──
@@ -116,7 +121,7 @@ async function triggerTradingRuntime(
   attempt = 1,
 ) {
   try {
-    const url = `${baseUrl}/api/cron/trading-runtime?token=${secret}`
+    const url = `${baseUrl}/api/cron/trading-runtime`
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'x-cron-secret': secret },
@@ -138,7 +143,7 @@ async function triggerTradingRuntime(
 
 async function triggerRecoveryPoint(baseUrl: string, secret: string) {
   try {
-    const url = `${baseUrl}/api/cron/recovery-point?token=${secret}`
+    const url = `${baseUrl}/api/cron/recovery-point`
     const res = await fetch(url, {
       method: 'GET',
       headers: { 'x-cron-secret': secret },
@@ -156,7 +161,7 @@ async function triggerRecoveryPoint(baseUrl: string, secret: string) {
 
 async function triggerClosedPnlSync(baseUrl: string, secret: string) {
   try {
-    const url = `${baseUrl}/api/cron/sync-closed-pnl?token=${secret}&mode=real`
+    const url = `${baseUrl}/api/cron/sync-closed-pnl?mode=real`
     const res = await fetch(url, {
       method: 'GET',
       headers: { 'x-cron-secret': secret },

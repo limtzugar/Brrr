@@ -317,7 +317,7 @@ function IndexCard({ index, onOpenAssetChart }: { index: IndexQuote; onOpenAsset
         </ResponsiveContainer>
       </div>
 
-      {/* Pokaż na wykresie button */}
+      {/* Show on chart button */}
       {onOpenAssetChart && (
         <div style={{ padding: '0 10px 10px' }}>
           <button
@@ -351,7 +351,7 @@ function IndexCard({ index, onOpenAssetChart }: { index: IndexQuote; onOpenAsset
               ;(e.currentTarget as HTMLElement).style.borderColor = TE.border
             }}
           >
-            <span>📈</span> Pokaż na wykresie
+            <span>📈</span> Show on chart
           </button>
         </div>
       )}
@@ -549,7 +549,7 @@ export default function StockMarketTab({ onOpenAssetChart }: { onOpenAssetChart?
     if (result) {
       setData(result)
     } else {
-      setError('Nie udało się pobrać danych rynkowych. Sprawdź połączenie.')
+      setError('Failed to fetch market data. Check connection.')
     }
     setLoading(false)
   }, [])
@@ -614,7 +614,7 @@ export default function StockMarketTab({ onOpenAssetChart }: { onOpenAssetChart?
               textTransform: 'uppercase',
             }}
           >
-            ODŚWIEŻ
+            REFRESH
           </button>
           <a
             href="https://insights.glassnode.com/glassnode-skew-index/"
@@ -657,7 +657,7 @@ export default function StockMarketTab({ onOpenAssetChart }: { onOpenAssetChart?
       {/* ── Loading ────────────────────────────────────────────────────── */}
       {loading && !data ? (
         <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: TE.textMuted, fontSize: 10, letterSpacing: '0.1em' }}>
-          ŁADOWANIE DANYCH RYNKOWYCH…
+          LOADING MARKET DATA...
         </div>
       ) : data ? (
         <>

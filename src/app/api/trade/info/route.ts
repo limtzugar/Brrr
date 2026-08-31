@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   return NextResponse.json(
-    { error: 'Handel przez Binance został wyłączony' },
+    { error: 'Trading via Binance has been disabled' },
     { status: 410 }
   )
 }

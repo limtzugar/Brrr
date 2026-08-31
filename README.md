@@ -1,6 +1,6 @@
 # BRRR — Trading Platform (Next.js)
 
-> **Teenage Engineering inspired** trading terminal — Dip Hunter · CEX Anomaly · Hurst · LLM Analyst. Built for portfolio — production-ready, secure, multi-exchange (Bybit / Binance / MEXC / Hyperliquid).
+> Trading terminal — Dip Hunter · CEX Anomaly · Hurst · LLM Analyst. Built for portfolio — production-ready, secure, multi-exchange (Bybit / Binance / MEXC / Hyperliquid).
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748) ![License](https://img.shields.io/badge/license-private-lightgrey)
 
@@ -117,4 +117,4 @@ Private — portfolio demo. Exchange keys are encrypted and never committed.
 
 ---
 
-*Built with Next.js 16 · TE design system (`src/lib/te-theme.tsx`) · v0.2.0*
+*Built with Next.js 16 · v0.2.0*

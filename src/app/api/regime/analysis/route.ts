@@ -1,9 +1,9 @@
 // ─── Market Regime Analysis API ──────────────────────────────────────────────
 // GET /api/regime/analysis?symbol=BTCUSDT
 //
-// Pobiera świece 5m z Bybit public API, oblicza cechy (returns, volatility, ATR,
+// Pobiera świece 5m of Bybit public API, oblicza cechy (returns, volatility, ATR,
 // momentum), a następnie uruchamia uproszczony ukryty model Markova (HMM)
-// w TypeScripcie z 3 reżimami: KONSOLIDACJA / TREND / PANIKA.
+// w TypeScripcie of 3 reżimami: KONSOLIDACJA / TREND / PANIKA.
 //
 // READ-ONLY — nie składa żadnych zleceń, nie wymaga kluczy API.
 
@@ -125,7 +125,7 @@ function computeFeatures(klines: Kline[]): Features {
   }
 
   // Align: wszystkie mają różne starty → weź overlapping
-  // Wszystkie arrays kończą się na tym samym indeksie klines
+  // Wszystkie arrays kończą się on tym samym indeksie klines
   // returns: [1..N-1], vol20: [20..N-1], atrPct: [15..N-1], mom10: [11..N-1]
   // → ostatni element każdego jest ten sam (ostatnia świeca)
   return {
@@ -139,8 +139,8 @@ function computeFeatures(klines: Kline[]): Features {
 
 // ─── Simplified Hidden Markov Model (Viterbi-like) ───────────────────────────
 // Zamiast pełnego EM (który jest powolny i niestabilny w TS),
-// używamy GMM (Gaussian Mixture Model) na zwinność + momentum do inicjalizacji
-// 3 komponentów, a potem Viterbi na łańcuchu Markova z empirycznymi przejściami.
+// używamy GMM (Gaussian Mixture Model) on zwinność + momentum do inicjalizacji
+// 3 komponentów, a potem Viterbi on łańcuchu Markova of empirycznymi przejściami.
 
 interface HMMState {
   mu: number
@@ -158,7 +158,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
   // Używamy volatilities jako obserwacji — to odróżnia reżimy najlepiej
   const obs = volatilities.slice(-N)
 
-  // K-means++ init na 3 klastry
+  // K-means++ init on 3 klastry
   const nStates = 3
 
   // Wybierz 3初始 centroidy (k-means++)
@@ -225,7 +225,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
     params.push({ mu, sigma: Math.sqrt(Math.max(variance, 0.01)) })
   }
 
-  // Oblicz macierz przejść z przypisań
+  // Oblicz macierz przejść of przypisań
   const transCount = Array.from({ length: nStates }, () => new Array(nStates).fill(1)) // Laplace smoothing
   for (let i = 1; i < N; i++) {
     transCount[assignments[i - 1]][assignments[i]]++
@@ -237,7 +237,7 @@ function fitRegimeHMM(returns: number[], volatilities: number[]): {
 
   // Forward algorithm: oblicz smoothed probabilities dla ostatniego okresu
   // (Właściwie używamy Viterbi dla całej sekwencji)
-  // Dla wydajności: tylko Forward na ostatnich 100 obserwacjach
+  // Dla wydajności: tylko Forward on ostatnich 100 obserwacjach
 
   return { states: assignments, params, transitionMatrix }
 }

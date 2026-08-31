@@ -98,7 +98,7 @@ export async function executeSolanaCopyTrade(
   } catch (err) {
     return {
       success: false,
-      error: `Błąd wykonania: ${String(err)}`,
+      error: `Error wykonania: ${String(err)}`,
     }
   }
 }

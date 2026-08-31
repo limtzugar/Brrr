@@ -98,7 +98,7 @@ function CategoryStatsTable({ stats }: { stats: BacktestCategoryStats[] }) {
   if (stats.length === 0) {
     return (
       <div style={{ color: te.textDim, padding: '16px', textAlign: 'center' }}>
-        Brak danych do wyświetlenia
+        No data to display
       </div>
     )
   }
@@ -108,7 +108,7 @@ function CategoryStatsTable({ stats }: { stats: BacktestCategoryStats[] }) {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', fontFamily: 'JetBrains Mono, monospace' }}>
         <thead>
           <tr style={{ borderBottom: `1px solid ${te.border}` }}>
-            <th style={{ padding: '6px 8px', textAlign: 'left', color: te.textDim }}>Kategoria</th>
+            <th style={{ padding: '6px 8px', textAlign: 'left', color: te.textDim }}>Category</th>
             <th style={{ padding: '6px 8px', textAlign: 'center', color: te.textDim }}>Trades</th>
             <th style={{ padding: '6px 8px', textAlign: 'center', color: te.textDim }}>Win%</th>
             <th style={{ padding: '6px 8px', textAlign: 'center', color: te.textDim }}>W/L/T</th>
@@ -205,8 +205,8 @@ function TradeList({ trades }: { trades: BacktestTrade[] }) {
 
   if (trades.length === 0) {
     return (
-      <div style={{ color: te.textDim, padding: '16px', textAlign: 'center' }}>
-        Brak trade&apos;ów
+        <div style={{ color: te.textDim, padding: '16px', textAlign: 'center' }}>
+        No trades
       </div>
     )
   }
@@ -216,11 +216,11 @@ function TradeList({ trades }: { trades: BacktestTrade[] }) {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10px', fontFamily: 'JetBrains Mono, monospace' }}>
         <thead style={{ position: 'sticky', top: 0, background: te.bg, zIndex: 1 }}>
           <tr style={{ borderBottom: `1px solid ${te.border}` }}>
-            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Data</th>
-            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Czas</th>
-            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Para</th>
-            <th style={{ padding: '4px 6px', textAlign: 'center', color: te.textDim }}>Strona</th>
-            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Sygnał</th>
+            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Date</th>
+            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Time</th>
+            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Pair</th>
+            <th style={{ padding: '4px 6px', textAlign: 'center', color: te.textDim }}>Side</th>
+            <th style={{ padding: '4px 6px', textAlign: 'left', color: te.textDim }}>Signal</th>
             <th style={{ padding: '4px 6px', textAlign: 'right', color: te.textDim }}>Entry</th>
             <th style={{ padding: '4px 6px', textAlign: 'right', color: te.textDim }}>Exit</th>
             <th style={{ padding: '4px 6px', textAlign: 'center', color: te.textDim }}>Rsn</th>
@@ -539,7 +539,7 @@ export function MicrostructureBacktestDialog({
         // Historical scan mode: fetch Binance data + scan for signals + backtest
         const pairsToScan = [...selectedPairs].filter(p => PAIR_TO_BINANCE[p])
         if (pairsToScan.length === 0) {
-          setError('Brak par do skanowania — wybierz przynajmniej jedną parę')
+          setError('No pairs to scan — select at least one pair')
           setRunning(false)
           return
         }
@@ -568,7 +568,7 @@ export function MicrostructureBacktestDialog({
       } else {
         // Live signals mode: use signals from current session
         if (filteredSignals.length === 0) {
-          setError('Brak sygnałów do backtestu — wybierz przynajmniej jeden typ sygnału i jedną parę')
+          setError('No signals for backtest — select at least one signal type and one pair')
           setRunning(false)
           return
         }
@@ -697,7 +697,7 @@ export function MicrostructureBacktestDialog({
           {/* Period selector + Capital */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <Calendar size={10} style={{ color: te.orange }} />
-            <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>OKRES</span>
+            <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>PERIOD</span>
             {BACKTEST_PERIODS.map(p => (
               <PeriodButton
                 key={p.label}
@@ -707,13 +707,13 @@ export function MicrostructureBacktestDialog({
               />
             ))}
             <span style={{ fontSize: '8px', color: te.textDim, marginLeft: '8px' }}>
-              {periodFilteredSignals.length} sygnałów w okresie
+              {periodFilteredSignals.length} signals in period
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <DollarSign size={10} style={{ color: te.green }} />
-            <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>KAPITAŁ / TRADE</span>
+            <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>CAPITAL / TRADE</span>
             <input
               type="number"
               min={10}
@@ -756,7 +756,7 @@ export function MicrostructureBacktestDialog({
               </button>
             ))}
             <span style={{ fontSize: '8px', color: te.textDim }}>
-              Pozycja = ${capitalPerTrade * btLeverage}
+              Position = ${capitalPerTrade * btLeverage}
             </span>
           </div>
 
@@ -764,11 +764,11 @@ export function MicrostructureBacktestDialog({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
               <Filter size={10} style={{ color: te.orange }} />
-              <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>SYGNAŁY</span>
+              <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>SIGNALS</span>
               <button onClick={selectAllSignals} style={{ fontSize: '8px', color: te.cyan, background: 'none', border: 'none', cursor: 'pointer', fontFamily: te.mono }}>ALL</button>
               <button onClick={deselectAllSignals} style={{ fontSize: '8px', color: te.red, background: 'none', border: 'none', cursor: 'pointer', fontFamily: te.mono }}>NONE</button>
               <span style={{ fontSize: '8px', color: te.textDim, marginLeft: 'auto' }}>
-                {selectedSignals.size}/{availableSignalTypes.length} wybrane | {filteredSignals.length} sygnałów
+                {selectedSignals.size}/{availableSignalTypes.length} selected | {filteredSignals.length} signals
               </span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
@@ -793,11 +793,11 @@ export function MicrostructureBacktestDialog({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
               <Filter size={10} style={{ color: te.cyan }} />
-              <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>PARY</span>
+              <span style={{ fontSize: '9px', fontWeight: 600, color: te.textDim, letterSpacing: '0.06em' }}>PAIRS</span>
               <button onClick={selectAllPairs} style={{ fontSize: '8px', color: te.cyan, background: 'none', border: 'none', cursor: 'pointer', fontFamily: te.mono }}>ALL</button>
               <button onClick={deselectAllPairs} style={{ fontSize: '8px', color: te.red, background: 'none', border: 'none', cursor: 'pointer', fontFamily: te.mono }}>NONE</button>
               <span style={{ fontSize: '8px', color: te.textDim, marginLeft: 'auto' }}>
-                {selectedPairs.size}/{availablePairs.length} wybrane
+                {selectedPairs.size}/{availablePairs.length} selected
               </span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px', maxHeight: '60px', overflowY: 'auto' }}>
@@ -831,7 +831,7 @@ export function MicrostructureBacktestDialog({
               style={{ width: '120px', accentColor: te.orange }}
             />
             <span style={{ fontSize: '10px', fontWeight: 600, color: te.text }}>
-              {maxCandles} świec ({maxHoldHours.toFixed(1)}h)
+              {maxCandles} candles ({maxHoldHours.toFixed(1)}h)
             </span>
             <span style={{ fontSize: '8px', color: te.textDim }}>
               | Lewar: <b style={{ color: te.orange }}>{btLeverage}x</b>
@@ -849,7 +849,7 @@ export function MicrostructureBacktestDialog({
               <>
                 <Loader2 size={24} style={{ color: te.orange, animation: 'spin 1s linear infinite' }} />
                 <div style={{ fontSize: '12px', color: te.text }}>
-                  {scanPhase || 'Backtestowanie...'} {progress.completed}/{progress.total}
+                  {scanPhase || 'Backtesting...'} {progress.completed}/{progress.total}
                 </div>
                 <div style={{
                   width: '200px',
@@ -879,7 +879,7 @@ export function MicrostructureBacktestDialog({
                     fontFamily: 'JetBrains Mono, monospace',
                   }}
                 >
-                  ANULUJ
+                  CANCEL
                 </button>
               </>
             ) : (
@@ -889,12 +889,12 @@ export function MicrostructureBacktestDialog({
                     const periodConfig = BACKTEST_PERIODS.find(p => p.label === backtestPeriod)
                     const isHistorical = periodConfig && periodConfig.days > 0
                     if (isHistorical) {
-                      return <>Backtest historyczny: pobierze świece 5m z Binance za ostatnie {periodConfig!.days} dni dla {selectedPairs.size} par, przeskanuje wzorce i przeprowadzi symulację TP/SL.</>
+                      return <>Historical backtest: will fetch 5m candles from Binance for last {periodConfig!.days} days for {selectedPairs.size} pairs, scan patterns and simulate TP/SL.</>
                     }
-                    return <>Backtest przeanalizuje {filteredSignals.length} wybranych sygnałów z sesji na świecach 5m z TP {BACKTEST_CONFIG.TP_PCT}% i SL {BACKTEST_CONFIG.SL_PCT}%.</>
+                    return <>Backtest will analyze {filteredSignals.length} selected session signals on 5m candles with TP {BACKTEST_CONFIG.TP_PCT}% i SL {BACKTEST_CONFIG.SL_PCT}%.</>
                   })()}
-                  {' '}Max hold: {maxCandles} świec ({maxHoldHours.toFixed(1)}h).
-                  Kapitał/trade: ${capitalPerTrade} ({btLeverage}x = ${capitalPerTrade * btLeverage} pozycja).
+                  {' '}Max hold: {maxCandles} candles ({maxHoldHours.toFixed(1)}h).
+                  Capital/trade: ${capitalPerTrade} ({btLeverage}x = ${capitalPerTrade * btLeverage} position).
                 </div>
                 <button
                   onClick={handleRun}
@@ -934,12 +934,12 @@ export function MicrostructureBacktestDialog({
                   }}
                 >
                   <FlaskConical size={16} />
-                  URUCHOM BACKTEST{(() => {
+                  RUN BACKTEST{(() => {
                     const periodConfig = BACKTEST_PERIODS.find(p => p.label === backtestPeriod)
                     const isHistorical = periodConfig && periodConfig.days > 0
                     return isHistorical
-                      ? ` (${periodConfig!.days}d, ${selectedPairs.size} par)`
-                      : ` (${filteredSignals.length} sygnałów)`
+                      ? ` (${periodConfig!.days}d, ${selectedPairs.size} pairs)`
+                      : ` (${filteredSignals.length} signals)`
                   })()}
                 </button>
               </>
@@ -976,7 +976,7 @@ export function MicrostructureBacktestDialog({
                 fontFamily: 'JetBrains Mono, monospace',
               }}
             >
-              PONÓW
+              RETRY
             </button>
           </div>
         )}
@@ -1028,9 +1028,9 @@ export function MicrostructureBacktestDialog({
                     gap: '6px',
                   }}>
                     <BarChart3 size={12} style={{ color: te.orange }} />
-                    OGÓLNE WYNIKI
+                    OVERALL RESULTS
                     <span style={{ marginLeft: 'auto', color: te.textDim, fontWeight: 400 }}>
-                      {results.overallStats.dataAvailable} z {results.signalsUsed} sygnałów ({results.overallStats.dataMissing} brak danych)
+                      {results.overallStats.dataAvailable} of {results.signalsUsed} signals ({results.overallStats.dataMissing} missing data)
                     </span>
                   </div>
                   <OverallStatsPanel stats={results.overallStats} />
@@ -1055,7 +1055,7 @@ export function MicrostructureBacktestDialog({
                       gap: '6px',
                     }}>
                       <Trophy size={12} style={{ color: te.orange }} />
-                      STATYSTYKI WG KATEGORII ({results.categoryStats.length})
+                      STATS BY CATEGORY ({results.categoryStats.length})
                     </div>
                     <CategoryStatsTable stats={results.categoryStats} />
                   </div>
@@ -1072,14 +1072,14 @@ export function MicrostructureBacktestDialog({
                 }}>
                   <span style={{ color: te.text, fontWeight: 600 }}>R:R = {BACKTEST_CONFIG.TP_PCT / BACKTEST_CONFIG.SL_PCT} : 1</span>
                   {' — '}
-                  TP {BACKTEST_CONFIG.TP_PCT}% ceny / SL {BACKTEST_CONFIG.SL_PCT}% ceny.
+                  TP {BACKTEST_CONFIG.TP_PCT}% price / SL {BACKTEST_CONFIG.SL_PCT}% price.
                   Break-even win rate: {((BACKTEST_CONFIG.SL_PCT / (BACKTEST_CONFIG.TP_PCT + BACKTEST_CONFIG.SL_PCT)) * 100).toFixed(1)}%
                   {' — '}
                   Przy {btLeverage}x lewarze: TP = {fmtPct(BACKTEST_CONFIG.TP_PCT * btLeverage)} PnL, SL = {fmtPct(-BACKTEST_CONFIG.SL_PCT * btLeverage)} PnL
                   {' — '}
-                  Kapitał/trade: ${capitalPerTrade} | Max hold: {maxCandles} świec ({maxHoldHours.toFixed(1)}h)
+                  Capital/trade: ${capitalPerTrade} | Max hold: {maxCandles} candles ({maxHoldHours.toFixed(1)}h)
                   {' — '}
-                  Okres: {backtestPeriod}
+                  Period: {backtestPeriod}
                 </div>
               </div>
             )}
@@ -1105,7 +1105,7 @@ export function MicrostructureBacktestDialog({
                   fontWeight: 600,
                 }}
               >
-                🔄 URUCHOM PONOWNIE
+                🔄 RUN AGAIN
               </button>
             </div>
           </div>

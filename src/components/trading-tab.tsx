@@ -115,13 +115,13 @@ function BuyPanel() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setOrderError(data.error || 'Błąd składania zlecenia')
+        setOrderError(data.error || 'Failed to place order')
       } else {
         setOrderResult(data)
         void fetchTradeInfo()
       }
     } catch (err) {
-      setOrderError(err instanceof Error ? err.message : 'Błąd połączenia')
+      setOrderError(err instanceof Error ? err.message : 'Connection error')
     } finally {
       setLoading(false)
     }
@@ -269,7 +269,7 @@ function BuyPanel() {
               <div><span style={{ color: te.textMuted }}>Typ:</span> <span style={{ color: te.text }}>{orderResult.type}</span></div>
               {orderResult.filledQty && <div><span style={{ color: te.textMuted }}>Ilość:</span> <span style={{ color: te.text }}>{orderResult.filledQty}</span></div>}
               {orderResult.avgPrice && <div><span style={{ color: te.textMuted }}>Cena:</span> <span style={{ color: te.text }}>${orderResult.avgPrice}</span></div>}
-              {orderResult.quoteQty && <div><span style={{ color: te.textMuted }}>Wartość:</span> <span style={{ color: te.text }}>${orderResult.quoteQty}</span></div>}
+              {orderResult.quoteQty && <div><span style={{ color: te.textMuted }}>Value:</span> <span style={{ color: te.text }}>${orderResult.quoteQty}</span></div>}
               {orderResult.price && <div><span style={{ color: te.textMuted }}>Cena limit:</span> <span style={{ color: te.text }}>${orderResult.price}</span></div>}
               {orderResult.quantity && <div><span style={{ color: te.textMuted }}>Ilość:</span> <span style={{ color: te.text }}>{orderResult.quantity}</span></div>}
               {orderResult.total && <div><span style={{ color: te.textMuted }}>Łącznie:</span> <span style={{ color: te.text }}>${orderResult.total} USDC</span></div>}
@@ -314,7 +314,7 @@ function OrderBookPanel() {
       const res = await fetch(`/api/trade/orderbook?coinId=${selectedCoin}&mode=${mode}&limit=12`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error || 'Błąd pobierania order book')
+        setError(data.error || 'Failed to fetch order book')
         return
       }
       const data = await res.json()
@@ -327,7 +327,7 @@ function OrderBookPanel() {
       setTotalBidUsdc(data.totalBidUsdc || '0')
       setTotalAskUsdc(data.totalAskUsdc || '0')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Błąd połączenia')
+      setError(err instanceof Error ? err.message : 'Connection error')
     } finally {
       setLoading(false)
     }
@@ -465,7 +465,7 @@ function OrderBookPanel() {
 
         {loading && bids.length === 0 && (
           <div className="flex items-center justify-center py-4 text-[9px]" style={{ color: te.textMuted }}>
-            <RefreshCw className="size-3 animate-spin mr-1.5" />Ładowanie...
+            <RefreshCw className="size-3 animate-spin mr-1.5" />Loading...
           </div>
         )}
       </CardContent>
@@ -502,7 +502,7 @@ function LiquidationMapPanel() {
       const res = await fetch(`/api/trade/liquidations?coinId=${selectedCoin}&mode=real`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error || 'Błąd pobierania danych liquidacji')
+        setError(data.error || 'Failed to fetch data liquidacji')
         return
       }
       const data = await res.json()
@@ -514,7 +514,7 @@ function LiquidationMapPanel() {
       setSentiment(data.sentiment || 'neutral')
       setLevels(data.levels || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Błąd połączenia')
+      setError(err instanceof Error ? err.message : 'Connection error')
     } finally {
       setLoading(false)
     }
@@ -665,14 +665,14 @@ function LiquidationMapPanel() {
 
             {/* Disclaimer */}
             <div className="text-[7px] mt-2 leading-tight" style={{ color: te.textDim }}>
-              Szacunkowe poziomy na podstawie dźwigni i maintenance margin. Dane z Binance Futures (USDT-M).
+              Szacunkowe poziomy on podstawie dźwigni i maintenance margin. Dane of Binance Futures (USDT-M).
             </div>
           </div>
         )}
 
         {loading && levels.length === 0 && (
           <div className="flex items-center justify-center py-4 text-[9px]" style={{ color: te.textMuted }}>
-            <RefreshCw className="size-3 animate-spin mr-1.5" />Ładowanie...
+            <RefreshCw className="size-3 animate-spin mr-1.5" />Loading...
           </div>
         )}
       </CardContent>
@@ -697,14 +697,14 @@ function OpenOrdersPanel() {
       const res = await fetch(`/api/trade/orders?mode=${mode}`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error || 'Błąd pobierania zleceń')
+        setError(data.error || 'Failed to fetch orders')
         setOrders([])
         return
       }
       const data = await res.json()
       setOrders(data.orders || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Błąd połączenia')
+      setError(err instanceof Error ? err.message : 'Connection error')
       setOrders([])
     } finally {
       setLoading(false)
@@ -726,12 +726,12 @@ function OpenOrdersPanel() {
       })
       const data = await res.json()
       if (!res.ok) {
-        alert(data.error || 'Błąd anulowania zlecenia')
+        alert(data.error || 'Failed to cancel order')
       } else {
         setOrders(prev => prev.filter(o => !(o.symbol === symbol && o.orderId === orderId)))
       }
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Błąd połączenia')
+      alert(err instanceof Error ? err.message : 'Connection error')
     } finally {
       setCancelling(null)
     }
@@ -796,7 +796,7 @@ function OpenOrdersPanel() {
           </div>
         ) : orders.length === 0 ? (
           <div className="flex items-center justify-center py-6 text-[10px]" style={{ color: te.textDim }}>
-            Brak otwartych zleceń na Binance ({mode === 'demo' ? 'testnet' : 'real'})
+            No open orders on Binance ({mode === 'demo' ? 'testnet' : 'real'})
           </div>
         ) : (
           <div className="divide-y" style={{ borderColor: te.border }}>
@@ -883,18 +883,18 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
         body: JSON.stringify({ strategyId, mode }),
       })
       const data = await res.json()
-      if (!res.ok) alert(data.error || 'Błąd dezaktywacji')
+      if (!res.ok) alert(data.error || 'Failed to deactivate')
       else onRefresh()
-    } catch (err) { alert(err instanceof Error ? err.message : 'Błąd połączenia') }
+    } catch (err) { alert(err instanceof Error ? err.message : 'Connection error') }
     finally { setDeactivating(null) }
   }
 
-  const runningStrategies = strategies.filter(s => s.status === 'running')
-  const stoppedStrategies = strategies.filter(s => s.status !== 'running')
+  const runningStrategiessss = strategies.filter(s => s.status === 'running')
+  const stoppedStrategiessss = strategies.filter(s => s.status !== 'running')
 
-  const totalPnl = runningStrategies.reduce((sum, s) => sum + s.totalPnl, 0)
-  const totalTrades = runningStrategies.reduce((sum, s) => sum + s.totalTrades, 0)
-  const inPosition = runningStrategies.filter(s => s.inPosition).length
+  const totalPnl = runningStrategiessss.reduce((sum, s) => sum + s.totalPnl, 0)
+  const totalTrades = runningStrategiessss.reduce((sum, s) => sum + s.totalTrades, 0)
+  const inPosition = runningStrategiessss.filter(s => s.inPosition).length
 
   return (
     <div className="space-y-4">
@@ -903,7 +903,7 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
         <div className="flex items-center gap-1.5">
           <Play className="size-3" style={{ color: te.green }} />
           <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono, letterSpacing: '0.06em' }}>STRATEGIE</span>
-          <span className="text-[13px] font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{runningStrategies.length}</span>
+          <span className="text-[13px] font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{runningStrategiessss.length}</span>
         </div>
         <div style={{ width: '1px', height: '16px', background: te.border }} />
         <div className="flex items-center gap-1.5">
@@ -920,7 +920,7 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
         <div style={{ width: '1px', height: '16px', background: te.border }} />
         <div className="flex items-center gap-1.5">
           <Shield className="size-3" style={{ color: te.blue }} />
-          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono, letterSpacing: '0.06em' }}>TRADE'Y</span>
+          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono, letterSpacing: '0.06em' }}>TRADES</span>
           <span className="text-[13px] font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{totalTrades}</span>
         </div>
       </div>
@@ -937,18 +937,18 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
       {/* Open Orders — directly below trading area, like exchange bottom panel */}
       <OpenOrdersPanel />
 
-      {runningStrategies.length === 0 ? (
+      {runningStrategiessss.length === 0 ? (
         <Card style={{ background: te.bgCard, border: `1px solid ${te.border}`, borderRadius: '4px' }}>
           <CardContent className="py-12 text-center" style={{ color: te.textMuted }}>
             <Play className="size-8 mx-auto mb-2 opacity-50" />
-            <p>Brak aktywnych strategii</p>
-            <p className="text-xs mt-1">Przejdź do zakładki Strategie i kliknij Demo lub Real aby aktywować</p>
+            <p>No active strategies</p>
+            <p className="text-xs mt-1">Przejdź do zakładki Strategiesss i kliknij Demo lub Real aby aktywować</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Aktywne strategie</h3>
-          {runningStrategies.map(s => (
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Active strategies</h3>
+          {runningStrategiessss.map(s => (
             <Card key={`${s.strategyId}:${s.mode}`} style={{ background: te.bgCard, border: `1px solid ${te.green}33`, borderRadius: '4px' }}>
               <CardContent className="p-4">
                 <div className="flex flex-col gap-3">
@@ -965,7 +965,7 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
                         {s.inPosition && <Badge style={{ background: te.yellow, color: '#000' }} className="text-[10px] shrink-0">W POZYCJI</Badge>}
                       </div>
                       <div className="text-xs mt-0.5" style={{ color: te.textMuted }}>
-                        {s.inPosition && s.entryPrice ? `Entry: $${s.entryPrice.toFixed(4)}` : `Czeka na sygnał ${strategyTypeLabel(s.strategyType || 'dip_buying')}...`}
+                        {s.inPosition && s.entryPrice ? `Entry: $${s.entryPrice.toFixed(4)}` : `Czeka on sygnał ${strategyTypeLabel(s.strategyType || 'dip_buying')}...`}
                         {s.lastPrice ? ` | Obecna: $${s.lastPrice.toFixed(4)}` : ''}
                       </div>
                     </div>
@@ -976,7 +976,7 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
                       <div style={{ fontFamily: te.mono, fontSize: 14, fontWeight: 700, color: s.totalPnl >= 0 ? te.green : te.red, fontVariantNumeric: 'tabular-nums' }}>${s.totalPnl.toFixed(2)}</div>
                     </div>
                     <div>
-                      <div style={{ fontFamily: te.mono, fontSize: '9px', letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Kapitał</div>
+                      <div style={{ fontFamily: te.mono, fontSize: '9px', letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Capital</div>
                       <div style={{ fontFamily: te.mono, fontSize: 14, fontWeight: 600, color: te.text, fontVariantNumeric: 'tabular-nums' }}>${s.currentCapital.toFixed(2)}</div>
                     </div>
                     <div>
@@ -995,10 +995,10 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
         </div>
       )}
 
-      {stoppedStrategies.length > 0 && (
+      {stoppedStrategiessss.length > 0 && (
         <div className="space-y-3">
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Zatrzymane strategie</h3>
-          {stoppedStrategies.map(s => (
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted }}>Stopped strategies</h3>
+          {stoppedStrategiessss.map(s => (
             <Card key={`${s.strategyId}:${s.mode}`} style={{ background: te.bgCard, border: `1px solid ${te.border}`, borderRadius: '4px', opacity: 0.6 }}>
               <CardContent className="p-3">
                 <div className="flex items-center justify-between text-xs">
@@ -1027,10 +1027,10 @@ export default function TradingTab({ strategies, onRefresh }: { strategies: Acti
         {showHelp && (
           <div className="px-3 pb-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs" style={{ color: te.textMuted }}>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>1.</span> Skonfiguruj klucze API Bybit w <span style={{ color: te.text }}>Ustawieniach</span> (ikona ⚙️ w nagłówku)</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>2.</span> Utwórz konto na <span style={{ color: te.text, fontWeight: 600 }}>testnet.binance.vision</span> dla trybu Testnet</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>3.</span> Kliknij <Badge style={{ background: te.blue, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Demo</Badge> na strategii — system zacznie monitorować rynek</div>
-              <div><span style={{ color: te.text, fontWeight: 500 }}>4.</span> Gdy dip spełni warunki — system automatycznie kupi i sprzeda z TP/SL</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>1.</span> Skonfiguruj klucze API Bybit w <span style={{ color: te.text }}>Settingsch</span> (ikona ⚙️ w nagłówku)</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>2.</span> Utwórz konto on <span style={{ color: te.text, fontWeight: 600 }}>testnet.binance.vision</span> dla trybu Testnet</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>3.</span> Kliknij <Badge style={{ background: te.blue, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Demo</Badge> on strategii — system zacznie monitorować rynek</div>
+              <div><span style={{ color: te.text, fontWeight: 500 }}>4.</span> Gdy dip spełni warunki — system automatycznie kupi i sprzeda of TP/SL</div>
               <div><span style={{ color: te.text, fontWeight: 500 }}>5.</span> <Badge style={{ background: te.red, color: '#fff', fontSize: '10px' }} className="px-1 py-0">Real</Badge> używa prawdziwego kapitału — upewnij się, że strategia działa w Demo!</div>
               <div><span style={{ color: te.text, fontWeight: 500 }}>6.</span> Monitoruj status w tej zakładce — możesz zatrzymać strategię w każdej chwili</div>
             </div>

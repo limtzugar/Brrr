@@ -70,7 +70,7 @@ async function evaluateStrategyDecision(
       include: { snapshot: true },
     })
     if (!decision || decision.action !== 'ENTER' || !decision.snapshot) {
-      await markEvaluationError(decisionId, 'Brak decyzji ENTER lub migawki rynku')
+      await markEvaluationError(decisionId, 'No decyzji ENTER lub migawki rynku')
       return 'DONE'
     }
 

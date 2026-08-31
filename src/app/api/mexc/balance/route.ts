@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 
     if (!['demo', 'real'].includes(mode)) {
       return NextResponse.json(
-        { error: 'Mode musi być "demo" lub "real"' },
+        { error: 'Mode must be "demo" or "real"' },
         { status: 400 }
       )
     }
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error('[/api/mexc/balance] error:', error)
-    const msg = error instanceof Error ? error.message : 'Nieznany błąd'
+    const msg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
       { error: msg },
       { status: 500 }

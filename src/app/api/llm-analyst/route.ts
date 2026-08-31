@@ -28,12 +28,12 @@ export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
     const rateResult = checkRateLimit(`llm-analyst:${ip}`, 10, 60 * 1000)
-    if (!rateResult.allowed) return NextResponse.json({ error: 'Zbyt wiele żądań LLM. Poczekaj ~60s.' }, { status: 429 })
+    if (!rateResult.allowed) return NextResponse.json({ error: 'Too many LLM requests. Wait ~60s.' }, { status: 429 })
 
     const cfg = await getLlmConfigPublic()
     if (!cfg.isConfigured) {
       return NextResponse.json(
-        { error: 'LLM nie jest skonfigurowany. Otwórz Ustawienia → sekcja LLM i wpisz klucz API.' },
+        { error: 'LLM is not configured. Open Settings → LLM section and enter API key.' },
         { status: 503 },
       )
     }
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
         ).catch(() => {})
       }
       return NextResponse.json(
-        { error: contractError instanceof Error ? contractError.message : 'Nieprawidłowa odpowiedź LLM' },
+        { error: contractError instanceof Error ? contractError.message : 'Invalid LLM response' },
         { status: 502 },
       )
     }
@@ -156,7 +156,7 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('[/api/llm-analyst] Error:', error)
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Analiza LLM nie powiodła się.' }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'LLM analysis failed.' }, { status: 500 })
   }
 }
 
@@ -193,10 +193,10 @@ function buildCexAnomalyContext(anomalies: any[], positions: any[], closedPositi
   lines.push(`\n## USTAWIENIA\n- TP: ${settings.tpPct ?? 2}%\n- SL: ${settings.slPct ?? 6.5}%\n- Leverage: ${settings.leverage ?? 1}x\n- Tryb: ${settings.tradingMode ?? 'CONSERVATIVE'}`)
   if (anomalies.length > 0) { lines.push('\n## ANOMALIE (ostatnie 20)'); anomalies.slice(0, 20).forEach((a, i) => lines.push(`${i+1}. [${a.category}] ${a.pair} ${a.side} | $${(a.sizeUsd/1000).toFixed(1)}K | ${a.details} | ${a.exchange}`)) }
   if (positions.length > 0) { lines.push('\n## AKTYWNE POZYCJE'); positions.forEach((p, i) => lines.push(`${i+1}. ${p.pair} ${p.side} | PnL=${p.pnlPercent?.toFixed(2)}% | lev=${p.leverage}x`)) }
-  if (closedPositions.length > 0) { lines.push('\n## ZAMKNIĘTE (ostatnie 15)'); closedPositions.slice(0, 15).forEach((p, i) => lines.push(`${i+1}. ${p.pair} | PnL=${p.pnlPercent?.toFixed(2)}% | ${p.status}`)) }
+  if (closedPositions.length > 0) { lines.push('\n## CLOSED (last 15)'); closedPositions.slice(0, 15).forEach((p, i) => lines.push(`${i+1}. ${p.pair} | PnL=${p.pnlPercent?.toFixed(2)}% | ${p.status}`)) }
   if (signalEvents.length > 0) { lines.push('\n## TA SIGNALS (ostatnie 20)'); signalEvents.slice(-20).forEach((e, i) => lines.push(`${i+1}. ${e.signalType} ${e.pair} | PnL=${e.pnlPct?.toFixed(2)}% | ${e.closeReason}`)) }
-  const pk = Object.keys(pairData); if (pk.length > 0) { lines.push('\n## WSKAŹNIKI'); pk.forEach(p => { const d = pairData[p]; lines.push(`- ${p}: price=${d.price} | RSI=${d.rsi?.toFixed(1)} | MACD=${d.macdHist?.toFixed(4)} | CVD=${d.cvd?.toFixed(0)}`) }) }
-  lines.push('\n## ZADANIE\nPrzeanalizuj dane. Wskaż wnioski, rekomendacje i hipotezy wymagające późniejszej walidacji.')
+  const pk = Object.keys(pairData); if (pk.length > 0) { lines.push('\n## INDICATORS'); pk.forEach(p => { const d = pairData[p]; lines.push(`- ${p}: price=${d.price} | RSI=${d.rsi?.toFixed(1)} | MACD=${d.macdHist?.toFixed(4)} | CVD=${d.cvd?.toFixed(0)}`) }) }
+  lines.push('\n## TASK\nAnalyze the data. Provide conclusions, recommendations and hypotheses requiring later validation.')
   return lines.join('\n')
 }
 
@@ -220,7 +220,7 @@ interface FullSystemInput {
 function buildFullSystemContext(input: FullSystemInput): string {
   const lines: string[] = []
   const { portfolio, strategies, regime, macro, oiFunding, fearGreed, anomalies, positions, closedPositions, signalEvents, pairData, settings } = input
-  lines.push('# ANALIZA CAŁEGO SYSTEMU — BRRR TRADING PLATFORM')
+  lines.push('# WHOLE SYSTEM ANALYSIS — BRRR TRADING PLATFORM')
   lines.push(`Czas: ${new Date().toISOString()}`)
 
   // ── Portfolio ──
@@ -234,7 +234,7 @@ function buildFullSystemContext(input: FullSystemInput): string {
     }
   }
 
-  // ── Strategies ──
+  // ── Strategiessss ──
   if (Array.isArray(strategies) && strategies.length > 0) {
     lines.push('\n## AKTYWNE STRATEGIE')
     strategies.forEach((s, i) => {
@@ -248,16 +248,16 @@ function buildFullSystemContext(input: FullSystemInput): string {
     positions.forEach((p, i) => lines.push(`${i+1}. ${p.pair || p.symbol} ${p.side} | size=$${Number(p.sizeUsd || 0).toFixed(0)} | PnL=${p.pnlPercent?.toFixed(2) ?? '?'}% | lev=${p.leverage ?? 1}x`))
   }
   if (Array.isArray(closedPositions) && closedPositions.length > 0) {
-    lines.push('\n## ZAMKNIĘTE POZYCJE (ostatnie 15)')
+    lines.push('\n## CLOSED POSITIONS (last 15)')
     closedPositions.slice(0, 15).forEach((p, i) => lines.push(`${i+1}. ${p.pair || p.symbol} | PnL=${p.pnlPercent?.toFixed(2) ?? '?'}% | ${p.status ?? p.exitReason ?? ''}`))
   }
 
   // ── Regime ──
   if (regime) {
-    lines.push('\n## REŻIM RYNKU')
-    if (regime.regime) lines.push(`- Reżim: ${regime.regime}`)
+    lines.push('\n## MARKET REGIME')
+    if (regime.regime) lines.push(`- Regime: ${regime.regime}`)
     if (regime.trend) lines.push(`- Trend: ${regime.trend}`)
-    if (regime.volatility) lines.push(`- Zmienność: ${regime.volatility}`)
+    if (regime.volatility) lines.push(`- Volatility: ${regime.volatility}`)
     if (regime.notes) lines.push(`- Notatki: ${regime.notes}`)
   }
 
@@ -265,7 +265,7 @@ function buildFullSystemContext(input: FullSystemInput): string {
   if (macro) {
     lines.push('\n## KALENDARZ MAKRO')
     if (Array.isArray(macro.events)) macro.events.slice(0, 10).forEach((e: any, i: number) => lines.push(`${i+1}. ${e.time ?? ''} ${e.country ?? ''} ${e.event ?? e.title ?? ''} | actual=${e.actual ?? '?'} forecast=${e.forecast ?? '?'}`))
-    else if (macro.nextEvent) lines.push(`- Następne: ${macro.nextEvent}`)
+    else if (macro.nextEvent) lines.push(`- Next: ${macro.nextEvent}`)
   }
 
   // ── OI + Funding ──
@@ -283,24 +283,24 @@ function buildFullSystemContext(input: FullSystemInput): string {
   // ── Fear & Greed ──
   if (fearGreed) {
     lines.push('\n## FEAR & GREED INDEX')
-    if (fearGreed.value !== undefined) lines.push(`- Wartość: ${fearGreed.value} (${fearGreed.classification || fearGreed.value_classification || ''})`)
+    if (fearGreed.value !== undefined) lines.push(`- Value: ${fearGreed.value} (${fearGreed.classification || fearGreed.value_classification || ''})`)
   }
 
   // ── CEX anomalies + TA (shared sections) ──
   if (anomalies.length > 0) { lines.push('\n## ANOMALIE CEX (ostatnie 20)'); anomalies.slice(0, 20).forEach((a, i) => lines.push(`${i+1}. [${a.category}] ${a.pair} ${a.side} | $${(a.sizeUsd/1000).toFixed(1)}K | ${a.details} | ${a.exchange}`)) }
-  const pk = Object.keys(pairData); if (pk.length > 0) { lines.push('\n## WSKAŹNIKI TA'); pk.slice(0, 20).forEach(p => { const d = pairData[p]; lines.push(`- ${p}: price=${d.price} | RSI=${d.rsi?.toFixed(1)} | MACD=${d.macdHist?.toFixed(4)} | CVD=${d.cvd?.toFixed(0)}`) }) }
+  const pk = Object.keys(pairData); if (pk.length > 0) { lines.push('\n## INDICATORS TA'); pk.slice(0, 20).forEach(p => { const d = pairData[p]; lines.push(`- ${p}: price=${d.price} | RSI=${d.rsi?.toFixed(1)} | MACD=${d.macdHist?.toFixed(4)} | CVD=${d.cvd?.toFixed(0)}`) }) }
   if (signalEvents.length > 0) { lines.push('\n## TA SIGNALS (ostatnie 20)'); signalEvents.slice(-20).forEach((e, i) => lines.push(`${i+1}. ${e.signalType} ${e.pair} | PnL=${e.pnlPct?.toFixed(2)}% | ${e.closeReason}`)) }
 
   lines.push('\n## USTAWIENIA TRADINGU')
   lines.push(`- TP: ${settings.tpPct ?? 2}% | SL: ${settings.slPct ?? 6.5}% | Leverage: ${settings.leverage ?? 1}x | Tryb: ${settings.tradingMode ?? 'CONSERVATIVE'}`)
 
-  lines.push('\n## ZADANIE')
-  lines.push('Przeprowadź GŁĘBOKĄ analizę całego systemu:')
-  lines.push('1. Ocena ogólnego stanu portfela i ekspozycji na ryzyko.')
-  lines.push('2. Skuteczność otwartych pozycji i strategii — co działa, co nie.')
-  lines.push('3. Kontekst rynkowy: reżim, OI, funding, Fear&Greed — czy obecne pozycje są z nim zgodne.')
-  lines.push('4. Najważniejsze anomalie i sygnały TA — korelacje między nimi.')
-  lines.push('5. Konkretne, priorytetyzowane rekomendacje (co zamknąć, co otworzyć, co dostroić).')
-  lines.push('6. Hipotezy do późniejszej walidacji (nie traktuj ich jako nauczonych reguł).')
+  lines.push('\n## TASK')
+  lines.push('Perform a DEEP analysis of the whole system:')
+  lines.push('1. Assessment of overall portfolio health and risk exposure.')
+  lines.push('2. Effectiveness of open positions and strategies — what works, what does not.')
+  lines.push('3. Market context: regime, OI, funding, Fear&Greed — whether current positions align.')
+  lines.push('4. Most important anomalies and TA signals — correlations between them.')
+  lines.push('5. Concrete, prioritized recommendations (what to close, what to open, what to tune).')
+  lines.push('6. Hypotheses for later validation (do not treat as learned rules).')
   return lines.join('\n')
 }

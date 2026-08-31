@@ -85,7 +85,7 @@ function DrawdownHeatMap() {
     return { background: `${te.red}88` }
   }
 
-  if (heatMapData.length === 0) return <div className="text-[9px] text-center py-4" style={{ color: te.textMuted, fontFamily: te.mono }}>Ładowanie danych heatmapy...</div>
+  if (heatMapData.length === 0) return <div className="text-[9px] text-center py-4" style={{ color: te.textMuted, fontFamily: te.mono }}>Loading heatmap data...</div>
 
   return (
     <>
@@ -120,7 +120,7 @@ function DrawdownHeatMap() {
       {heatMapTooltip && (
         <div className="mt-2 rounded-sm px-3 py-1.5" style={{ background: `${te.bgInput}55`, border: `1px solid ${te.border}` }}>
           <span className="text-[9px] font-bold" style={{ color: te.text, fontFamily: te.mono }}>{heatMapTooltip.coin}</span>
-          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono }}> — dzień {heatMapTooltip.day === 0 ? 'dziś' : `-${heatMapTooltip.day}d`}: </span>
+          <span className="text-[9px]" style={{ color: te.textMuted, fontFamily: te.mono }}> — day {heatMapTooltip.day === 0 ? 'dziś' : `-${heatMapTooltip.day}d`}: </span>
           <span className="text-[9px] font-bold" style={{ color: heatMapTooltip.drawdown < -5 ? te.red : te.yellow, fontFamily: te.mono }}>{heatMapTooltip.drawdown.toFixed(2)}%</span>
         </div>
       )}
@@ -285,13 +285,13 @@ export default function BacktestTab() {
           bb_period: bbPeriod, bb_std: bbStd,
         }),
       })
-      if (!res.ok) { const errData = await res.json().catch(() => ({})); throw new Error(errData.error || 'Backtest nie powiódł się') }
+      if (!res.ok) { const errData = await res.json().catch(() => ({})); throw new Error(errData.error || 'Backtest failed') }
       setResult(await res.json())
-    } catch (err) { setError(err instanceof Error ? err.message : 'Nieznany błąd') }
+    } catch (err) { setError(err instanceof Error ? err.message : 'Unknown error') }
     finally { setRunning(false) }
   }
 
-  const presetStrategies = [
+  const presetStrategiessss = [
     { name: 'Konserwatywna', dip1h: -3, dip24h: -10, tp: 2, sl: 3, days: 90 },
     { name: 'Zbalansowana', dip1h: -2, dip24h: -7, tp: 3, sl: 5, days: 90 },
     { name: 'Agresywna', dip1h: -1, dip24h: -5, tp: 5, sl: 8, days: 90 },
@@ -343,12 +343,12 @@ export default function BacktestTab() {
                     </select>
                   </div>
 
-                  {/* Preset Strategies */}
+                  {/* Preset Strategiessss */}
                   {strategyType === 'dip_buying' && (
                     <div>
                       <span className="text-[8px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em', fontFamily: te.mono }}>PRESETS</span>
                       <div className="flex gap-1.5 mt-1">
-                        {presetStrategies.map(p => (
+                        {presetStrategiessss.map(p => (
                           <button key={p.name} onClick={() => { setDipThreshold1h(p.dip1h); setDipThreshold24h(p.dip24h); setTakeProfitPct(p.tp); setStopLossPct(p.sl); setDays(p.days) }}
                             className="px-2 py-1 text-[8px] font-bold rounded-sm"
                             style={{ color: te.textDim, background: 'transparent', border: `1px solid ${te.border}`, fontFamily: te.mono, letterSpacing: '0.04em' }}>

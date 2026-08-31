@@ -412,7 +412,7 @@ export default function AssetChartModal({ asset, open, onClose }: {
                   animation: 'spin 0.8s linear infinite',
                 }} />
                 <span style={{ fontFamily: te.mono, fontSize: 8, letterSpacing: '0.1em', color: te.textDim, textTransform: 'uppercase' }}>
-                  ŁADOWANIE WYKRESU…
+                  LOADING CHART...
                 </span>
               </div>
             </div>

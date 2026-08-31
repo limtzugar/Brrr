@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const rateResult = checkRateLimit(ip, 10, 60 * 1000)
     if (!rateResult.allowed) {
       return NextResponse.json(
-        { error: 'Zbyt wiele żądań. Spróbuj ponownie za chwilę.' },
+        { error: 'Too many requests. Try again in a moment.' },
         { status: 429 }
       )
     }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     const exchange = (parsedParams?.exchange as string) || 'bybit'
     if (exchange === 'binance') {
       return NextResponse.json(
-        { error: 'Handel przez Binance został wyłączony' },
+        { error: 'Trading via Binance has been disabled' },
         { status: 410 }
       )
     }
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     }
     if (!symbol) {
       return NextResponse.json(
-        { error: `Nie znaleziono symbolu dla ${coinId} na ${exchange.toUpperCase()}` },
+        { error: `Nie znaleziono symbolu dla ${coinId} on ${exchange.toUpperCase()}` },
         { status: 400 }
       )
     }
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[/api/strategies/activate] Error:', error)
     return NextResponse.json(
-      { error: 'Błąd aktywacji strategii. Spróbuj ponownie później.' },
+      { error: 'Failed to activate strategy. Try again later.' },
       { status: 500 }
     )
   }

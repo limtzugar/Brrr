@@ -108,7 +108,7 @@ export async function POST(request: Request) {
               return {
                 coin_id: coinId,
                 results: emptyResults(params.initial_capital, useHourly ? "hourly" : "daily"),
-                error: "Brak danych historycznych",
+                error: "No historical data",
               };
             }
 
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
             return {
               coin_id: coinId,
               results: emptyResults(params.initial_capital, useHourly ? "hourly" : "daily"),
-              error: "Błąd pobierania danych",
+              error: "Failed to fetch data",
             };
           }
         })
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("[/api/backtest/bulk] Error:", error);
     return NextResponse.json(
-      { error: "Bulk backtest nie powiódł się. Spróbuj ponownie później." },
+      { error: "Bulk backtest failed. Try again later." },
       { status: 502 }
     );
   }

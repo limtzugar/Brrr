@@ -14,8 +14,8 @@ import {
 } from '@/lib/trading-shared'
 import { useTE } from '@/lib/te-theme'
 
-interface StrategiesTabProps {
-  activeStrategies: ActiveStrategyInfo[]
+interface StrategiessssTabProps {
+  activeStrategiessss: ActiveStrategyInfo[]
   onStrategyChange: () => void
 }
 
@@ -102,7 +102,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
 
           {/* Coin */}
           <div>
-            <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Moneta</span>
+            <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Coin</span>
             <select
               value={editForm.coin_id}
               onChange={e => onEditFormChange({ ...editForm, coin_id: e.target.value })}
@@ -131,11 +131,11 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           {(currentType === 'momentum') && (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Okres MA</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>MA period</span>
                 <input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} min={2} />
               </div>
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Próg wolumenu</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Volume threshold</span>
                 <input type="number" value={editForm.volume_threshold} onChange={e => onEditFormChange({ ...editForm, volume_threshold: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} step={0.1} min={0.1} />
               </div>
             </div>
@@ -143,11 +143,11 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           {(currentType === 'mean_reversion') && (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Okres MA</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>MA period</span>
                 <input type="number" value={editForm.ma_period} onChange={e => onEditFormChange({ ...editForm, ma_period: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} min={2} />
               </div>
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Próg odchylenia (σ)</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Deviation threshold (σ)</span>
                 <input type="number" value={editForm.deviation_threshold} onChange={e => onEditFormChange({ ...editForm, deviation_threshold: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} step={0.5} min={0.5} />
               </div>
             </div>
@@ -167,11 +167,11 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           {(currentType === 'grid') && (
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Odstęp siatki (%)</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Grid spacing (%)</span>
                 <input type="number" value={editForm.grid_spacing_pct} onChange={e => onEditFormChange({ ...editForm, grid_spacing_pct: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} step={0.5} min={0.5} />
               </div>
               <div>
-                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Poziomy siatki</span>
+                <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Grid levels</span>
                 <input type="number" value={editForm.grid_levels} onChange={e => onEditFormChange({ ...editForm, grid_levels: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} min={2} />
               </div>
             </div>
@@ -224,7 +224,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Kapitał ($)</span>
+              <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Capital ($)</span>
               <input type="number" value={editForm.initial_capital} onChange={e => onEditFormChange({ ...editForm, initial_capital: Number(e.target.value) })} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teInput(te)} />
             </div>
             <div className="flex items-end gap-2 pb-0.5">
@@ -242,7 +242,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
             <div className="flex items-center gap-2 mb-2">
               <Thermometer className="size-3" style={{ color: te.orange }} />
               <span className="text-[8px] font-bold uppercase" style={{ color: te.text, fontFamily: te.mono, letterSpacing: '0.06em' }}>Trailing Stop-Loss</span>
-              <span className="text-[8px]" style={{ color: te.textMuted, fontFamily: te.mono }}>(0 = wyłączony)</span>
+              <span className="text-[8px]" style={{ color: te.textMuted, fontFamily: te.mono }}>(0 = disabled)</span>
             </div>
             <div>
               <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Trailing SL (%)</span>
@@ -341,8 +341,8 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
             <div><span style={{ color: te.textMuted }}>Potwierdzenie:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.breakout_confirm_bars} bar</span></div>
           </>)}
           {strategy.strategy_type === 'grid' && (<>
-            <div><span style={{ color: te.textMuted }}>Odstęp:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.grid_spacing_pct}%</span></div>
-            <div><span style={{ color: te.textMuted }}>Poziomy:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.grid_levels}</span></div>
+            <div><span style={{ color: te.textMuted }}>Spacing:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.grid_spacing_pct}%</span></div>
+            <div><span style={{ color: te.textMuted }}>Levels:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.grid_levels}</span></div>
           </>)}
           {strategy.strategy_type === 'hurst_hcoo_lb' && (<>
             <div><span style={{ color: te.textMuted }}>Hurst ok:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.hurst_period}</span></div>
@@ -353,10 +353,10 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
           <div><span style={{ color: te.textMuted }}>SL:</span> <span className="font-bold" style={{ color: te.red }}>-{strategy.stop_loss_pct}%</span></div>
           <div><span style={{ color: te.textMuted }}>Hold:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.max_holding_hours}h</span></div>
           <div><span style={{ color: te.textMuted }}>Fee:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.fee_pct}%</span></div>
-          <div><span style={{ color: te.textMuted }}>Kapitał:</span> <span className="font-bold" style={{ color: te.text }}>${strategy.initial_capital}</span></div>
+          <div><span style={{ color: te.textMuted }}>Capital:</span> <span className="font-bold" style={{ color: te.text }}>${strategy.initial_capital}</span></div>
           <div><span style={{ color: te.textMuted }}>Dni:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.days}</span></div>
           <div><span style={{ color: te.textMuted }}>Compound:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.compound ? 'Tak' : 'Nie'}</span></div>
-          <div><span style={{ color: te.textMuted }}>Trailing SL:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.trailing_stop_pct > 0 ? `${strategy.trailing_stop_pct}%` : 'Wyłączony'}</span></div>
+          <div><span style={{ color: te.textMuted }}>Trailing SL:</span> <span className="font-bold" style={{ color: te.text }}>{strategy.trailing_stop_pct > 0 ? `${strategy.trailing_stop_pct}%` : 'Disabled'}</span></div>
           <div><span style={{ color: te.textMuted }}>Slippage:</span> <span className="font-bold" style={{ color: te.yellow }}>{(strategy.slippage_pct ?? 0.05).toFixed(2)}%</span></div>
           <div><span style={{ color: te.textMuted }}>Wick sim:</span> <span className="font-bold" style={{ color: strategy.simulate_wicks !== false ? te.green : te.red }}>{strategy.simulate_wicks !== false ? 'TAK' : 'NIE'}</span></div>
         </div>
@@ -384,7 +384,7 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
         {result?.data && (
           <div className="grid grid-cols-2 gap-2 pt-2" style={{ borderTop: `1px solid ${te.border}` }}>
             <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
-              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>ZWROT</span>
+              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>RETURN</span>
               <span className="text-[14px] font-bold" style={{ color: result.data.results.total_return_pct >= 0 ? te.green : te.red, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{result.data.results.total_return_pct >= 0 ? '+' : ''}{result.data.results.total_return_pct.toFixed(2)}%</span>
             </div>
             <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
@@ -400,11 +400,11 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
               <span className="text-[14px] font-bold" style={{ color: result.data.results.info_ratio >= 1 ? te.green : te.yellow, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{result.data.results.info_ratio.toFixed(2)}</span>
             </div>
             <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
-              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>TRADE'Y</span>
+              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>TRADES</span>
               <span className="text-[14px] font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{result.data.results.total_trades}</span>
             </div>
             <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
-              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>KAPITAŁ KOŃCOWY</span>
+              <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>CAPITAL KOŃCOWY</span>
               <span className="text-[14px] font-bold" style={{ color: result.data.results.final_capital > (result.data.parameters?.initial_capital as number ?? 0) ? te.green : te.red, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>${result.data.results.final_capital.toFixed(0)}</span>
             </div>
           </div>
@@ -414,11 +414,11 @@ function StrategyCard({ strategy, result, onEdit, onDelete, isEditing, editForm,
   )
 }
 
-// ─── StrategiesTab Main Component ─────────────────────────────────────────────
+// ─── StrategiessssTab Main Component ─────────────────────────────────────────────
 
-export default function StrategiesTab({ activeStrategies, onStrategyChange }: StrategiesTabProps) {
+export default function StrategiessssTab({ activeStrategiessss, onStrategyChange }: StrategiessssTabProps) {
   const te = useTE()
-  const [strategies, setStrategies] = useState<StrategyConfig[]>(DEFAULT_STRATEGIES)
+  const [strategies, setStrategiessss] = useState<StrategyConfig[]>(DEFAULT_STRATEGIES)
   const [results, setResults] = useState<Map<string, StrategyResult>>(new Map())
   const [running, setRunning] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -449,7 +449,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
             hurst_threshold: s.hurst_threshold ?? 0.5, bb_period: s.bb_period ?? 20, bb_std: s.bb_std ?? 2,
             slippage_pct: s.slippage_pct ?? 0.05, simulate_wicks: s.simulate_wicks ?? true,
           }))
-          setStrategies(migrated)
+          setStrategiessss(migrated)
         }
       }
     } catch {}
@@ -478,7 +478,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
-        const errMsg = errData.error || errData.details || `Błąd HTTP ${res.status}`
+        const errMsg = errData.error || errData.details || `Error HTTP ${res.status}`
         if ((res.status === 429 || res.status === 502) && retryCount < maxRetries) {
           await new Promise(r => setTimeout(r, 2000 * Math.pow(2, retryCount)))
           return runSingleBacktest(strategy, retryCount + 1)
@@ -488,7 +488,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       const data = await res.json()
       return { strategyId: strategy.id, loading: false, error: null, data, retryCount }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : 'Błąd połączenia z serwerem'
+      const errMsg = err instanceof Error ? err.message : 'Server connection error'
       if (retryCount < maxRetries) { await new Promise(r => setTimeout(r, 2000 * Math.pow(2, retryCount))); return runSingleBacktest(strategy, retryCount + 1) }
       return { strategyId: strategy.id, loading: false, error: errMsg, data: null, retryCount }
     }
@@ -529,18 +529,18 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       leverage: 3, futures_alloc_pct: 50, ema_fast: 9, ema_slow: 21, rsi_period: 14, rsi_overbought: 70, rsi_oversold: 30,
       futures_sl_pct: 2, futures_tp_pct: 4, max_futures_hours: 24, funding_rate_pct: 0.01,
     }
-    setStrategies([...strategies, newStrategy]); setEditingId(id); setEditForm(newStrategy)
+    setStrategiessss([...strategies, newStrategy]); setEditingId(id); setEditForm(newStrategy)
   }
 
   const deleteStrategy = (id: string) => {
-    setStrategies(strategies.filter(s => s.id !== id))
+    setStrategiessss(strategies.filter(s => s.id !== id))
     const newResults = new Map(results); newResults.delete(id); setResults(newResults)
     if (editingId === id) { setEditingId(null); setEditForm(null) }
   }
 
   const saveStrategy = () => {
     if (!editForm) return
-    setStrategies(strategies.map(s => s.id === editForm.id ? editForm : s))
+    setStrategiessss(strategies.map(s => s.id === editForm.id ? editForm : s))
     setEditingId(null); setEditForm(null)
   }
 
@@ -551,9 +551,9 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ coin_id: optimizeCoin, days: optimizeDays, initial_capital: 1000, compound: true, fee_pct: 0.1, strategy_type: optimizeStrategyType }),
       })
-      if (!res.ok) { const errData = await res.json().catch(() => ({})); setOptimizeError(errData.error || 'Błąd optymalizacji') }
+      if (!res.ok) { const errData = await res.json().catch(() => ({})); setOptimizeError(errData.error || 'Optimization error') }
       else { setOptimizeResult(await res.json()) }
-    } catch (err) { setOptimizeError(err instanceof Error ? err.message : 'Błąd optymalizacji') }
+    } catch (err) { setOptimizeError(err instanceof Error ? err.message : 'Optimization error') }
     finally { setOptimizing(false) }
   }
 
@@ -576,7 +576,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       hurst_threshold: best.params.hurst_threshold ?? 0.5, bb_period: best.params.bb_period ?? 20,
       bb_std: best.params.bb_std ?? 2, slippage_pct: 0.05, simulate_wicks: true,
     }
-    setStrategies([...strategies, newStrategy])
+    setStrategiessss([...strategies, newStrategy])
   }
 
   const addOptimizedStrategy = (item: OptimizeResultItem, rank: number) => {
@@ -596,7 +596,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       hurst_threshold: item.params.hurst_threshold ?? 0.5, bb_period: item.params.bb_period ?? 20,
       bb_std: item.params.bb_std ?? 2, slippage_pct: 0.05, simulate_wicks: true,
     }
-    setStrategies([...strategies, newStrategy])
+    setStrategiessss([...strategies, newStrategy])
   }
 
   const bestStrategy = strategies.reduce((best, s) => {
@@ -622,9 +622,9 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         }),
       })
       const data = await res.json()
-      if (!res.ok) setActivationError(data.error || 'Błąd aktywacji strategii')
+      if (!res.ok) setActivationError(data.error || 'Failed to activate strategy')
       else onStrategyChange()
-    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Błąd połączenia z serwerem') }
+    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Server connection error') }
     finally { setActivatingStrategy(null) }
   }
 
@@ -636,14 +636,14 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         body: JSON.stringify({ strategyId, mode }),
       })
       const data = await res.json()
-      if (!res.ok) setActivationError(data.error || 'Błąd dezaktywacji')
+      if (!res.ok) setActivationError(data.error || 'Failed to deactivate')
       else onStrategyChange()
-    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Błąd połączenia') }
+    } catch (err) { setActivationError(err instanceof Error ? err.message : 'Connection error') }
     finally { setActivatingStrategy(null) }
   }
 
-  const runningStrategies = activeStrategies.filter(s => s.status === 'running')
-  const stoppedStrategies = activeStrategies.filter(s => s.status !== 'running')
+  const runningStrategiessss = activeStrategiessss.filter(s => s.status === 'running')
+  const stoppedStrategiessss = activeStrategiessss.filter(s => s.status !== 'running')
 
   return (
     <div className="space-y-4">
@@ -673,7 +673,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
               <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
                 <div>
-                  <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Moneta</span>
+                  <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Coin</span>
                   <select value={optimizeCoin} onChange={e => setOptimizeCoin(e.target.value)} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teSelect(te)}>
                     {COIN_OPTIONS.map(c => (<option key={c.id} value={c.id}>{c.label}</option>))}
                   </select>
@@ -685,7 +685,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
                   </select>
                 </div>
                 <div>
-                  <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Okres (dni)</span>
+                  <span className="text-[7px] font-bold uppercase" style={{ ...teLabel(te) }}>Period (days)</span>
                   <select value={String(optimizeDays)} onChange={e => setOptimizeDays(Number(e.target.value))} className="w-full px-2 py-1 text-[10px] rounded-sm outline-none mt-0.5" style={teSelect(te)}>
                     <option value="30">30 dni</option>
                     <option value="90">90 dni</option>
@@ -710,16 +710,16 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
             {optimizing && (
               <div className="flex items-center gap-3 text-[10px] rounded-sm px-3 py-2" style={{ color: te.textMuted, background: `${te.bgInput}55`, fontFamily: te.mono }}>
                 <RefreshCw className="size-3 animate-spin" />
-                <span>Testuję kombinacje parametrów ({strategyTypeLabel(optimizeStrategyType)})... To może potrwać 10-30s</span>
+                <span>Testing parameter combinations ({strategyTypeLabel(optimizeStrategyType)})... May take 10-30s</span>
               </div>
             )}
 
             {optimizeResult && !optimizing && (
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-[10px]" style={{ color: te.textMuted, fontFamily: te.mono }}>
-                  <span>Przetestowano <strong style={{ color: te.text }}>{optimizeResult.total_combinations}</strong> kombinacji</span>
+                  <span>Tested <strong style={{ color: te.text }}>{optimizeResult.total_combinations}</strong> combinations</span>
                   <span style={{ color: te.border }}>|</span>
-                  <span>Ważne strategie: <strong style={{ color: te.text }}>{optimizeResult.valid_strategies}</strong></span>
+                  <span>Valid strategies: <strong style={{ color: te.text }}>{optimizeResult.valid_strategies}</strong></span>
                 </div>
 
                 {optimizeResult.best && (
@@ -733,7 +733,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
-                        <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>ZWROT</span>
+                        <span className="text-[7px] font-bold" style={{ color: te.textDim, letterSpacing: '0.08em' }}>RETURN</span>
                         <span className="text-[12px] font-bold" style={{ color: optimizeResult.best.total_return_pct >= 0 ? te.green : te.red, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{optimizeResult.best.total_return_pct >= 0 ? '+' : ''}{optimizeResult.best.total_return_pct.toFixed(2)}%</span>
                       </div>
                       <div className="flex flex-col items-center p-2 rounded-sm" style={teMetricBox(te)}>
@@ -770,7 +770,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
                           <th className="px-2 py-1.5 text-left font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>TP</th>
                           <th className="px-2 py-1.5 text-left font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>SL</th>
                           {optimizeResult.strategy_type !== 'grid' && (<th className="px-2 py-1.5 text-left font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>HOLD</th>)}
-                          <th className="px-2 py-1.5 text-right font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>ZWROT</th>
+                          <th className="px-2 py-1.5 text-right font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>RETURN</th>
                           <th className="px-2 py-1.5 text-right font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>WR</th>
                           <th className="px-2 py-1.5 text-right font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>PF</th>
                           <th className="px-2 py-1.5 text-right font-bold text-[8px]" style={{ color: te.textDim, letterSpacing: '0.06em' }}>DD</th>
@@ -815,7 +815,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <span className="text-[8px] font-bold" style={{ color: te.textDim, letterSpacing: '0.14em', fontFamily: te.mono }}>TWOJE STRATEGIE TRADINGOWE</span>
-          <p className="text-[10px] mt-0.5" style={{ color: te.textMuted, fontFamily: te.mono }}>Porównaj różne konfiguracje — każdy typ strategii z własnymi parametrami</p>
+          <p className="text-[10px] mt-0.5" style={{ color: te.textMuted, fontFamily: te.mono }}>Porównaj różne konfiguracje — każdy typ strategii of własnymi parametrami</p>
         </div>
         <div className="flex gap-2">
           <button onClick={addStrategy} disabled={running} className="px-2 py-1 text-[9px] font-bold rounded-sm inline-flex items-center gap-1" style={{ color: te.textDim, background: 'transparent', border: `1px solid ${te.border}`, fontFamily: te.mono, letterSpacing: '0.04em' }}><Plus className="size-3" /> DODAJ</button>
@@ -832,12 +832,12 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         </div>
       )}
 
-      {/* Running Strategies */}
-      {runningStrategies.length > 0 && (
+      {/* Running Strategiessss */}
+      {runningStrategiessss.length > 0 && (
         <div>
-          <span className="text-[8px] font-bold uppercase inline-flex items-center gap-1.5 mb-2" style={{ color: te.textDim, fontFamily: te.mono, letterSpacing: '0.1em' }}><Play className="size-3" /> AKTYWNE STRATEGIE ({runningStrategies.length})</span>
+          <span className="text-[8px] font-bold uppercase inline-flex items-center gap-1.5 mb-2" style={{ color: te.textDim, fontFamily: te.mono, letterSpacing: '0.1em' }}><Play className="size-3" /> AKTYWNE STRATEGIE ({runningStrategiessss.length})</span>
           <div className="flex gap-2 overflow-x-auto pb-2">
-            {runningStrategies.map(s => (
+            {runningStrategiessss.map(s => (
               <div key={`${s.strategyId}:${s.mode}`} className="shrink-0 min-w-[200px] rounded-sm p-3" style={{ background: te.greenBg, border: `1px solid ${te.green}30` }}>
                 <div className="flex items-center gap-2 mb-1.5">
                   <div className="size-5 rounded-sm flex items-center justify-center" style={{ background: s.mode === 'demo' ? te.blue : te.red }}>{s.mode === 'demo' ? <FlaskConical className="size-2.5 text-white" /> : <DollarSign className="size-2.5 text-white" />}</div>
@@ -859,10 +859,10 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
         </div>
       )}
 
-      {/* Stopped Strategies */}
-      {stoppedStrategies.length > 0 && (
+      {/* Stopped Strategiessss */}
+      {stoppedStrategiessss.length > 0 && (
         <div className="flex gap-2 overflow-x-auto">
-          {stoppedStrategies.map(s => (
+          {stoppedStrategiessss.map(s => (
             <div key={`${s.strategyId}:${s.mode}`} className="flex items-center gap-2 text-[9px] rounded-sm px-2 py-1 shrink-0" style={{ background: `${te.bgInput}55`, color: te.textMuted, fontFamily: te.mono }}>
               <span className="font-bold" style={{ color: te.text }}>{s.name}</span>
               <span>PnL: <span style={{ color: s.totalPnl >= 0 ? te.green : te.red }}>${s.totalPnl.toFixed(2)}</span></span>
@@ -878,7 +878,7 @@ export default function StrategiesTab({ activeStrategies, onStrategyChange }: St
             onEdit={() => { setEditingId(strategy.id); setEditForm({ ...strategy }) }}
             onDelete={() => deleteStrategy(strategy.id)} isEditing={editingId === strategy.id} editForm={editForm}
             onEditFormChange={setEditForm} onSave={saveStrategy} onCancel={() => { setEditingId(null); setEditForm(null) }}
-            activeInfo={activeStrategies} activatingKey={activatingStrategy}
+            activeInfo={activeStrategiessss} activatingKey={activatingStrategy}
             onActivate={activateStrategy} onDeactivate={deactivateStrategyHandler} onRetry={retryStrategy}
           />
         ))}

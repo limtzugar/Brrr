@@ -545,7 +545,7 @@ export default function CexAnomalyTab() {
       const res = await fetch('/api/llm-analyst', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ anomalies: recentAnomalies, positions: activePositions, closedPositions: closedPos, signalEvents: signalEvents.slice(-20), pairData, settings: { tpPct: taManualTpRef.current ?? 2, slPct: taManualSlRef.current ?? 6.5, leverage: taLeverageRef.current, tradingMode } }) })
       if (!res.ok) { const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` })); throw new Error(err.error || 'LLM failed') }
       const data = await res.json(); setLlmReport(data)
-    } catch (err) { setLlmError(err instanceof Error ? err.message : 'Błąd') } finally { setLlmLoading(false) }
+    } catch (err) { setLlmError(err instanceof Error ? err.message : 'Error') } finally { setLlmLoading(false) }
   }, [signalEvents, tradingMode])
 
   // ─── RSI 15m Virtual Signal Tracking ──────────────────────────────────────
@@ -1349,7 +1349,7 @@ export default function CexAnomalyTab() {
       if (balRes.ok) {
         const balData = await balRes.json()
         if (balData.success === false) {
-          const errMsg = balData.error || 'Błąd'
+          const errMsg = balData.error || 'Error'
           // Don't kill REAL mode on transient errors — only on auth failures
           if (errMsg.includes('klucze') || errMsg.includes('API key') || errMsg.includes('Unauthorized') || errMsg.includes('Invalid sign') || errMsg.includes('10003') || errMsg.includes('10004')) {
             logEvent('CRITICAL', 'BYBIT', 'Klucze API utracone', `${errMsg} — dezaktywacja REAL mode.`)
@@ -5244,7 +5244,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: taSettingsOpen ? te.orange : 'transparent',
                       border: `1px solid ${taSettingsOpen ? 'transparent' : te.orange + '66'}`,
                     }}
-                    title="Ustawienia TP/SL/Leverage dla sygnałów TA (RSI 15m + MACD)"
+                    title="Settings TP/SL/Leverage dla sygnałów TA (RSI 15m + MACD)"
                   >
                     {taSettingsOpen ? '×' : '⚙'} TA
                   </button>
@@ -6029,8 +6029,8 @@ export default function CexAnomalyTab() {
                       if (d.success === false) {
                         // API keys not configured or connection failed
                         setBybitTrading(false)
-                        const errMsg = d.error || 'Nieznany błąd'
-                        logEvent('CRITICAL', 'BYBIT', 'Brak kluczy API Bybit', `${errMsg} — kliknij Setup API w nagłówku aby skonfigurować klucze.`)
+                        const errMsg = d.error || 'Unknown error'
+                        logEvent('CRITICAL', 'BYBIT', 'No kluczy API Bybit', `${errMsg} — kliknij Setup API w nagłówku aby skonfigurować klucze.`)
                         console.error(`[REAL MODE] ❌ Cannot activate: ${errMsg}`)
                         return
                       }
@@ -6052,18 +6052,18 @@ export default function CexAnomalyTab() {
                         setTestWalletInput(realBalance.toFixed(2))
                         // Reset cumulative PnL so initialCapital = wallet balance at switch time
                         cumulativeRealizedPnlRef.current = 0
-                        logEvent('INFO', 'BYBIT', 'REAL mode aktywny', `Kapitał: $${realBalance.toFixed(2)} (availableBalance=${d.availableBalance}, totalEquity=${d.totalEquityUsdt})`)
+                        logEvent('INFO', 'BYBIT', 'REAL mode aktywny', `Capital: $${realBalance.toFixed(2)} (availableBalance=${d.availableBalance}, totalEquity=${d.totalEquityUsdt})`)
                       } else {
                         // Balance is 0 — API works but no funds
                         setBybitFuturesBalance(0)
-                        logEvent('WARNING', 'BYBIT', 'Saldo Bybit = $0', 'Połączenie OK, ale brak USDT na koncie futures. Przelej środki na konto Unified Trading.')
+                        logEvent('WARNING', 'BYBIT', 'Saldo Bybit = $0', 'Connection OK, ale brak USDT on koncie futures. Przelej środki on konto Unified Trading.')
                       }
                       // Activate REAL mode regardless of balance (>0 is info, ===0 is warning, both valid)
                       setBybitTrading(true)
                     })
                     .catch(err => {
                       setBybitTrading(false)
-                      logEvent('CRITICAL', 'BYBIT', 'Błąd połączenia z Bybit', err instanceof Error ? err.message : String(err))
+                      logEvent('CRITICAL', 'BYBIT', 'Bybit connection error', err instanceof Error ? err.message : String(err))
                       console.error('[REAL MODE] ❌ Balance fetch failed:', err)
                     })
                 }
@@ -6103,7 +6103,7 @@ export default function CexAnomalyTab() {
                 </span>
               )}
               <div className="ml-auto flex items-center gap-1">
-                <span className="text-[12px]" style={{ fontFamily: te.mono, color: te.text }}>KAPITAŁ:</span>
+                <span className="text-[12px]" style={{ fontFamily: te.mono, color: te.text }}>CAPITAL:</span>
                 {/* REAL mode: show Bybit balance (read-only) */}
                 {bybitTrading && bybitFuturesBalance !== null ? (
                   <span className="px-1.5 py-0.5 text-[11px] font-bold rounded-sm" style={{
@@ -6606,7 +6606,7 @@ export default function CexAnomalyTab() {
                       backgroundColor: beEnabled ? te.cyan : 'transparent',
                       border: `1px solid ${beEnabled ? 'transparent' : te.border}`,
                     }}
-                    title={beEnabled ? 'Wyłącz Breakeven Stop' : 'Włącz Breakeven Stop — SL przechodzi na entry+buffer po ruchu w stronę TP'}
+                    title={beEnabled ? 'Wyłącz Breakeven Stop' : 'Włącz Breakeven Stop — SL przechodzi on entry+buffer po ruchu w stronę TP'}
                   >
                     {beEnabled ? 'ON' : 'OFF'}
                   </button>
@@ -6966,7 +6966,7 @@ export default function CexAnomalyTab() {
                       opacity: isEnabled ? 1 : 0.35,
                       textDecoration: isEnabled ? 'none' : 'line-through',
                     }}
-                    title={isEnabled ? `Wyłącz ${pair.symbol} z sygnałów` : `Włącz ${pair.symbol} do sygnałów`}
+                    title={isEnabled ? `Wyłącz ${pair.symbol} of sygnałów` : `Włącz ${pair.symbol} do sygnałów`}
                   >
                     {isEnabled ? '●' : '○'} {baseAsset}
                   </button>
@@ -7060,7 +7060,7 @@ export default function CexAnomalyTab() {
             </>)}
           </div>
 
-          {/* Active Positions — na samym dole */}
+          {/* Active Positions — on samym dole */}
           <div className="rounded-sm p-2" style={{ background: te.bgCard, border: `1px solid ${te.border}` }}>
             <div className="flex items-center gap-2 mb-1">
               <Layers className="size-3.5" style={{ color: te.blue }} />

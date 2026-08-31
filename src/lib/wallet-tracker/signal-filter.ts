@@ -33,7 +33,7 @@ export async function filterSignal(
 
   if (!safetyInfo) {
     // If we can't get safety info, be conservative
-    reasons.push('Brak danych bezpieczeństwa tokena (safety score niedostępny)')
+    reasons.push('No data bezpieczeństwa tokena (safety score niedostępny)')
     riskLevel = 'high'
     recommendedAction = 'skip'
     return { passed: false, reasons, safetyInfo: null, riskLevel, recommendedAction }
@@ -111,7 +111,7 @@ export async function filterSignal(
 
   // 10. Position size risk check
   if (activity.amountUsd && activity.amountUsd > 100000) {
-    reasons.push(`Duża pozycja: $${activity.amountUsd.toLocaleString()} — potencjalny wpływ na cenę`)
+    reasons.push(`Duża pozycja: $${activity.amountUsd.toLocaleString()} — potencjalny wpływ on cenę`)
     if (riskLevel === 'low') riskLevel = 'medium'
   }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { resumeActiveStrategies } from '@/lib/strategy-runner'
+import { resumeActiveStrategiessss } from '@/lib/strategy-runner'
 import { resumeStrategyLearningJobs } from '@/lib/strategy-shadow'
 
 export const runtime = 'nodejs'
@@ -11,15 +11,14 @@ export async function POST(request: Request) {
   if (!secret) {
     return NextResponse.json({ error: 'CRON_SECRET env var not set — trading-runtime disabled' }, { status: 503 })
   }
-  const token = request.headers.get('x-cron-secret')
-    || new URL(request.url).searchParams.get('token')
+  const token = request.headers.get('x-cron-secret') || ''
   if (token !== secret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     await resumeStrategyLearningJobs()
-    await resumeActiveStrategies()
+    await resumeActiveStrategiessss()
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({

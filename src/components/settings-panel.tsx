@@ -97,7 +97,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
   const saveApiKeys = async (exchange: string, mode: 'demo' | 'real') => {
     const form = getFormState(exchange, mode)
     if (!form.key || !form.secret) {
-      setTestResult('Wypełnij oba pola: API Key i API Secret')
+      setTestResult('Fill both fields: API Key and API Secret')
       return
     }
     const saveKey = `${exchange}:${mode}`
@@ -122,7 +122,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
         }
       }
     } catch (err) {
-      setTestResult(`❌ Błąd: ${err instanceof Error ? err.message : 'Nieznany'}`)
+      setTestResult(`❌ Error: ${err instanceof Error ? err.message : 'Unknown'}`)
     } finally {
       setSaving(null)
     }
@@ -132,7 +132,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
     try {
       await fetch(`/api/exchange?exchange=${exchange}&mode=${mode}`, { method: 'DELETE' })
       fetchApis()
-      setTestResult('Klucze usunięte')
+      setTestResult('Keys removed')
     } catch {}
   }
 
@@ -161,8 +161,8 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
         body: JSON.stringify({ exchange, mode, subMemberId: memberId, subAccountName: memberName }),
       })
       fetchApis()
-      const label = memberId ? `subkonto "${memberName}"` : 'konto główne'
-      setTestResult(`✅ Przełączono na ${label}`)
+      const label = memberId ? `sub-account "${memberName}"` : 'main account'
+      setTestResult(`✅ Przełączono on ${label}`)
     } catch {}
   }
 
@@ -325,7 +325,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
                   className="w-full text-left px-2 py-1 text-[10px] font-mono transition-colors flex items-center justify-between"
                   style={{ background: !currentSubId ? '#f7a60010' : 'transparent', color: !currentSubId ? te.orange : te.textDim }}
                 >
-                  <span>{!currentSubId ? '● ' : '○ '}Konto główne</span>
+                  <span>{!currentSubId ? '● ' : '○ '}Main account</span>
                 </button>
                 {/* Sub-accounts */}
                 {subs.map(sub => (
@@ -348,7 +348,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
           {/* Mode warnings */}
           {mode === 'real' && (
             <div className="text-[9px] font-mono" style={{ color: `${te.red}aa` }}>
-              LIVE — {apiEndpoint} — prawdziwe środki
+              LIVE — {apiEndpoint} — real funds
             </div>
           )}
           {mode === 'demo' && (
@@ -366,7 +366,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2 text-sm">
           <Key className="size-4" />
-          <span className="uppercase tracking-wider text-[12px] font-bold">Ustawienia API</span>
+          <span className="uppercase tracking-wider text-[12px] font-bold">Settings API</span>
         </DialogTitle>
         <DialogDescription className="text-[10px]" style={{ color: te.textDim }}>
           Skonfiguruj klucze API do automatycznego tradingu.
@@ -376,9 +376,9 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
       <div className="text-[9px] px-3 py-2 space-y-1 font-mono" style={{ borderRadius: '2px', border: `1px solid ${te.border}`, background: `${te.orange}11`, color: te.textDim }}>
         <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: te.orange }}>Quick Start — Demo Trading</div>
         <div>1. Bybit: <a href="https://testnet.bybit.com" target="_blank" rel="noreferrer" style={{ color: te.cyan }}>testnet.bybit.com</a> → API → Create Key (Read + Trade)</div>
-        <div>2. Wklej klucz w <span style={{ color: te.yellow }}>Bybit Demo</span> poniżej → Zapisz</div>
-        <div>3. W headerze przełącz na <span style={{ color: te.green }}>DEMO</span> → saldo testnet się pojawi</div>
-        <div>4. CEX Anomaly: włącz PAPER lub REAL (demo) → SCALPER mode</div>
+        <div>2. Paste key into <span style={{ color: te.yellow }}>Bybit Demo</span> below → Save</div>
+        <div>3. W headerze przełącz on <span style={{ color: te.green }}>DEMO</span> → testnet balance will appear</div>
+        <div>4. CEX Anomaly: enable PAPER or REAL (demo) → SCALPER mode</div>
       </div>
 
       <div className="space-y-3 mt-1">
@@ -387,7 +387,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
         <div className="text-[9px] px-3 py-2 space-y-0.5 font-mono" style={{ borderRadius: '2px', border: `1px solid ${te.border}`, background: te.bg, color: te.textDim }}>
           <div className="text-[10px] font-bold mb-1 uppercase tracking-wider" style={{ color: te.orange }}>Bybit USDT Futures</div>
           <div>Isolated Margin · Maker: <span style={{ color: te.yellow }}>0.0200%</span> · Taker: <span style={{ color: te.yellow }}>0.0550%</span> · Round-trip: <span style={{ color: te.yellow }}>0.1100%</span></div>
-          <div style={{ color: te.textDim }}>UTA Cross → <span style={{ color: te.green }}>auto Isolated per-pair</span> · kliknij SUB by wybrać subkonto</div>
+          <div style={{ color: te.textDim }}>UTA Cross → <span style={{ color: te.green }}>auto Isolated per-pair</span> · click SUB to select sub-account</div>
         </div>
 
         {testResult && (
@@ -437,7 +437,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
           </div>
           <div className="px-3 pb-2 text-[9px] font-mono" style={{ color: te.textDim }}>
             {logsEnabled ? (
-              <span>console.log + console.warn aktywne — <span style={{ color: te.yellow }}>może zapychać bota</span></span>
+              <span>console.log + console.warn active — <span style={{ color: te.yellow }}>may clog bot</span></span>
             ) : (
               <span>Logi wyciszone — <span style={{ color: te.green }}>tylko console.error widoczny</span></span>
             )}
@@ -447,7 +447,7 @@ export default function SettingsPanel({ onClose: _onClose }: SettingsPanelProps)
         {/* ── LLM Analyst Settings ── */}
         <LlmSettingsSection />
 
-        {loading && <div className="text-[10px] font-mono uppercase tracking-wider" style={{ color: te.textDim }}>Ładowanie...</div>}
+        {loading && <div className="text-[10px] font-mono uppercase tracking-wider" style={{ color: te.textDim }}>Loading...</div>}
       </div>
     </>
   )

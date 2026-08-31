@@ -121,7 +121,7 @@ interface RunningStrategy {
 
 // ─── Singleton State ────────────────────────────────────────────────────────
 
-const runningStrategies = new Map<string, RunningStrategy>()
+const runningStrategiessss = new Map<string, RunningStrategy>()
 let pollIntervalId: ReturnType<typeof setInterval> | null = null
 let isPolling = false
 
@@ -140,7 +140,7 @@ async function recordExecutionLegSafely(
 /** Create a unified exchange client from stored API credentials */
 async function createExchangeClient(exchange: string, mode: string): Promise<UnifiedExchangeClient> {
   if (exchange === 'binance') {
-    throw new Error('Handel przez Binance został wyłączony')
+    throw new Error('Trading via Binance has been disabled')
   }
 
   const apiRecord = await db.exchangeApi.findUnique({
@@ -148,7 +148,7 @@ async function createExchangeClient(exchange: string, mode: string): Promise<Uni
   })
 
   if (!apiRecord || !apiRecord.isConfigured) {
-    throw new Error(`Brak skonfigurowanych kluczy API dla ${exchange.toUpperCase()} (${mode}). Ustaw klucze w Ustawieniach.`)
+    throw new Error(`No API keys configured for ${exchange.toUpperCase()} (${mode}). Ustaw klucze w Settingsch.`)
   }
 
   const apiKey = decrypt(apiRecord.apiKey)
@@ -187,7 +187,7 @@ export async function activateStrategyWithConfig(config: {
   const { strategyId, name, coinId, mode } = config
   const existingKey = `${strategyId}:${mode}`
 
-  if (runningStrategies.has(existingKey)) {
+  if (runningStrategiessss.has(existingKey)) {
     return { success: false, message: `Strategia jest już aktywna w trybie ${mode}` }
   }
 
@@ -198,10 +198,10 @@ export async function activateStrategyWithConfig(config: {
     client = await createExchangeClient(exchange, mode)
     const test = await client.testConnection()
     if (!test.success) {
-      return { success: false, message: `Błąd połączenia z ${exchange.toUpperCase()}: ${test.message}` }
+      return { success: false, message: `Connection error of ${exchange.toUpperCase()}: ${test.message}` }
     }
   } catch (err) {
-    return { success: false, message: err instanceof Error ? err.message : `Błąd tworzenia klienta ${exchange.toUpperCase()}` }
+    return { success: false, message: err instanceof Error ? err.message : `Error tworzenia klienta ${exchange.toUpperCase()}` }
   }
 
   const symbol = getExchangeSymbol(coinId, exchange)
@@ -285,7 +285,7 @@ export async function activateStrategyWithConfig(config: {
     gridBoughtLevels: new Map(),
   }
 
-  runningStrategies.set(existingKey, running)
+  runningStrategiessss.set(existingKey, running)
 
   // Start polling if not already
   startPolling()
@@ -310,7 +310,7 @@ function getStrategyTypeLabel(type: string): string {
 /** Deactivate a strategy — stop monitoring and cancel any open orders */
 export async function deactivateStrategy(strategyId: string, mode: BybitMode): Promise<{ success: boolean; message: string }> {
   const key = `${strategyId}:${mode}`
-  const running = runningStrategies.get(key)
+  const running = runningStrategiessss.get(key)
 
   if (!running) {
     return { success: false, message: 'Strategia nie jest aktywna' }
@@ -403,7 +403,7 @@ export async function deactivateStrategy(strategyId: string, mode: BybitMode): P
     if (closeError) {
       await db.activeStrategy.update({
         where: { id: running.dbId },
-        data: { status: 'error', errorMessage: `Błąd zamknięcia: ${closeError.message}` },
+        data: { status: 'error', errorMessage: `Error zamknięcia: ${closeError.message}` },
       })
     } else {
       await db.activeStrategy.update({
@@ -413,10 +413,10 @@ export async function deactivateStrategy(strategyId: string, mode: BybitMode): P
     }
   }
 
-  runningStrategies.delete(key)
+  runningStrategiessss.delete(key)
 
   // Stop polling if no more strategies
-  if (runningStrategies.size === 0) {
+  if (runningStrategiessss.size === 0) {
     stopPolling()
   }
 
@@ -424,7 +424,7 @@ export async function deactivateStrategy(strategyId: string, mode: BybitMode): P
 }
 
 /** Get status of all active strategies */
-export function getActiveStrategiesStatus(): Array<{
+export function getActiveStrategiessssStatus(): Array<{
   strategyId: string
   name: string
   coinId: string
@@ -441,7 +441,7 @@ export function getActiveStrategiesStatus(): Array<{
   winningTrades: number
   lastPrice: number | null
 }> {
-  return Array.from(runningStrategies.values()).map(s => ({
+  return Array.from(runningStrategiessss.values()).map(s => ({
     strategyId: s.strategyId,
     name: s.name,
     coinId: s.coinId,
@@ -462,7 +462,7 @@ export function getActiveStrategiesStatus(): Array<{
 
 /** Check if a specific strategy+mode is active */
 export function isStrategyActive(strategyId: string, mode: BybitMode): boolean {
-  return runningStrategies.has(`${strategyId}:${mode}`)
+  return runningStrategiessss.has(`${strategyId}:${mode}`)
 }
 
 // ─── Polling Engine ─────────────────────────────────────────────────────────
@@ -472,10 +472,10 @@ function startPolling() {
   log('[StrategyRunner] Starting polling engine...')
 
   // Poll every 60 seconds
-  pollIntervalId = setInterval(pollAllStrategies, 60_000)
+  pollIntervalId = setInterval(pollAllStrategiessss, 60_000)
 
   // Also run immediately
-  setTimeout(pollAllStrategies, 1000)
+  setTimeout(pollAllStrategiessss, 1000)
 }
 
 function stopPolling() {
@@ -486,7 +486,7 @@ function stopPolling() {
   log('[StrategyRunner] Polling engine stopped')
 }
 
-async function pollAllStrategies() {
+async function pollAllStrategiessss() {
   if (isPolling) return
   isPolling = true
 
@@ -510,7 +510,7 @@ async function pollAllStrategies() {
       currentPrices.set(`${baseSymbol}USDT`, coin.current_price)
       currentPrices.set(`${baseSymbol}USDC`, coin.current_price)
     }
-    for (const strategy of runningStrategies.values()) {
+    for (const strategy of runningStrategiessss.values()) {
       const coin = coinMap.get(strategy.coinId)
       if (coin) {
         currentPrices.set(normalizeTradingSymbol(strategy.symbol), coin.current_price)
@@ -518,7 +518,7 @@ async function pollAllStrategies() {
     }
 
     // Process each running strategy
-    for (const [key, strategy] of runningStrategies) {
+    for (const [key, strategy] of runningStrategiessss) {
       try {
         await processStrategy(strategy, coinMap)
       } catch (err) {
@@ -733,7 +733,7 @@ async function checkDipEntry(
     logError(`[StrategyRunner] BUY order failed for ${strategy.symbol}:`, err)
     await db.activeStrategy.update({
       where: { id: strategy.dbId },
-      data: { errorMessage: `Błąd kupna: ${err instanceof Error ? err.message : 'Unknown'}` },
+      data: { errorMessage: `Error kupna: ${err instanceof Error ? err.message : 'Unknown'}` },
     })
   }
 }
@@ -1313,7 +1313,7 @@ async function checkExit(strategy: RunningStrategy, currentPrice: number, forceR
     logError(`[StrategyRunner] SELL order failed for ${strategy.symbol}:`, err)
     await db.activeStrategy.update({
       where: { id: strategy.dbId },
-      data: { errorMessage: `Błąd sprzedaży: ${err instanceof Error ? err.message : 'Unknown'}` },
+      data: { errorMessage: `Sell failed: ${err instanceof Error ? err.message : 'Unknown'}` },
     })
   }
 }
@@ -1395,7 +1395,7 @@ async function executeBuy(strategy: RunningStrategy, currentPrice: number) {
     logError(`[StrategyRunner] BUY order failed for ${strategy.symbol}:`, err)
     await db.activeStrategy.update({
       where: { id: strategy.dbId },
-      data: { errorMessage: `Błąd kupna: ${err instanceof Error ? err.message : 'Unknown'}` },
+      data: { errorMessage: `Error kupna: ${err instanceof Error ? err.message : 'Unknown'}` },
     })
   }
 }
@@ -1403,16 +1403,16 @@ async function executeBuy(strategy: RunningStrategy, currentPrice: number) {
 // ─── Initialize on Server Start ─────────────────────────────────────────────
 
 /** Resume any strategies that were running when the server shut down */
-export async function resumeActiveStrategies() {
-  const activeStrategies = await db.activeStrategy.findMany({
+export async function resumeActiveStrategiessss() {
+  const activeStrategiessss = await db.activeStrategy.findMany({
     where: { status: 'running' },
   })
 
-  if (activeStrategies.length === 0) return
+  if (activeStrategiessss.length === 0) return
 
-  log(`[StrategyRunner] Resuming ${activeStrategies.length} active strategies...`)
+  log(`[StrategyRunner] Resuming ${activeStrategiessss.length} active strategies...`)
 
-  for (const record of activeStrategies) {
+  for (const record of activeStrategiessss) {
     try {
       const client = await createExchangeClient(record.exchange || 'bybit', record.mode)
       const key = `${record.strategyId}:${record.mode}`
@@ -1461,7 +1461,7 @@ export async function resumeActiveStrategies() {
         gridBoughtLevels: new Map(),
       }
 
-      runningStrategies.set(key, running)
+      runningStrategiessss.set(key, running)
       log(`[StrategyRunner] Resumed: ${record.name} (${record.strategyType || 'dip_buying'}, ${record.mode})`)
     } catch (err) {
       logError(`[StrategyRunner] Failed to resume ${record.name}:`, err)
@@ -1472,7 +1472,7 @@ export async function resumeActiveStrategies() {
     }
   }
 
-  if (runningStrategies.size > 0) {
+  if (runningStrategiessss.size > 0) {
     startPolling()
   }
 }

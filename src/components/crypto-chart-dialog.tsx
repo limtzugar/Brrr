@@ -232,7 +232,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
       ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
       : 'bg-red-500/20 text-red-400 border-red-500/30'
 
-  const riskLabel = riskLevel === 'safe' ? 'Bezpieczny' : riskLevel === 'warning' ? 'Ostrzeżenie' : 'Zagrożenie'
+  const riskLabel = riskLevel === 'safe' ? 'Safe' : riskLevel === 'warning' ? 'Warning' : 'Danger'
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
@@ -268,7 +268,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
                   <Shield className="size-2.5" />
                   {formatPrice(trailStopLevel)}
                 </Badge>
-                <Badge className="text-[10px] gap-1 bg-slate-700/50 text-slate-300 border border-slate-600" title="Odległość">
+                <Badge className="text-[10px] gap-1 bg-slate-700/50 text-slate-300 border border-slate-600" title="Distance">
                   {trailDistance.percent.toFixed(1)}% / {formatPrice(trailDistance.dollar)}
                 </Badge>
                 <Badge className={`text-[10px] gap-1 ${riskBadgeColor} border`} title="Ocena ryzyka">
@@ -293,7 +293,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="text-xs">
-                  {trailEnabled ? 'Wyłącz Trailing Stop' : 'Włącz Trailing Stop'}
+                  {trailEnabled ? 'Disable Trailing Stop' : 'Enable Trailing Stop'}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -373,7 +373,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
               {trailType === 'atr' && (
                 <>
                   <div className="flex items-center gap-2">
-                    <Label className="text-[11px] text-slate-400">ATR mnożnik</Label>
+                    <Label className="text-[11px] text-slate-400">ATR multiplier</Label>
                     <Input
                       type="number"
                       value={atrMultiplier}
@@ -396,7 +396,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
               )}
 
               <div className="flex items-center gap-2">
-                <Label className="text-[11px] text-slate-400">Cena wejścia</Label>
+                <Label className="text-[11px] text-slate-400">Entry price</Label>
                 <Input
                   type="number"
                   value={entryPrice}
@@ -414,7 +414,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
                     <span className="text-[11px] text-red-400 font-medium">{formatPrice(trailStopLevel)}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] text-slate-500">Odległość:</span>
+                    <span className="text-[10px] text-slate-500">Distance:</span>
                     <span className="text-[11px] text-slate-300 font-medium">{trailDistance.percent.toFixed(1)}% ({formatPrice(trailDistance.dollar)})</span>
                   </div>
                 </div>
@@ -429,7 +429,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
             <div className="absolute inset-0 flex items-center justify-center bg-slate-900 z-10">
               <div className="flex items-center gap-3 text-slate-400">
                 <RefreshCw className="size-5 animate-spin" />
-                <span>Ładowanie wykresu TradingView...</span>
+                <span>Loading TradingView chart...</span>
               </div>
             </div>
           )}
@@ -441,7 +441,7 @@ export default function CryptoChartDialog({ crypto, open, onClose }: CryptoChart
                 <div
                   className="absolute left-0 right-0 h-[2px] bg-emerald-500 z-10"
                   style={{ bottom: '100%' }}
-                  title={`Cena wejścia: ${formatPrice(entryPrice)}`}
+                  title={`Entry price: ${formatPrice(entryPrice)}`}
                 >
                   <div className="absolute -left-1 -top-[1px] w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 </div>

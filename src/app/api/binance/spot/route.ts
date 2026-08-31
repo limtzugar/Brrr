@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 const removed = () => NextResponse.json(
-  { error: 'Handel przez Binance został wyłączony' },
+  { error: 'Trading via Binance has been disabled' },
   { status: 410 }
 )
 

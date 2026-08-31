@@ -601,14 +601,14 @@ export function computeHurstSignal(
   if (h > 1.0) {
     const strength = Math.min(1, (h - 1.0) * 2 + 0.3)
     return { type: 'OVERVALUED', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Przewartościowany: oshort=${h.toFixed(2)} > 1.0 (powyżej kanału) → odwrócenie w dół` }
+      description: `Overvalued: oshort=${h.toFixed(2)} > 1.0 (above channel) → reversal down` }
   }
 
   // UNDERVALUED: fastOsc < 0.0 (price below medium channel bottom) → oversold
   if (h < 0.0) {
     const strength = Math.min(1, Math.abs(h) * 2 + 0.3)
     return { type: 'UNDERVALUED', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Niedowartościowany: oshort=${h.toFixed(2)} < 0.0 (poniżej kanału) → odwrócenie w górę` }
+      description: `Undervalued: oshort=${h.toFixed(2)} < 0.0 (poniżej kanału) → odwrócenie w górę` }
   }
 
   // EXHAUSTION: fastOsc was above 1.0 recently, now falling back (overbought exhaustion)
@@ -616,7 +616,7 @@ export function computeHurstSignal(
     const strength = Math.min(1, Math.abs(hSlope) / 0.08)
     const direction = price > bbMA ? 'UP' : 'DOWN'
     return { type: 'EXHAUSTION', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Wyczerpanie: oshort spada z ekstremum (${direction}) → trend ${direction === 'UP' ? 'wzrostowy' : 'spadkowy'} umiera` }
+      description: `Wyczerpanie: oshort spada of ekstremum (${direction}) → trend ${direction === 'UP' ? 'wzrostowy' : 'spadkowy'} umiera` }
   }
 
   // Bear cross in upper zone: fast crosses below slow when fast > 0.5 → bearish
@@ -624,7 +624,7 @@ export function computeHurstSignal(
     if (prevFast >= prevSlow && h < curSlow && h > 0.5) {
       const strength = Math.min(1, (h - 0.5) * 1.5 + 0.2)
       return { type: 'OVERVALUED', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-        description: `Przewartościowany: bear cross w górnej strefie (fast=${h.toFixed(2)} < slow=${curSlow.toFixed(2)})` }
+        description: `Overvalued: bear cross in upper zone (fast=${h.toFixed(2)} < slow=${curSlow.toFixed(2)})` }
     }
   }
 
@@ -633,7 +633,7 @@ export function computeHurstSignal(
     if (prevFast <= prevSlow && h > curSlow && h < 0.5) {
       const strength = Math.min(1, (0.5 - h) * 1.5 + 0.2)
       return { type: 'UNDERVALUED', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-        description: `Niedowartościowany: bull cross w dolnej strefie (fast=${h.toFixed(2)} > slow=${curSlow.toFixed(2)})` }
+        description: `Undervalued: bull cross in lower zone (fast=${h.toFixed(2)} > slow=${curSlow.toFixed(2)})` }
     }
   }
 
@@ -641,24 +641,24 @@ export function computeHurstSignal(
   if (hSlope > 0.02 && h > 0.3 && price > bbMA) {
     const strength = Math.min(1, hSlope / 0.05 + 0.1)
     return { type: 'TREND-UP', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Trend wzrostowy: oshort rośnie (${(hSlope >= 0 ? '+' : '')}${(hSlope * 100).toFixed(1)}%) → kontynuacja` }
+      description: `Uptrend: oshort rising (${(hSlope >= 0 ? '+' : '')}${(hSlope * 100).toFixed(1)}%) → continuation` }
   }
 
   // TREND-DOWN: fastOsc falling from upper zone + price below MA → downtrend
   if (hSlope < -0.02 && h < 0.7 && price < bbMA) {
     const strength = Math.min(1, Math.abs(hSlope) / 0.05 + 0.1)
     return { type: 'TREND-DOWN', strength, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Trend spadkowy: oshort spada (${(hSlope * 100).toFixed(1)}%) → kontynuacja` }
+      description: `Trend spadkowy: oshort spada (${(hSlope * 100).toFixed(1)}%) → continuation` }
   }
 
   // Neutral with context
   if (h < 0.3) {
     return { type: 'NEUTRAL', strength: 0, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Dolna strefa HCCCO (oshort=${h.toFixed(2)}) — oczekiwanie na sygnał` }
+      description: `Lower HCCCO zone (oshort=${h.toFixed(2)}) — waiting for signal` }
   }
   if (h > 0.7) {
     return { type: 'NEUTRAL', strength: 0, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
-      description: `Górna strefa HCCCO (oshort=${h.toFixed(2)}) — oczekiwanie na sygnał` }
+      description: `Upper HCCCO zone (oshort=${h.toFixed(2)}) — waiting for signal` }
   }
 
   return { type: 'NEUTRAL', strength: 0, hurst: h, hurstSlope: hSlope, bbPosition: bbPos,
@@ -844,7 +844,7 @@ export function computeHCCCOSignal(
 ): HCCCOSignal {
   const neutral: HCCCOSignal = {
     type: 'NEUTRAL', fastVal: 0.5, slowVal: 0.5, strength: 0,
-    description: 'Brak sygnału HCCCO',
+    description: 'No HCCCO signal',
   }
 
   const n = fastOsc.length
@@ -862,7 +862,7 @@ export function computeHCCCOSignal(
     // so this condition catches the "still overbought" state
     return {
       type: 'OVERBOUGHT', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Przewartościowany: oshort=${fast.toFixed(2)} > 1.0 → możliwy spadek`,
+      description: `HCCCO Overvalued: oshort=${fast.toFixed(2)} > 1.0 → possible drop`,
     }
   }
 
@@ -871,7 +871,7 @@ export function computeHCCCOSignal(
     const strength = Math.min(1, Math.abs(fast) * 2 + 0.3)
     return {
       type: 'OVERSOLD', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Niedowartościowany: oshort=${fast.toFixed(2)} < 0.0 → możliwy wzrost`,
+      description: `HCCCO Undervalued: oshort=${fast.toFixed(2)} < 0.0 → possible rise`,
     }
   }
 
@@ -881,7 +881,7 @@ export function computeHCCCOSignal(
     const strength = Math.min(1, Math.abs(fastPrev) * 2 + 0.4)
     return {
       type: 'OS_CROSS_UP', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Przebicie OS 0.0 ↑: oshort z ${fastPrev.toFixed(2)} na ${fast.toFixed(2)} → sygnał LONG`,
+      description: `HCCCO OS 0.0 breakout ↑: oshort of ${fastPrev.toFixed(2)} on ${fast.toFixed(2)} → LONG signal`,
     }
   }
 
@@ -891,7 +891,7 @@ export function computeHCCCOSignal(
     const strength = Math.min(1, (fastPrev - 1.0) * 2 + 0.4)
     return {
       type: 'OB_CROSS_DOWN', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Przebicie OB 1.0 ↓: oshort z ${fastPrev.toFixed(2)} na ${fast.toFixed(2)} → sygnał SHORT`,
+      description: `HCCCO OB 1.0 breakout ↓: oshort of ${fastPrev.toFixed(2)} on ${fast.toFixed(2)} → SHORT signal`,
     }
   }
 
@@ -900,7 +900,7 @@ export function computeHCCCOSignal(
     const strength = Math.min(1, (0.5 - fast) * 1.5 + 0.2)
     return {
       type: 'BULL_CROSS', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Krzyżowanie bycze: fast (${fast.toFixed(2)}) przebija slow w dolnej strefie`,
+      description: `HCCCO Bullish crossover: fast (${fast.toFixed(2)}) crosses slow in lower zone`,
     }
   }
 
@@ -909,7 +909,7 @@ export function computeHCCCOSignal(
     const strength = Math.min(1, (fast - 0.5) * 1.5 + 0.2)
     return {
       type: 'BEAR_CROSS', fastVal: fast, slowVal: slow, strength,
-      description: `HCCCO Krzyżowanie niedźwiedzie: fast (${fast.toFixed(2)}) przebija slow w górnej strefie`,
+      description: `HCCCO Bearish crossover: fast (${fast.toFixed(2)}) crosses slow in upper zone`,
     }
   }
 
@@ -1039,7 +1039,7 @@ export function computeHurstStrategySignals(
             barIndex: i,
             price,
             hurst: h,
-            description: `EXIT: Hurst ↓1.00 — H z ${prevH.toFixed(3)} na ${h.toFixed(3)}`,
+            description: `EXIT: Hurst ↓1.00 — H of ${prevH.toFixed(3)} on ${h.toFixed(3)}`,
           }],
           strength: 1.0,
           confirmedAtBar: i,
@@ -1069,7 +1069,7 @@ export function computeHurstStrategySignals(
         strength: 0.6,
         confirmedAtBar: i,
         confirmedAtPrice: price,
-        description: `ENTRY 1 (1x): BB dolna dotknięcie`,
+        description: `ENTRY 1 (1x): BB lower touch`,
         entryStep: 1,
         sizeMultiplier: 1,
         tradeGroupId,
@@ -1087,12 +1087,12 @@ export function computeHurstStrategySignals(
           barIndex: i,
           price,
           hurst: h,
-          description: `ENTRY 2 (2x): Hurst ↑0.00 — H z ${prevH.toFixed(3)} na ${h.toFixed(3)}`,
+          description: `ENTRY 2 (2x): Hurst ↑0.00 — H of ${prevH.toFixed(3)} on ${h.toFixed(3)}`,
         }],
         strength: 0.8,
         confirmedAtBar: i,
         confirmedAtPrice: price,
-        description: `ENTRY 2 (2x): Hurst przebicie 0.00 ↑ — uśrednianie`,
+        description: `ENTRY 2 (2x): Hurst breakout 0.00 ↑ — averaging`,
         entryStep: 2,
         sizeMultiplier: 2,
         tradeGroupId,
@@ -1110,12 +1110,12 @@ export function computeHurstStrategySignals(
           barIndex: i,
           price,
           hurst: h,
-          description: `ENTRY 3 (4x): Hurst ↑0.00 — H z ${prevH.toFixed(3)} na ${h.toFixed(3)}`,
+          description: `ENTRY 3 (4x): Hurst ↑0.00 — H of ${prevH.toFixed(3)} on ${h.toFixed(3)}`,
         }],
         strength: 1.0,
         confirmedAtBar: i,
         confirmedAtPrice: price,
-        description: `ENTRY 3 (4x): Hurst przebicie 0.00 ↑ — 2. uśrednianie`,
+        description: `ENTRY 3 (4x): Hurst breakout 0.00 ↑ — 2nd averaging`,
         entryStep: 3,
         sizeMultiplier: 4,
         tradeGroupId,

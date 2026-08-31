@@ -37,11 +37,11 @@ export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
     const rateResult = checkRateLimit(ip, 20, 60 * 1000)
-    if (!rateResult.allowed) return NextResponse.json({ error: 'Zbyt wiele żądań (limit 20/min).' }, { status: 429 })
+    if (!rateResult.allowed) return NextResponse.json({ error: 'Too many requests (limit 20/min).' }, { status: 429 })
 
     const body = await request.json()
     const coinIds: string[] = Array.isArray(body.coin_ids) ? body.coin_ids.slice(0, 150) : []
-    if (coinIds.length === 0) return NextResponse.json({ error: 'coin_ids nie może być puste' }, { status: 400 })
+    if (coinIds.length === 0) return NextResponse.json({ error: 'coin_ids cannot be empty' }, { status: 400 })
 
     const days = Math.min(Math.max(Number(body.days) || 5, 1), 30)
     const strategyType = body.strategy_type || 'dip_buying'
@@ -82,13 +82,13 @@ export async function POST(request: Request) {
         const symbol = coinIdToBinanceSymbol(coinId)
         try {
           const prices = await fetchBinanceKlines(symbol, interval, limit)
-          if (prices.length < 10) return { coin_id: coinId, symbol, results: emptyResults(params.initial_capital), error: 'Brak danych' }
+          if (prices.length < 10) return { coin_id: coinId, symbol, results: emptyResults(params.initial_capital), error: 'No data' }
           const { results: btResults } = runBacktest(prices, { ...params, coin_id: coinId })
           return { coin_id: coinId, symbol, results: btResults }
         } catch (err) {
-          const message = err instanceof Error ? err.message : 'Błąd'
+          const message = err instanceof Error ? err.message : 'Error'
           errors.push(`${coinId} (${symbol}): ${message}`)
-          return { coin_id: coinId, symbol, results: emptyResults(params.initial_capital), error: 'Błąd: ' + message }
+          return { coin_id: coinId, symbol, results: emptyResults(params.initial_capital), error: 'Error: ' + message }
         }
       }))
       for (const r of batchResults) { if (r.status === 'fulfilled') results.push(r.value) }
@@ -121,6 +121,6 @@ export async function POST(request: Request) {
     }, { headers: { 'Cache-Control': 'private, no-cache' } })
   } catch (error) {
     console.error('[/api/backtest/bulk-klines] Error:', error)
-    return NextResponse.json({ error: 'Bulk backtest nie powiódł się.' }, { status: 502 })
+    return NextResponse.json({ error: 'Bulk backtest failed.' }, { status: 502 })
   }
 }

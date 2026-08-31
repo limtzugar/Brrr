@@ -69,7 +69,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
     const form = getFormState(exchange, mode)
 
     if (!form.key || !form.secret) {
-      setTestResult('Wypełnij oba pola: API Key i API Secret')
+      setTestResult('Fill both fields: API Key and API Secret')
       return
     }
 
@@ -91,7 +91,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
         fetchApis()
       }
     } catch (err) {
-      setTestResult(`❌ Błąd: ${err instanceof Error ? err.message : 'Nieznany'}`)
+      setTestResult(`❌ Error: ${err instanceof Error ? err.message : 'Unknown'}`)
     } finally {
       setSaving(null)
     }
@@ -101,7 +101,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
     try {
       await fetch(`/api/exchange?exchange=${exchange}&mode=${mode}`, { method: 'DELETE' })
       fetchApis()
-      setTestResult('Klucze usunięte')
+      setTestResult('Keys removed')
     } catch {}
   }
 
@@ -175,12 +175,12 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
               Zapisz i przetestuj
             </Button>
             {configured && (
-              <Button size="sm" variant="outline" className="h-7 text-xs text-red-500" onClick={() => deleteApiKeys(exchange, mode)}>Usuń</Button>
+              <Button size="sm" variant="outline" className="h-7 text-xs text-red-500" onClick={() => deleteApiKeys(exchange, mode)}>Delete</Button>
             )}
           </div>
           {mode === 'real' && (
             <div className="text-[10px] text-red-500/80">
-              ⚠️ Prawdziwy kapitał — giełda: <span className="font-mono">{apiEndpoint}</span> — Używasz prawdziwych środków!
+              ⚠️ Real capital — exchange: <span className="font-mono">{apiEndpoint}</span> — You are using real funds!
             </div>
           )}
           {mode === 'demo' && !isBinance && (
@@ -190,7 +190,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           )}
           {mode === 'demo' && isBinance && (
             <div className="text-[10px] text-muted-foreground">
-              Binance Testnet: <span className="font-mono">testnet.binance.vision</span> — klucze z testnet.binance.vision
+              Binance Testnet: <span className="font-mono">testnet.binance.vision</span> — klucze of testnet.binance.vision
             </div>
           )}
         </CardContent>
@@ -203,9 +203,9 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
       <div className="flex items-center gap-2 mb-2">
         <Key className="size-5" />
         <div>
-          <h2 className="text-base font-semibold">Ustawienia API</h2>
+          <h2 className="text-base font-semibold">Settings API</h2>
           <p className="text-xs text-muted-foreground">
-            Skonfiguruj klucze API do automatycznego tradingu. Obsługiwane giełdy: Bybit, Binance.
+            Configure API keys for automated trading. Supported exchanges: Bybit, Binance.
           </p>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
             <ExchangeForm
               exchange="bybit" mode="real"
               icon={<DollarSign className="size-4 text-red-500" />}
-              title="Real (Prawdziwy kapitał)"
+              title="Real (Real capital)"
               borderColor="border-red-500/30"
               bgColor="bg-red-600"
             />
@@ -256,16 +256,16 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
             <ExchangeForm
               exchange="binance" mode="real"
               icon={<DollarSign className="size-4 text-red-500" />}
-              title="Real (Prawdziwy kapitał)"
+              title="Real (Real capital)"
               borderColor="border-red-500/30"
               bgColor="bg-red-600"
             />
             <div className="text-[10px] text-muted-foreground bg-yellow-500/5 rounded px-3 py-2 space-y-1">
-              <div className="font-medium text-yellow-600 dark:text-yellow-400">Informacje o opłatach Binance:</div>
-              <div>• Maker: <span className="font-medium text-amber-400">0.1000%</span> — opłata za limity</div>
-              <div>• Taker: <span className="font-medium text-amber-400">0.1000%</span> — opłata za zlecenia rynkowe</div>
-              <div>• Z BNB: <span className="font-medium text-emerald-400">-25%</span> zniżki na opłaty</div>
-              <div>• Backtest domyślnie: <span className="font-medium">0.10%</span> (średnia Maker+Taker)</div>
+              <div className="font-medium text-yellow-600 dark:text-yellow-400">Informacje o oppatchch Binance:</div>
+              <div>• Maker: <span className="font-medium text-amber-400">0.1000%</span> — oppatch za limity</div>
+              <div>• Taker: <span className="font-medium text-amber-400">0.1000%</span> — oppatch za zlecenia rynkowe</div>
+              <div>• Z BNB: <span className="font-medium text-emerald-400">-25%</span> fee discount</div>
+              <div>• Backtest default: <span className="font-medium">0.10%</span> (avg Maker+Taker)</div>
             </div>
           </>
         )}
@@ -276,7 +276,7 @@ export default function SettingsPanel({ onClose }: SettingsPanelProps) {
           </div>
         )}
 
-        {loading && <div className="text-xs text-muted-foreground">Ładowanie...</div>}
+        {loading && <div className="text-xs text-muted-foreground">Loading...</div>}
       </div>
     </>
   )

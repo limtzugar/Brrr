@@ -81,6 +81,6 @@ export async function GET(request: Request) {
     if (cachedData) {
       return NextResponse.json({ ...cachedData.data, cached: true, stale: true })
     }
-    return NextResponse.json({ error: 'Błąd pobierania ceny' }, { status: 502 })
+    return NextResponse.json({ error: 'Failed to fetch price' }, { status: 502 })
   }
 }

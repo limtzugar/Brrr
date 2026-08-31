@@ -29,12 +29,12 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Nieprawidłowa konfiguracja ewaluacji', issues: error.issues },
+        { error: 'Invalid evaluation configuration', issues: error.issues },
         { status: 400 },
       )
     }
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Ewaluacja nie powiodła się' },
+      { error: error instanceof Error ? error.message : 'Evaluation failed' },
       { status: 500 },
     )
   }
@@ -69,7 +69,7 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Nie udało się pobrać ewaluacji' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch evaluation' },
       { status: 500 },
     )
   }

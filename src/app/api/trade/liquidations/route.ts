@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
       annualizedFunding: (fundingRate * 3 * 365 * 100).toFixed(2), // 3 fundings/day * 365
     })
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Błąd pobierania danych liquidacji'
+    const message = err instanceof Error ? err.message : 'Failed to fetch data liquidacji'
     console.error('[Trade Liquidations] Error:', message)
     return NextResponse.json({ error: message }, { status: 500 })
   }

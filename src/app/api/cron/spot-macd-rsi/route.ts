@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 
 function authorized(req: NextRequest): boolean {
   if (!CRON_SECRET) return false
-  const token = req.nextUrl.searchParams.get('token') || req.headers.get('x-cron-secret') || ''
+  const token = req.headers.get('x-cron-secret') || ''
   return token === CRON_SECRET
 }
 

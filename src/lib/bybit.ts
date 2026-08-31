@@ -558,7 +558,7 @@ export class BybitClient {
       }
     }
 
-    throw lastError || new Error('Bybit: wszystkie endpointy testnet niedostępne')
+    throw lastError || new Error('Bybit: all testnet endpoints unavailable')
   }
 
   // ─── Server Time ──────────────────────────────────────────────────────────
@@ -592,7 +592,7 @@ export class BybitClient {
       }
     }
 
-    throw new Error('Nie udało się pobrać czasu serwera Bybit')
+    throw new Error('Failed to fetch Bybit server time')
   }
 
   // ─── Account ────────────────────────────────────────────────────────────────
@@ -739,7 +739,7 @@ export class BybitClient {
       if (Math.abs(timeDiff) > 5000) {
         return {
           success: false,
-          message: `Desynchronizacja czasu: różnica ${timeDiff > 0 ? '+' : ''}${timeDiff}ms. Serwer: ${new Date(timeInfo.serverTime).toISOString()}, Lokalny: ${new Date(timeInfo.localTime).toISOString()}`,
+          message: `Time desynchronization: difference ${timeDiff > 0 ? '+' : ''}${timeDiff}ms. Server: ${new Date(timeInfo.serverTime).toISOString()}, Local: ${new Date(timeInfo.localTime).toISOString()}`,
           timeDiff,
         }
       }
@@ -753,7 +753,7 @@ export class BybitClient {
           const usdtBalance = usdtCoin ? Number(usdtCoin.walletBalance) : 0
           return {
             success: true,
-            message: `Połączono z Bybit (${this.config.mode}, konto główne ${accountType}). Saldo USDT: ${usdtBalance.toFixed(2)}`,
+            message: `Connected to Bybit (${this.config.mode}, main account ${accountType}). USDT balance: ${usdtBalance.toFixed(2)}`,
             balance: usdtBalance,
             timeDiff,
             accountType,
@@ -773,7 +773,7 @@ export class BybitClient {
             log(`[Bybit] testConnection: found balance on sub-account "${sub.memberName}" (${sub.memberId}), ${accountType}`)
             return {
               success: true,
-              message: `Połączono z Bybit (${this.config.mode}, subkonto "${sub.memberName}" ${accountType}). Saldo USDT: ${usdtBalance.toFixed(2)}`,
+              message: `Connected to Bybit (${this.config.mode}, sub-account "${sub.memberName}" ${accountType}). USDT balance: ${usdtBalance.toFixed(2)}`,
               balance: usdtBalance,
               timeDiff,
               accountType,
@@ -786,19 +786,19 @@ export class BybitClient {
       // API key works but no USDT found anywhere
       return {
         success: true,
-        message: `Połączono z Bybit (${this.config.mode}), ale brak USDT na koncie głównym i subkontach. Przelej USDT na konto Unified Trading.`,
+        message: `Connected to Bybit (${this.config.mode}), but no USDT on main or sub-accounts. Transfer USDT to Unified Trading account.`,
         balance: 0,
         timeDiff,
         accountType: 'NONE',
         source: 'none',
       }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : 'Błąd połączenia z Bybit'
+      const errMsg = err instanceof Error ? err.message : 'Bybit connection error'
       // Provide helpful diagnostic info
       if (errMsg.includes('sign') || errMsg.includes('10004')) {
         return {
           success: false,
-          message: `Błąd podpisu (10004). Możliwe przyczyny: (1) błędny API Secret, (2) białe znaki w kluczu, (3) klucze z innego środowiska (testnet vs mainnet). Sprawdź czy klucz i secret są dokładnie takie same jak na Bybit.`,
+          message: `Signature error (10004). Possible causes: (1) incorrect API Secret, (2) whitespace in key, (3) keys from different environment (testnet vs mainnet). Verify that key and secret match exactly as on Bybit.`,
         }
       }
       return {
@@ -1604,7 +1604,7 @@ export async function createBybitClient(mode: BybitMode): Promise<BybitClient> {
   })
 
   if (!api || !api.isConfigured) {
-    throw new Error(`Klucze API Bybit (${mode}) nie są skonfigurowane`)
+    throw new Error(`Bybit API keys (${mode}) are not configured`)
   }
 
   const apiKey = decrypt(api.apiKey)

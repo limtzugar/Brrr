@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('[/api/exchange] GET error:', error)
     return NextResponse.json(
-      { error: 'Błąd pobierania kluczy API' },
+      { error: 'Error pobierania kluczy API' },
       { status: 500 }
     )
   }
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
     if (exchange === 'binance') {
       return NextResponse.json(
-        { error: 'Handel przez Binance został wyłączony' },
+        { error: 'Trading via Binance has been disabled' },
         { status: 410 }
       )
     }
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       testResult = await client.testConnection()
       if (!testResult.success) {
         return NextResponse.json(
-          { error: `Błąd połączenia z Bybit: ${testResult.message}` },
+          { error: `Bybit connection error: ${testResult.message}` },
           { status: 400 }
         )
       }
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[/api/exchange] POST error:', error)
     return NextResponse.json(
-      { error: 'Błąd zapisywania kluczy API' },
+      { error: 'Failed to save API keys' },
       { status: 500 }
     )
   }
@@ -154,7 +154,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Missing exchange or mode' }, { status: 400 })
     }
     if (exchange === 'binance') {
-      return NextResponse.json({ error: 'Handel przez Binance został wyłączony' }, { status: 410 })
+      return NextResponse.json({ error: 'Trading via Binance has been disabled' }, { status: 410 })
     }
 
     const record = await db.exchangeApi.update({
@@ -176,7 +176,7 @@ export async function PATCH(request: Request) {
     })
   } catch (error) {
     console.error('[/api/exchange] PATCH error:', error)
-    return NextResponse.json({ error: 'Błąd aktualizacji subkonta' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update sub-account' }, { status: 500 })
   }
 }
 
@@ -190,7 +190,7 @@ export async function DELETE(request: Request) {
 
     if (!mode) {
       return NextResponse.json(
-        { error: 'Brak parametru "mode"' },
+        { error: 'Missing "mode" parameter' },
         { status: 400 }
       )
     }
@@ -199,11 +199,11 @@ export async function DELETE(request: Request) {
       where: { exchange, mode },
     })
 
-    return NextResponse.json({ success: true, message: 'Klucze API usunięte' })
+    return NextResponse.json({ success: true, message: 'API keys removed' })
   } catch (error) {
     console.error('[/api/exchange] DELETE error:', error)
     return NextResponse.json(
-      { error: 'Błąd usuwania kluczy API' },
+      { error: 'Failed to delete API keys' },
       { status: 500 }
     )
   }

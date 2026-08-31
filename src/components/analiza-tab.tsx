@@ -165,7 +165,7 @@ export default function AnalizaTab() {
   // Compute sentiment
   const sentiment = useMemo(() => computeSentiment(heatmapData, activeScenario), [heatmapData, activeScenario])
 
-  const sentimentLabel = sentiment < 20 ? 'EKSTREMALNY STRACH' : sentiment < 40 ? 'STRACH' : sentiment < 60 ? 'NEUTRALNIE' : sentiment < 80 ? 'CHCIWOŚĆ' : 'EKSTREMALNA CHCIWOŚĆ'
+  const sentimentLabel = sentiment < 20 ? 'EXTREME FEAR' : sentiment < 40 ? 'FEAR' : sentiment < 60 ? 'NEUTRAL' : sentiment < 80 ? 'GREED' : 'EKSTREMALNA GREED'
   const sentimentColor = sentiment < 40 ? TE.red : sentiment < 60 ? TE.yellow : TE.green
 
   // Run Monte Carlo when company or horizon changes (useEffect, not useMemo)
@@ -204,7 +204,7 @@ export default function AnalizaTab() {
 
       {/* ─── 2. What-If Scenarios — compact toggle row ────────────────────── */}
       <div>
-        <SectionLabel icon={ICONS.flask} color={TE.purple}>Scenariusze What-If</SectionLabel>
+        <SectionLabel icon={ICONS.flask} color={TE.purple}>Scenarioe What-If</SectionLabel>
         <div className="flex flex-wrap gap-1">
           {WHAT_IF_SCENARIOS.map(scenario => {
             const isActive = activeScenario?.id === scenario.id
@@ -278,7 +278,7 @@ export default function AnalizaTab() {
             <PixelIcon grid={selectedTheme.pixelIcon} color={selectedTheme.color} size={18} />
             <span className="text-sm font-bold" style={{ color: TE.text }}>{selectedTheme.name}</span>
             <Badge variant="outline" className="text-[9px] h-4" style={{ borderColor: TE.borderLight, color: TE.textMuted }}>
-              {selectedTheme.companies.length} spółek
+              {selectedTheme.companies.length} companies
             </Badge>
             {/* Sub-themes inline */}
             <div className="flex flex-wrap gap-1 ml-auto">
@@ -342,7 +342,7 @@ export default function AnalizaTab() {
           {/* Inter-theme connections — inline badges */}
           {THEME_CONNECTIONS.filter(c => c.from === selectedTheme.id || c.to === selectedTheme.id).length > 0 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 border-t" style={{ borderColor: TE.border }}>
-              <span style={{ fontFamily: TE.mono, fontSize: '9px', color: TE.textDim }}>Powiązania:</span>
+              <span style={{ fontFamily: TE.mono, fontSize: '9px', color: TE.textDim }}>Connections:</span>
               {THEME_CONNECTIONS
                 .filter(c => c.from === selectedTheme.id || c.to === selectedTheme.id)
                 .map(c => {
@@ -353,7 +353,7 @@ export default function AnalizaTab() {
                     <Badge key={`${c.from}-${c.to}`} variant="outline" className="text-[8px] h-4 gap-0.5" style={{ borderColor: TE.borderLight, color: TE.text }}>
                       <PixelIcon grid={otherTheme.pixelIcon} color={otherTheme.color} size={8} />
                       {otherTheme.name.split('/')[0].trim()}
-                      <span style={{ color: TE.textDim }}>({c.type === 'dependency' ? 'zależność' : c.type === 'competitor' ? 'konkurencja' : 'komplement'}, {(c.strength * 100).toFixed(0)}%)</span>
+                      <span style={{ color: TE.textDim }}>({c.type === 'dependency' ? 'dependency' : c.type === 'competitor' ? 'competition' : 'complement'}, {(c.strength * 100).toFixed(0)}%)</span>
                     </Badge>
                   )
                 })}
@@ -432,7 +432,7 @@ export default function AnalizaTab() {
           {activeScenario && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 border-t" style={{ background: TE.yellowBg, borderColor: TE.border }}>
               <span style={{ fontFamily: TE.mono, fontSize: '9px', color: TE.yellow }}>
-                Scenariusz &quot;{activeScenario.name}&quot; modyfikuje prognozę o {(activeScenario.impacts[selectedTheme?.id || ''] || 0).toFixed(1)}%
+                Scenario &quot;{activeScenario.name}&quot; modifies forecast by {(activeScenario.impacts[selectedTheme?.id || ''] || 0).toFixed(1)}%
               </span>
             </div>
           )}
@@ -441,7 +441,7 @@ export default function AnalizaTab() {
 
       {/* ─── 6. Connections Graph — force-directed layout ──────────────────── */}
       <div>
-        <SectionLabel icon={ICONS.net} color={TE.textDim}>Graf Powiązań</SectionLabel>
+        <SectionLabel icon={ICONS.net} color={TE.textDim}>Connections Graph</SectionLabel>
         <div className="rounded border overflow-hidden" style={{ borderColor: TE.border, background: TE.bgCard }}>
           <div className="relative" style={{ height: '240px' }}>
             <svg width="100%" height="100%" viewBox="0 0 600 240" style={{ imageRendering: 'auto' }}>

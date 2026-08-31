@@ -116,6 +116,6 @@ export async function GET(request: Request) {
     if (cachedData) {
       return NextResponse.json({ ...cachedData.data, cached: true, stale: true })
     }
-    return NextResponse.json({ error: 'Błąd pobierania danych likwidacji', levels: [] }, { status: 502 })
+    return NextResponse.json({ error: 'Failed to fetch data likwidacji', levels: [] }, { status: 502 })
   }
 }

@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     } = body
 
     if (!strategyType || !thesis) {
-      return NextResponse.json({ error: 'strategyType i thesis są wymagane' }, { status: 400 })
+      return NextResponse.json({ error: 'strategyType and thesis are required' }, { status: 400 })
     }
 
     const conviction = await db.conviction.create({

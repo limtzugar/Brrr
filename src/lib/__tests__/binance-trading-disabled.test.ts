@@ -11,12 +11,12 @@ describe('Binance trading removal', () => {
       apiKey: 'unused',
       apiSecret: 'unused',
       mode: 'real',
-    })).toThrow('Handel przez Binance został wyłączony')
+    })).toThrow('Trading via Binance has been disabled')
   })
 
   it('blocks clients created from stored credentials', async () => {
     await expect(createBinanceClient('real')).rejects.toThrow(
-      'Handel przez Binance został wyłączony'
+      'Trading via Binance has been disabled'
     )
   })
 

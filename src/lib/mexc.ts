@@ -236,15 +236,15 @@ export class MexcClient {
 
       return {
         success: true,
-        message: `Połączono z MEXC${this.config.mode === 'demo' ? ' (Demo)' : ''}. Saldo USDT: ${usdtBalance.toFixed(2)}`,
+        message: `Połączono of MEXC${this.config.mode === 'demo' ? ' (Demo)' : ''}. Saldo USDT: ${usdtBalance.toFixed(2)}`,
         balance: usdtBalance,
       }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : 'Błąd połączenia z MEXC'
+      const errMsg = err instanceof Error ? err.message : 'MEXC connection error'
       if (errMsg.includes('Invalid') || errMsg.includes('signature') || errMsg.includes('apikey')) {
         return {
           success: false,
-          message: `Błąd autoryzacji MEXC. Sprawdź czy klucz API i secret są poprawne. Szczegóły: ${errMsg}`,
+          message: `MEXC authorization error. Check if API key and secret are correct. Details: ${errMsg}`,
         }
       }
       return {

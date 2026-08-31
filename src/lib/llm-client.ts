@@ -250,7 +250,7 @@ export async function callLlm(
 ): Promise<LlmResult> {
   const cfg = explicitConfig ?? await getLlmConfig()
   if (!cfg) {
-    throw new Error('LLM nie jest skonfigurowany. Otwórz Ustawienia → sekcja LLM.')
+    throw new Error('LLM is not configured. Open Settings → LLM section.')
   }
   const o = withDefaults(opts)
   const startedAt = Date.now()
@@ -265,7 +265,7 @@ export async function callLlm(
       case 'cloudflare':  result = await callCloudflare(cfg, messages, o); break
       case 'gemini':      result = await callGemini(cfg, messages, o); break
       default:
-        throw new Error(`Nieobsługiwany provider LLM: ${String(cfg.provider)}`)
+        throw new Error(`Unsupported LLM provider: ${String(cfg.provider)}`)
     }
 
     const latencyMs = Date.now() - startedAt
@@ -284,7 +284,7 @@ export async function callLlm(
         metadataJson,
       })
     } catch (logError) {
-      console.error('[LLM] Nie udało się zapisać telemetrii wywołania:', logError)
+      console.error('[LLM] Failed to save invocation telemetry:', logError)
     }
     return { ...result, latencyMs, invocationId }
   } catch (error) {
@@ -301,7 +301,7 @@ export async function callLlm(
         metadataJson,
       })
     } catch (logError) {
-      console.error('[LLM] Nie udało się zapisać telemetrii błędu:', logError)
+      console.error('[LLM] Failed to save error telemetry:', logError)
     }
     throw error
   }
@@ -324,7 +324,7 @@ export async function testLlmConnection(
   try {
     const result = await callLlm(
       [
-        { role: 'system', content: 'Odpowiedz jednym słowem.' },
+        { role: 'system', content: 'Answer with one word.' },
         { role: 'user', content: 'Napisz PONG' },
       ],
       {
@@ -340,13 +340,13 @@ export async function testLlmConnection(
     return {
       success: ok,
       message: ok
-        ? `✅ Połączenie OK (${cfg.provider}/${cfg.model}) — odpowiedź: "${result.content.trim().slice(0, 40)}"`
-        : '❌ Brak treści w odpowiedzi modelu',
+        ? `✅ Connection OK (${cfg.provider}/${cfg.model}) — response: "${result.content.trim().slice(0, 40)}"`
+        : '❌ No content in model response',
     }
   } catch (err) {
     return {
       success: false,
-      message: `❌ ${err instanceof Error ? err.message : 'Nieznany błąd połączenia'}`,
+      message: `❌ ${err instanceof Error ? err.message : 'Unknown connection error'}`,
     }
   }
 }

@@ -493,7 +493,7 @@ export default function SignalyTab() {
       if (!signalsOk) setLastUpdated(coinsData.last_updated)
     }
     if (!signalsOk && coinsResult.status !== 'fulfilled') {
-      setError('Błąd pobierania danych — sprawdź połączenie')
+      setError('Failed to fetch data — sprawdź połączenie')
     }
     setLoading(false)
   }, [])
@@ -610,7 +610,7 @@ export default function SignalyTab() {
     try {
       const coinIds = coinsRef.current.slice(0, 10).map(c => c.id)
       if (coinIds.length === 0) {
-        setBulkBacktestError('Brak monet do backtestu')
+        setBulkBacktestError('No monet do backtestu')
         return
       }
       const body = {
@@ -779,7 +779,7 @@ export default function SignalyTab() {
             </span>
           )}
           <div className="ml-auto flex items-center gap-1">
-            <span className="text-[12px]" style={{ fontFamily: te.mono, color: te.text }}>KAPITAŁ:</span>
+            <span className="text-[12px]" style={{ fontFamily: te.mono, color: te.text }}>CAPITAL:</span>
             {/* REAL mode: show Binance balance (read-only) */}
             {binanceReal && binanceBalance !== null ? (
               <span className="px-1.5 py-0.5 text-[11px] font-bold rounded-sm" style={{
@@ -1030,7 +1030,7 @@ export default function SignalyTab() {
           <div className="mt-2">
             {closedSpotPositions.length === 0 ? (
               <div className="text-[10px] text-center py-3" style={{ color: te.textDim, fontFamily: te.mono }}>
-                Brak zamkniętych transakcji — pozycje zamkną się automatycznie przy TP/SL lub ręcznie przez SELL
+                No zamkniętych transakcji — pozycje zamkną się automatycznie przy TP/SL lub ręcznie przez SELL
               </div>
             ) : (
               <div className="space-y-1 max-h-64 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: `${te.border} transparent` }}>
@@ -1091,7 +1091,7 @@ export default function SignalyTab() {
         <Separator orientation="vertical" className="h-4" />
         <div className="flex items-center gap-1.5 text-sm">
           <Bell className="size-3.5" style={{ color: te.yellow }} />
-          <span className="text-xs" style={{ color: te.textMuted }}>Sygnały</span>
+          <span className="text-xs" style={{ color: te.textMuted }}>Signals</span>
           <span className="font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{signals.length}</span>
         </div>
         <Separator orientation="vertical" className="h-4" />
@@ -1144,14 +1144,14 @@ export default function SignalyTab() {
             <TooltipTrigger asChild>
               <button className="flex items-center gap-1 text-xs transition-colors" style={{ color: te.textMuted }}>
                 <Shield className="size-3.5" />
-                <span className="hidden sm:inline">Jak korzystać?</span>
+                <span className="hidden sm:inline">How to use?</span>
               </button>
             </TooltipTrigger>
             <TooltipContent className="max-w-sm text-xs space-y-1">
-              <div><strong>1.</strong> Dashboard pokazuje sygnały z top 100 MC — nie potrzebujesz konta</div>
-              <div><strong>2.</strong> Kliknij ikonę monety — otworzy się wykres TradingView z RSI</div>
-              <div><strong>3.</strong> ALERT / BUY SIGNAL — oceniasz sam i kupujesz ręcznie</div>
-              <div><strong>4.</strong> Kupujesz na Bybit, Binance, OKX</div>
+              <div><strong>1.</strong> Dashboard shows signals from top 100 MC — no account needed</div>
+              <div><strong>2.</strong> Click coin icon — TradingView chart with RSI will open</div>
+              <div><strong>3.</strong> ALERT / BUY SIGNAL — you assess and buy manually</div>
+              <div><strong>4.</strong> Kupujesz on Bybit, Binance, OKX</div>
               <div className="flex flex-wrap gap-1 pt-1">
                 <Badge variant="outline" className="text-[9px]">Bybit 0.1%</Badge>
                 <Badge variant="outline" className="text-[9px]">Binance 0.1%</Badge>
@@ -1166,7 +1166,7 @@ export default function SignalyTab() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={signalFilter} onValueChange={(v) => setSignalFilter(v as typeof signalFilter)}>
-            <SelectTrigger className="w-[130px] h-8 text-xs"><SelectValue placeholder="Filtr sygnałów" /></SelectTrigger>
+            <SelectTrigger className="w-[130px] h-8 text-xs"><SelectValue placeholder="Signal filter" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Wszystkie</SelectItem>
               <SelectItem value="buy_signal">Buy Signal</SelectItem>
@@ -1194,7 +1194,7 @@ export default function SignalyTab() {
             </span>
           )}
           <Button variant="outline" size="sm" className="h-8 text-xs" onClick={fetchData} disabled={loading}>
-            <RefreshCw className={`size-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} /> Odśwież
+            <RefreshCw className={`size-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
           </Button>
         </div>
       </div>
@@ -1207,7 +1207,7 @@ export default function SignalyTab() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Sygnały Dip</h3>
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Signals Dip</h3>
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map(i => (
@@ -1218,8 +1218,8 @@ export default function SignalyTab() {
             <Card style={teCardStyle}>
               <CardContent className="py-12 text-center" style={{ color: te.textMuted }}>
                 <Eye className="size-8 mx-auto mb-2 opacity-50" />
-                <p style={{ color: te.text }}>Brak aktywnych sygnałów dip</p>
-                <p className="text-xs mt-1">Rynek jest spokojny — sprawdź później</p>
+                <p style={{ color: te.text }}>No active dip signals</p>
+                <p className="text-xs mt-1">Market is calm — check later</p>
               </CardContent>
             </Card>
           ) : (
@@ -1245,7 +1245,7 @@ export default function SignalyTab() {
         </div>
 
         <div>
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Top 10 Spadków 24h</h3>
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Top 10 Drops 24h</h3>
           <div className="rounded border overflow-hidden" style={{ borderColor: te.border, background: te.bgCard }}>
             <ScrollArea className="max-h-[300px]">
               <div className="divide-y" style={{ borderColor: te.border }}>
@@ -1284,10 +1284,10 @@ export default function SignalyTab() {
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <SlidersHorizontal className="size-5" /> Progi alertów per-moneta
+              <SlidersHorizontal className="size-5" /> Alert thresholds per coin
             </DialogTitle>
             <DialogDescription>
-              Dostosuj progi RSI, spadku 24h i mnożnika wolumenu dla każdej monitorowanej monety. Niestandardowe progi są oznaczone ikoną ⚙️ na karcie sygnału.
+              Adjust RSI, 24h drop and volume multiplier thresholds for each monitored coin. Niestandardowe progi są oznaczone ikoną ⚙️ on karcie sygnału.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 mt-2">
@@ -1298,7 +1298,7 @@ export default function SignalyTab() {
                 setCoinThresholds(newThresholds)
                 saveThresholds(newThresholds)
               }}>
-                <Settings className="size-3" /> Zastosuj domyślne dla wszystkich
+                <Settings className="size-3" /> Apply defaults for all
               </Button>
             </div>
             <ScrollArea className="max-h-[400px]">
@@ -1315,7 +1315,7 @@ export default function SignalyTab() {
                       </div>
                       <div className="flex-1 grid grid-cols-3 gap-2">
                         <div>
-                          <Label className="text-[9px]" style={{ color: te.textMuted }}>RSI próg</Label>
+                          <Label className="text-[9px]" style={{ color: te.textMuted }}>RSI threshold</Label>
                           <Input type="number" value={thresholds.rsi_threshold} onChange={e => {
                             const newT = { ...coinThresholds, [coin.id]: { ...thresholds, rsi_threshold: Number(e.target.value) } }
                             setCoinThresholds(newT); saveThresholds(newT)
@@ -1329,7 +1329,7 @@ export default function SignalyTab() {
                           }} className="h-6 text-[10px]" step={1} />
                         </div>
                         <div>
-                          <Label className="text-[9px]" style={{ color: te.textMuted }}>Vol mnożnik</Label>
+                          <Label className="text-[9px]" style={{ color: te.textMuted }}>Vol multiplier</Label>
                           <Input type="number" value={thresholds.volume_multiplier_threshold} onChange={e => {
                             const newT = { ...coinThresholds, [coin.id]: { ...thresholds, volume_multiplier_threshold: Number(e.target.value) } }
                             setCoinThresholds(newT); saveThresholds(newT)

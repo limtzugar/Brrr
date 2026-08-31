@@ -14,7 +14,7 @@ const validResponse = {
     direction: 'NEUTRAL',
     category: 'REGIME',
     evidence: ['Funding był dodatni przy rosnącym OI.'],
-    invalidators: ['Brak cofnięcia w następnym oknie walidacyjnym.'],
+    invalidators: ['No cofnięcia w następnym oknie walidacyjnym.'],
     confidence: 50,
     status: 'UNVALIDATED',
   }],

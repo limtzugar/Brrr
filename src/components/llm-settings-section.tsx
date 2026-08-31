@@ -113,7 +113,7 @@ export default function LlmSettingsSection() {
 
   const handleSave = async () => {
     if (!apiKey || apiKey.trim().length < 5) {
-      setResult('❌ Wpisz klucz API (min. 5 znaków)')
+      setResult('❌ Enter API key (min. 5 characters)')
       return
     }
     setSaving(true)
@@ -126,14 +126,14 @@ export default function LlmSettingsSection() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setResult(`❌ ${data.error || 'Błąd zapisu'}`)
+        setResult(`❌ ${data.error || 'Save error'}`)
       } else {
         setResult(`✅ Zapisano: ${provider}/${data.config?.model || model}`)
         setApiKey('')
         await fetchConfig()
       }
     } catch (err) {
-      setResult(`❌ ${err instanceof Error ? err.message : 'Błąd'}`)
+      setResult(`❌ ${err instanceof Error ? err.message : 'Error'}`)
     } finally {
       setSaving(false)
     }
@@ -141,7 +141,7 @@ export default function LlmSettingsSection() {
 
   const handleTest = async () => {
     if (!apiKey || apiKey.trim().length < 5) {
-      setResult('❌ Wpisz klucz API przed testem')
+      setResult('❌ Enter API key before testing')
       return
     }
     setTesting(true)
@@ -154,23 +154,23 @@ export default function LlmSettingsSection() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setResult(`❌ ${data.error || 'Test nie powiódł się'}`)
+        setResult(`❌ ${data.error || 'Test failed'}`)
       } else {
-        setResult(data.message || (data.success ? '✅ Połączenie OK' : '❌ Test nie powiódł się'))
+        setResult(data.message || (data.success ? '✅ Connection OK' : '❌ Test failed'))
       }
     } catch (err) {
-      setResult(`❌ ${err instanceof Error ? err.message : 'Błąd testu'}`)
+      setResult(`❌ ${err instanceof Error ? err.message : 'Test error'}`)
     } finally {
       setTesting(false)
     }
   }
 
   const handleDelete = async () => {
-    if (!confirm('Usunąć konfigurację LLM?')) return
+    if (!confirm('Delete LLM configuration?')) return
     try {
       await fetch('/api/llm-settings', { method: 'DELETE' })
       setApiKey('')
-      setResult('Konfiguracja usunięta')
+      setResult('Configuration removed')
       await fetchConfig()
     } catch {}
   }
@@ -241,7 +241,7 @@ export default function LlmSettingsSection() {
                 style={{ borderRadius: '2px', background: te.bgInput, borderColor: te.border, color: te.text }}
               />
               <div className="text-[9px] mt-0.5" style={{ color: te.textDim }}>
-                Zmień na: openrouter.ai/api/v1, api.groq.com/openai/v1, localhost:11434/v1 (Ollama)
+                Change to: openrouter.ai/api/v1, api.groq.com/openai/v1, localhost:11434/v1 (Ollama)
               </div>
             </div>
           )}
@@ -283,8 +283,8 @@ export default function LlmSettingsSection() {
                       <CommandList className="max-h-[280px]">
                         <CommandEmpty>
                           {modelsLoading
-                            ? <span className="text-[10px]" style={{ color: te.textDim }}>Ładowanie modeli...</span>
-                            : <span className="text-[10px]" style={{ color: te.textDim }}>Brak modeli. Wpisz ręcznie poniżej.</span>
+                            ? <span className="text-[10px]" style={{ color: te.textDim }}>Loading models...</span>
+                            : <span className="text-[10px]" style={{ color: te.textDim }}>No models. Enter manually below.</span>
                           }
                         </CommandEmpty>
                         <CommandGroup>
@@ -314,7 +314,7 @@ export default function LlmSettingsSection() {
                 ref={inputRef}
                 className="flex-1 h-6 px-2 text-[10px] font-mono bg-transparent border-0 outline-none"
                 style={{ color: te.textDim }}
-                placeholder="lub wpisz ręcznie..."
+                placeholder="or enter manually..."
                 value={model}
                 onChange={e => setModel(e.target.value)}
               />
@@ -388,10 +388,10 @@ export default function LlmSettingsSection() {
 
         {/* Help footer */}
         <div className="text-[9px] font-mono pt-1" style={{ color: te.textDim, borderTop: `1px solid ${te.border}` }}>
-          Klucz jest szyfrowany (AES-256-GCM) w bazie. Używany przez zakładkę „LLM Analyst" oraz panel LLM w CEX Anomaly.
+          Key is encrypted (AES-256-GCM) in database. Used by "LLM Analyst" tab and LLM panel in CEX Anomaly.
         </div>
 
-        {loading && <div className="text-[10px] font-mono uppercase tracking-wider" style={{ color: te.textDim }}>Ładowanie...</div>}
+        {loading && <div className="text-[10px] font-mono uppercase tracking-wider" style={{ color: te.textDim }}>Loading...</div>}
       </div>
     </div>
   )

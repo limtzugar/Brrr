@@ -1,5 +1,5 @@
 // ─── Cron: Sync Closed PnL from Bybit ────────────────────────────────
-// Wywoływany co 2 minuty przez scheduler. Pobiera zamknięte pozycje z Bybit
+// Wywoływany co 2 minuty przez scheduler. Pobiera zamknięte pozycje of Bybit
 // i zapisuje je do bazy danych (AppSettings) jako authoritative PnL source.
 //
 // GET /api/cron/sync-closed-pnl?token=xxx&mode=real|demo
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   if (!CRON_SECRET) {
     return NextResponse.json({ error: 'CRON_SECRET env var not set — sync disabled' }, { status: 503 })
   }
-  const token = req.nextUrl.searchParams.get('token') || req.headers.get('x-cron-secret') || ''
+  const token = req.headers.get('x-cron-secret') || ''
   if (token !== CRON_SECRET) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }

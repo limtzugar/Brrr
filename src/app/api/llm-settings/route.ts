@@ -27,7 +27,7 @@ export async function GET() {
     return NextResponse.json({ config, defaultModels: DEFAULT_MODELS })
   } catch (error) {
     console.error('[/api/llm-settings] GET error:', error)
-    return NextResponse.json({ error: 'Błąd pobierania ustawień LLM' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch LLM settings' }, { status: 500 })
   }
 }
 
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (test === true) {
       const ip = request.headers.get('x-forwarded-for') || 'unknown'
       const rate = checkRateLimit(`llm-settings-test:${ip}`, 5, 60 * 1000)
-      if (!rate.allowed) return NextResponse.json({ error: 'Zbyt wiele testów. Poczekaj ~60s.' }, { status: 429 })
+      if (!rate.allowed) return NextResponse.json({ error: 'Too many tests. Wait ~60s.' }, { status: 429 })
 
       if (!provider || !apiKey) {
         return NextResponse.json({ error: 'Test wymaga provider + apiKey' }, { status: 400 })
@@ -70,10 +70,10 @@ export async function POST(request: Request) {
 
     // ── Save branch ──
     if (!provider || !VALID_PROVIDERS.includes(provider as LlmProvider)) {
-      return NextResponse.json({ error: `Nieprawidłowy provider. Dozwolone: ${VALID_PROVIDERS.join(', ')}` }, { status: 400 })
+      return NextResponse.json({ error: `Invalid provider. Allowed: ${VALID_PROVIDERS.join(', ')}` }, { status: 400 })
     }
     if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length < 5) {
-      return NextResponse.json({ error: 'Brak lub zbyt krótki klucz API' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing or too short API key' }, { status: 400 })
     }
 
     await saveLlmConfig({
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, message: 'Konfiguracja LLM zapisana', config })
   } catch (error) {
     console.error('[/api/llm-settings] POST error:', error)
-    return NextResponse.json({ error: 'Błąd zapisu ustawień LLM' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save LLM settings' }, { status: 500 })
   }
 }
 
@@ -97,9 +97,9 @@ export async function POST(request: Request) {
 export async function DELETE() {
   try {
     await deleteLlmConfig()
-    return NextResponse.json({ success: true, message: 'Konfiguracja LLM usunięta' })
+    return NextResponse.json({ success: true, message: 'LLM configuration removed' })
   } catch (error) {
     console.error('[/api/llm-settings] DELETE error:', error)
-    return NextResponse.json({ error: 'Błąd usuwania ustawień LLM' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to delete LLM settings' }, { status: 500 })
   }
 }

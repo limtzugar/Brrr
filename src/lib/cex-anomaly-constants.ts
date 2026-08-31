@@ -102,7 +102,7 @@ export const CATEGORY_META: Record<AnomalyCategory, {
     label: 'ICEBERG DETECTED',
     icon: Waves,
     color: TE.cyan,
-    description: 'Wolumen realizacji przekracza widoczny OB — ukryta płynność',
+    description: 'Execution volume exceeds visible OB — hidden liquidity',
   },
   ICEBERG_REVERSAL: {
     label: 'ICEBERG REVERSAL',
@@ -114,25 +114,25 @@ export const CATEGORY_META: Record<AnomalyCategory, {
     label: 'WHALE INFLOW',
     icon: Anchor,
     color: TE.purple,
-    description: 'Duży transfer stablecoinów/BTC na adresy Binance',
+    description: 'Large stablecoin/BTC transfer to Binance addresses',
   },
   AGGRESSIVE_ABSORPTION: {
     label: 'AGGRESSIVE ABSORPTION',
     icon: Shield,
     color: TE.green,
-    description: 'Market-buy pochłaniany bez ruchu ceny — sygnał COPY',
+    description: 'Market-buy absorbed without price movement — COPY signal',
   },
   OI_SPIKE: {
     label: 'OI SPIKE',
     icon: TrendingUp,
     color: TE.yellow,
-    description: 'Nagły wzrost Open Interest — nowa pozycja masowa wchodzi na rynek',
+    description: 'Sudden Open Interest spike — large new position entering market',
   },
   FUNDING_EXTREME: {
     label: 'FUNDING EXTREME',
     icon: DollarSign,
     color: TE.red,
-    description: 'Ekstremalny funding rate — tłum po jednej stronie, contrarian signal',
+    description: 'Extreme funding rate — crowd on one side, contrarian signal',
   },
   CROWD_BIAS: {
     label: 'CROWD BIAS',
@@ -144,7 +144,7 @@ export const CATEGORY_META: Record<AnomalyCategory, {
     label: 'TAKER IMBALANCE',
     icon: Zap,
     color: '#ff4081',
-    description: 'Agresywni kupujący vs sprzedający — bezpośrednia presja',
+    description: 'Aggressive buyers vs sellers — direct pressure',
   },
   LIQUIDATION_CASCADE: {
     label: 'LIQ CASCADE',
@@ -156,13 +156,13 @@ export const CATEGORY_META: Record<AnomalyCategory, {
     label: 'OI VELOCITY',
     icon: Activity,
     color: '#ffd700',
-    description: 'Szybka zmiana OI — ktoś buduje gigapozycję',
+    description: 'Rapid OI change — someone building a large position',
   },
   ORDERBOOK_IMBALANCE: {
     label: 'OB FADE',
     icon: Layers,
     color: '#00ff88',
-    description: 'Nierównowaga bid/ask → follow presje OB; Contrarian → FADE (odwraca)',
+    description: 'Bid/ask imbalance → follow OB pressure; Contrarian → FADE (reverses)',
   },
   WHALE_SWEEP: {
     label: 'WHALE SWEEP',
@@ -175,37 +175,37 @@ export const CATEGORY_META: Record<AnomalyCategory, {
     label: 'RT LIQUIDATION',
     icon: Siren,
     color: '#ff4444',
-    description: 'Sub-sekundowa kaskada likwidacji z Binance WS — najszybszy sygnał cascade',
+    description: 'Sub-second liquidation cascade from Binance WS — fastest cascade signal',
   },
   OPTIONS_FLOW: {
     label: 'OPTIONS FLOW',
     icon: BarChart3,
     color: '#ce93d8',
-    description: 'Duży wolumen opcji put/call na Deribit — opcje przewidują futures',
+    description: 'Large put/call option volume on Deribit — options predict futures',
   },
   GATE_FLOW: {
     label: 'GATE FLOW',
     icon: ArrowRightLeft,
     color: '#64b5f6',
-    description: 'Presja OB + whalowy trade na Gate.io — inna demografia traderów',
+    description: 'OB pressure + whale trade on Gate.io — different trader demographics',
   },
   BITGET_FLOW: {
     label: 'BITGET FLOW',
     icon: Binary,
     color: '#81c784',
-    description: 'Presja OB + whalowy trade na Bitget — top-3 derivatives exchange',
+    description: 'Presja OB + whalowy trade on Bitget — top-3 derivatives exchange',
   },
   DYDX_PERP_FLOW: {
     label: 'DYDX PERP FLOW',
     icon: Globe,
     color: '#b39ddb',
-    description: 'On-chain perps order flow z dYdX v4 — inny mix uczestników',
+    description: 'On-chain perps order flow from dYdX v4 — different participant mix',
   },
   MACRO_EVENT: {
     label: 'MACRO EVENT',
     icon: CalendarClock,
     color: '#ffb74d',
-    description: 'CPI/FOMC/NFP macro event — wysoka volatywność po wydarzeniach',
+    description: 'CPI/FOMC/NFP macro event — high volatility after events',
   },
 }
 
@@ -374,7 +374,7 @@ export const TRADING_MODES: Record<TradingMode, {
   AGGRESSIVE: {
     label: 'AGGRESSIVE',
     leverage: 10,
-    takeProfitPercent: 1.2,     // 1.2% ceny → 10x: 12% PnL (balans: realistyczny + daje szansę na runner)
+    takeProfitPercent: 1.2,     // 1.2% price →10x: 12% PnL (balanced: realistic + gives runner chance)
     shieldStopOffset: 0.005,    // 0.5% shield offset — przetrwa noise ±0.3-0.4%
     positionTimeoutMs: 180 * 1000, // 3min auto-close (hard TMO) — oddech dla trade'u
     positionSizePct: 0.08,
@@ -387,7 +387,7 @@ export const TRADING_MODES: Record<TradingMode, {
     shieldStopOffset: 0.002, // 0.20% price hard cap — CSV-optimal SL (was 0.30%, losses avg 0.56%)
     positionTimeoutMs: 5 * 60 * 1000, // 5 min auto-close (safety net)
     positionSizePct: 0.06,
-    description: '10x lewar, TP 0.50% ceny, SL 0.20% ceny (R:R 2.5:1). CSV-backtested na 48k trades. TMO hard 30s. Bybit fees: taker 0.0550% × 2 = 0.110%.',
+    description: '10x lewar, TP 0.50% ceny, SL 0.20% ceny (R:R 2.5:1). CSV-backtested on 48k trades. TMO hard 30s. Bybit fees: taker 0.0550% × 2 = 0.110%.',
   },
   CROWD20: {
     label: 'CROWD20',
@@ -405,7 +405,7 @@ export const TRADING_MODES: Record<TradingMode, {
     shieldStopOffset: 0.008,
     positionTimeoutMs: 8 * 60 * 1000, // 8 min auto-close
     positionSizePct: 0.08,
-    description: '5x lewar, odwraca kierunek KAŻDEGO sygnału. BID→SHORT, ASK→LONG. Fade sygnałów — gra przeciwko tłumie. TP1.5% ceny, trailing po 2%, TMO 8min. Bybit fees: taker 0.0550% × 2 = 0.110%.',
+    description: '5x leverage, reverses direction of EVERY signal. BID→SHORT, ASK→LONG. Fade signals — play against crowd. TP1.5% price, trailing after 2%, TMO 8min. Bybit fees: taker 0.0550% ×2 =0.110%.',
   },
 }
 
@@ -637,7 +637,7 @@ export const TA_CONFIG = {
   MAX_CANDLE_15M_HISTORY: 100,
 
   // ── RSI 15m Signal Thresholds (user-defined) ──
-  /** RSI 15m overbought threshold — RSI15m >= 76.50 → SHORT signal (przewartościowanie) */
+  /** RSI 15m overbought threshold — RSI15m >= 76.50 → SHORT signal (overvaluation) */
   RSI_15M_OVERBOUGHT: 76.50,
   /** RSI 15m oversold threshold — RSI15m <= 26.50 → LONG signal (wyprzedane) */
   RSI_15M_OVERSOLD: 26.50,
@@ -854,7 +854,7 @@ export const DYNAMIC_EXIT = {
 
   // ── Layer 4: Time-Based Stop Loss (two-level TMO) ──
   TIME_STOP: {
-    TMO_WARN_DEFAULT_MS: 120_000,      // 2min — daje czas na rozwój
+    TMO_WARN_DEFAULT_MS: 120_000,      // 2min — gives time to develop
     TMO_HARD_DEFAULT_MS: 180_000,      // 3min — hard cap
     TMO_WARN_OVERRIDES: {
       WHALE_INFLOW: 90_000,
@@ -902,7 +902,7 @@ export const DYNAMIC_EXIT = {
 
   // ── SL Grace Period ──
   SL_GRACE: {
-    DURATION_MS: 15_000,   // 15s — daje pozycji oddech, nie ucina na pierwszym noise
+    DURATION_MS: 15_000,   // 15s — daje pozycji oddech, nie ucina on pierwszym noise
     ENABLED: true,
   },
 

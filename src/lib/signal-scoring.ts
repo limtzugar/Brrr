@@ -32,7 +32,7 @@ export const CEX_ANOMALY_SIGNAL_TYPES = [
   'DYDX_PERP_FLOW',
   'MACRO_EVENT',
   // ── RSI 15m virtual signals ──
-  'RSI_15M_OVERBOUGHT',   // RSI 15m >= 76.50 → SHORT przewartościowanie
+  'RSI_15M_OVERBOUGHT',   // RSI 15m >= 76.50 → SHORT overvaluation
   'RSI_15M_OVERSOLD',     // RSI 15m <= 26.50 → LONG wyprzedane
   // ── MACD virtual signals ──
   'MACD_BEAR_CROSS',     // MACD histogram crosses below 0 → SHORT
@@ -321,7 +321,7 @@ export const SIGNAL_TYPE_META: Record<SignalType, { label: string; color: string
   DYDX_PERP_FLOW:      { label: 'DYDX', color: '#6366f1', description: 'dYdX perp flow — on-chain order flow' },
   MACRO_EVENT:         { label: 'MAC',  color: '#8b5cf6', description: 'Macro event — CPI/FOMC/NFP' },
   // RSI 15m virtual signals
-  RSI_15M_OVERBOUGHT:   { label: 'RSI▼', color: '#ff6b6b', description: 'RSI 15m >= 76.50 → SHORT przewartościowanie' },
+  RSI_15M_OVERBOUGHT:   { label: 'RSI▼', color: '#ff6b6b', description: 'RSI 15m >= 76.50 → SHORT overvaluation' },
   RSI_15M_OVERSOLD:     { label: 'RSI▲', color: '#51cf66', description: 'RSI 15m <= 26.50 → LONG wyprzedane' },
   // MACD virtual signals
   MACD_BEAR_CROSS:    { label: 'MACD▼', color: '#ff4757', description: 'MACD histogram crosses below 0 → SHORT' },

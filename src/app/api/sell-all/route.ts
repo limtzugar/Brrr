@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const parsed = sellAllSchema.safeParse(body)
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Nieprawidłowe parametry', details: parsed.error.flatten() }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid parameters', details: parsed.error.flatten() }, { status: 400 })
     }
     const { exchange, mode } = parsed.data
 
@@ -43,9 +43,9 @@ export async function POST(request: Request) {
         const qty = Number(coin.free).toFixed(Number(coin.free) < 1 ? 6 : 4)
         try {
           await client.marketSell(symbol, qty, `sell-all-${Date.now()}`)
-          results.push({ coin: coin.coin, symbol, qty, status: 'success', message: `Sprzedano ${qty} ${coin.coin}` })
+          results.push({ coin: coin.coin, symbol, qty, status: 'success', message: `Sold ${qty} ${coin.coin}` })
         } catch (err) {
-          const msg = err instanceof Error ? err.message : 'Błąd sprzedaży'
+          const msg = err instanceof Error ? err.message : 'Sell failed'
           results.push({ coin: coin.coin, symbol, qty, status: 'error', message: msg })
         }
       }
@@ -60,9 +60,9 @@ export async function POST(request: Request) {
         const qty = Number(coin.free).toFixed(Number(coin.free) < 1 ? 6 : 4)
         try {
           await client.marketSell(symbol, qty, `sell-all-${Date.now()}`)
-          results.push({ coin: coin.coin, symbol, qty, status: 'success', message: `Sprzedano ${qty} ${coin.coin}` })
+          results.push({ coin: coin.coin, symbol, qty, status: 'success', message: `Sold ${qty} ${coin.coin}` })
         } catch (err) {
-          const msg = err instanceof Error ? err.message : 'Błąd sprzedaży'
+          const msg = err instanceof Error ? err.message : 'Sell failed'
           results.push({ coin: coin.coin, symbol, qty, status: 'error', message: msg })
         }
       }
@@ -73,14 +73,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: errorCount === 0,
-      message: `Sprzedano ${successCount}/${results.length} aktywów${errorCount > 0 ? `, ${errorCount} błędów` : ''}`,
+      message: `Sold ${successCount}/${results.length} assets${errorCount > 0 ? `, ${errorCount} errors` : ''}`,
       results,
       soldCount: successCount,
       errorCount,
     })
   } catch (error) {
     console.error('[/api/sell-all] error:', error)
-    const msg = error instanceof Error ? error.message : 'Nieznany błąd'
+    const msg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

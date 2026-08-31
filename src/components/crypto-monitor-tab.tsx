@@ -99,7 +99,7 @@ export default function CryptoMonitorTab() {
         fetch('/api/signals'),
         fetch('/api/coins'),
       ])
-      if (!signalsRes.ok || !coinsRes.ok) throw new Error('Błąd pobierania danych')
+      if (!signalsRes.ok || !coinsRes.ok) throw new Error('Failed to fetch data')
       const signalsData = await signalsRes.json()
       const coinsData = await coinsRes.json()
       const signalsWithConf = (signalsData.signals || []).map((s: DipSignal) => ({
@@ -110,7 +110,7 @@ export default function CryptoMonitorTab() {
       setCoins(coinsData.coins || [])
       setLastUpdated(signalsData.last_updated || coinsData.last_updated)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Nieznany błąd')
+      setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
       setLoading(false)
     }
@@ -169,7 +169,7 @@ export default function CryptoMonitorTab() {
         <Separator orientation="vertical" className="h-4" />
         <div className="flex items-center gap-1.5 text-sm">
           <Bell className="size-3.5" style={{ color: te.yellow }} />
-          <span className="text-xs" style={{ color: te.textMuted }}>Sygnały</span>
+          <span className="text-xs" style={{ color: te.textMuted }}>Signals</span>
           <span className="font-bold" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{signals.length}</span>
         </div>
         <Separator orientation="vertical" className="h-4" />
@@ -222,14 +222,14 @@ export default function CryptoMonitorTab() {
             <TooltipTrigger asChild>
               <button className="flex items-center gap-1 text-xs transition-colors" style={{ color: te.textMuted }}>
                 <Shield className="size-3.5" />
-                <span className="hidden sm:inline">Jak korzystać?</span>
+                <span className="hidden sm:inline">How to use?</span>
               </button>
             </TooltipTrigger>
             <TooltipContent className="max-w-sm text-xs space-y-1">
-              <div><strong>1.</strong> Dashboard pokazuje sygnały z top 100 MC — nie potrzebujesz konta</div>
-              <div><strong>2.</strong> Kliknij ikonę monety — otworzy się wykres TradingView z RSI</div>
-              <div><strong>3.</strong> ALERT / BUY SIGNAL — oceniasz sam i kupujesz ręcznie</div>
-              <div><strong>4.</strong> Kupujesz na Bybit, Binance, OKX</div>
+              <div><strong>1.</strong> Dashboard shows signals from top 100 MC — no account needed</div>
+              <div><strong>2.</strong> Click coin icon — TradingView chart with RSI will open</div>
+              <div><strong>3.</strong> ALERT / BUY SIGNAL — you assess and buy manually</div>
+              <div><strong>4.</strong> Kupujesz on Bybit, Binance, OKX</div>
               <div className="flex flex-wrap gap-1 pt-1">
                 <Badge variant="outline" className="text-[9px]">Bybit 0.1%</Badge>
                 <Badge variant="outline" className="text-[9px]">Binance 0.1%</Badge>
@@ -244,7 +244,7 @@ export default function CryptoMonitorTab() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={signalFilter} onValueChange={(v) => setSignalFilter(v as typeof signalFilter)}>
-            <SelectTrigger className="w-[130px] h-8 text-xs"><SelectValue placeholder="Filtr sygnałów" /></SelectTrigger>
+            <SelectTrigger className="w-[130px] h-8 text-xs"><SelectValue placeholder="Signal filter" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Wszystkie</SelectItem>
               <SelectItem value="buy_signal">Buy Signal</SelectItem>
@@ -271,7 +271,7 @@ export default function CryptoMonitorTab() {
             </span>
           )}
           <Button variant="outline" size="sm" className="h-8 text-xs" onClick={fetchData} disabled={loading}>
-            <RefreshCw className={`size-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} />Odśwież
+            <RefreshCw className={`size-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} />Refresh
           </Button>
         </div>
       </div>
@@ -286,7 +286,7 @@ export default function CryptoMonitorTab() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Sygnały Dip</h3>
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Signals Dip</h3>
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map(i => (
@@ -297,8 +297,8 @@ export default function CryptoMonitorTab() {
             <Card style={teCardStyle}>
               <CardContent className="py-12 text-center" style={{ color: te.textMuted }}>
                 <Eye className="size-8 mx-auto mb-2 opacity-50" />
-                <p style={{ color: te.text }}>Brak aktywnych sygnałów dip</p>
-                <p className="text-xs mt-1">Rynek jest spokojny — sprawdź później</p>
+                <p style={{ color: te.text }}>No active dip signals</p>
+                <p className="text-xs mt-1">Market is calm — check later</p>
               </CardContent>
             </Card>
           ) : (
@@ -319,7 +319,7 @@ export default function CryptoMonitorTab() {
         </div>
 
         <div>
-          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Top 10 Spadków 24h</h3>
+          <h3 style={{ fontFamily: te.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: te.textMuted, marginBottom: 12 }}>Top 10 Drops 24h</h3>
           <Card style={teCardStyle}>
             <CardContent className="p-0">
               <ScrollArea className="max-h-[600px]">
@@ -360,8 +360,8 @@ export default function CryptoMonitorTab() {
       <Dialog open={thresholdsOpen} onOpenChange={setThresholdsOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><SlidersHorizontal className="size-5" />Progi alertów per-moneta</DialogTitle>
-            <DialogDescription>Dostosuj progi RSI, spadku 24h i mnożnika wolumenu dla każdej monitorowanej monety.</DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><SlidersHorizontal className="size-5" />Alert thresholds per coin</DialogTitle>
+            <DialogDescription>Adjust RSI, 24h drop and volume multiplier thresholds for each monitored coin.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 mt-2">
             <div className="flex gap-2 mb-2">
@@ -370,7 +370,7 @@ export default function CryptoMonitorTab() {
                 coins.forEach(c => { newThresholds[c.id] = { ...DEFAULT_COIN_THRESHOLDS } })
                 setCoinThresholds(newThresholds)
                 saveThresholds(newThresholds)
-              }}><Settings className="size-3" />Zastosuj domyślne dla wszystkich</Button>
+              }}><Settings className="size-3" />Apply defaults for all</Button>
             </div>
             <ScrollArea className="max-h-[400px]">
               <div className="space-y-2">
@@ -386,7 +386,7 @@ export default function CryptoMonitorTab() {
                       </div>
                       <div className="flex-1 grid grid-cols-3 gap-2">
                         <div>
-                          <Label className="text-[9px]" style={{ color: te.textMuted }}>RSI próg</Label>
+                          <Label className="text-[9px]" style={{ color: te.textMuted }}>RSI threshold</Label>
                           <Input type="number" value={thresholds.rsi_threshold} onChange={e => {
                             const newT = { ...coinThresholds, [coin.id]: { ...thresholds, rsi_threshold: Number(e.target.value) } }
                             setCoinThresholds(newT); saveThresholds(newT)
@@ -400,7 +400,7 @@ export default function CryptoMonitorTab() {
                           }} className="h-6 text-[10px]" step={1} />
                         </div>
                         <div>
-                          <Label className="text-[9px]" style={{ color: te.textMuted }}>Vol mnożnik</Label>
+                          <Label className="text-[9px]" style={{ color: te.textMuted }}>Vol multiplier</Label>
                           <Input type="number" value={thresholds.volume_multiplier_threshold} onChange={e => {
                             const newT = { ...coinThresholds, [coin.id]: { ...thresholds, volume_multiplier_threshold: Number(e.target.value) } }
                             setCoinThresholds(newT); saveThresholds(newT)
@@ -449,7 +449,7 @@ function SignalCard({ signal, onOpenChart, fearGreedValue, hasCustomThreshold }:
     <Card className="overflow-hidden" style={{ background: te.bgCard, border: `1px solid ${te.border}`, borderRadius: '4px' }}>
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
-          <button className="shrink-0 group relative" onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)} title="Otwórz wykres TradingView">
+          <button className="shrink-0 group relative" onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)} title="Open TradingView chart">
             <img src={signal.image} alt={signal.symbol} className="size-10 rounded-full group-hover:ring-2 transition-all" style={{ outlineColor: te.orange, outlineWidth: '2px' }} />
             <div className="absolute -bottom-0.5 -right-0.5 rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: te.orange }}><Maximize2 className="size-2.5" style={{ color: '#000' }} /></div>
           </button>
@@ -463,7 +463,7 @@ function SignalCard({ signal, onOpenChart, fearGreedValue, hasCustomThreshold }:
             </div>
             <div className="text-sm" style={{ color: te.textMuted, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(signal.current_price)}</div>
           </div>
-          <div className="hidden sm:block cursor-pointer" onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)} title="Otwórz wykres">
+          <div className="hidden sm:block cursor-pointer" onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)} title="Open chart">
             <MiniChart data={signal.sparkline_7d} isPositive={isPositive7d} width={80} height={32} />
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -486,7 +486,7 @@ function SignalCard({ signal, onOpenChart, fearGreedValue, hasCustomThreshold }:
             <Separator className="my-3" />
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs" style={{ color: te.textMuted }}>Pewność sygnału</span>
+                <span className="text-xs" style={{ color: te.textMuted }}>Signal confidence</span>
                 <span className="text-xs font-bold" style={{ color: confScore >= 70 ? te.green : confScore >= 40 ? te.yellow : te.red, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{confScore}/100</span>
               </div>
               <div className="h-2.5 rounded-full overflow-hidden" style={{ background: te.bgInput }}>
@@ -513,12 +513,12 @@ function SignalCard({ signal, onOpenChart, fearGreedValue, hasCustomThreshold }:
               <div className="flex items-center gap-2 mb-2"><Thermometer className="size-3.5" style={{ color: te.orange }} /><span className="text-xs font-medium" style={{ color: te.text }}>Trailing Stop-Loss</span></div>
               <div className="rounded-lg p-3" style={{ background: `${te.bgInput}55` }}>
                 <div className="flex items-end gap-1 mb-2 h-8">
-                  <div className="flex-1 flex flex-col items-center justify-end h-full"><div className="w-full rounded-t" style={{ height: '100%', background: `${te.green}66` }} /><span style={{ fontFamily: te.mono, fontSize: '9px', color: te.textMuted, marginTop: 2 }}>Wejście</span></div>
+                  <div className="flex-1 flex flex-col items-center justify-end h-full"><div className="w-full rounded-t" style={{ height: '100%', background: `${te.green}66` }} /><span style={{ fontFamily: te.mono, fontSize: '9px', color: te.textMuted, marginTop: 2 }}>Entry</span></div>
                   <div className="flex-1 flex flex-col items-center justify-end h-full"><div className="w-full rounded-t" style={{ height: `${Math.max(10, 100 - trailingPct * 8)}%`, background: `${te.orange}66` }} /><span style={{ fontFamily: te.mono, fontSize: '9px', color: te.textMuted, marginTop: 2 }}>Trailing SL</span></div>
                   <div className="flex-1 flex flex-col items-center justify-end h-full"><div className="w-full rounded-t" style={{ height: '30%', background: `${te.red}44` }} /><span style={{ fontFamily: te.mono, fontSize: '9px', color: te.textMuted, marginTop: 2 }}>ATR</span></div>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div><div style={{ color: te.textMuted }}>Cena wejścia</div><div className="font-medium" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(signal.current_price)}</div></div>
+                  <div><div style={{ color: te.textMuted }}>Entry price</div><div className="font-medium" style={{ color: te.text, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(signal.current_price)}</div></div>
                   <div><div style={{ color: te.textMuted }}>Trailing SL ({trailingPct}%)</div><div className="font-medium" style={{ color: te.orange, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(trailingStopPrice)}</div></div>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
@@ -530,27 +530,27 @@ function SignalCard({ signal, onOpenChart, fearGreedValue, hasCustomThreshold }:
             </div>
             <Separator className="my-3" />
             <div className="mb-3">
-              <div className="flex items-center gap-2 mb-2"><Calculator className="size-3.5" style={{ color: te.purple }} /><span className="text-xs font-medium" style={{ color: te.text }}>Kalkulator wielkości pozycji</span></div>
+              <div className="flex items-center gap-2 mb-2"><Calculator className="size-3.5" style={{ color: te.purple }} /><span className="text-xs font-medium" style={{ color: te.text }}>Position size calculator</span></div>
               <div className="rounded-lg p-3" style={{ background: `${te.bgInput}55` }}>
                 <div className="grid grid-cols-2 gap-3 text-xs mb-2">
-                  <div><Label className="text-[10px]" style={{ color: te.textMuted }}>Kapitał ($)</Label><Input type="number" value={accountBalance} readOnly className="h-7 text-xs" style={{ background: te.bgInput }} /></div>
-                  <div><Label className="text-[10px]" style={{ color: te.textMuted }}>Ryzyko na trade (%)</Label><div className="flex items-center gap-1"><Slider value={[riskPct]} onValueChange={v => setRiskPct(v[0])} min={0.5} max={5} step={0.5} className="flex-1" /><span className="text-xs font-medium w-8 text-right" style={{ fontFamily: te.mono, color: te.text }}>{riskPct}%</span></div></div>
+                  <div><Label className="text-[10px]" style={{ color: te.textMuted }}>Capital ($)</Label><Input type="number" value={accountBalance} readOnly className="h-7 text-xs" style={{ background: te.bgInput }} /></div>
+                  <div><Label className="text-[10px]" style={{ color: te.textMuted }}>Ryzyko on trade (%)</Label><div className="flex items-center gap-1"><Slider value={[riskPct]} onValueChange={v => setRiskPct(v[0])} min={0.5} max={5} step={0.5} className="flex-1" /><span className="text-xs font-medium w-8 text-right" style={{ fontFamily: te.mono, color: te.text }}>{riskPct}%</span></div></div>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs mb-2">
                   <div><span style={{ color: te.textMuted }}>Stop Loss %</span><div className="font-medium" style={{ fontFamily: te.mono, color: te.text, fontVariantNumeric: 'tabular-nums' }}>{stopLossPct.toFixed(1)}%</div></div>
-                  <div><span style={{ color: te.textMuted }}>Zmienność (ATR proxy)</span><div className="font-medium" style={{ fontFamily: te.mono, color: te.text, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(atrProxy)}</div></div>
+                  <div><span style={{ color: te.textMuted }}>Volatility (ATR proxy)</span><div className="font-medium" style={{ fontFamily: te.mono, color: te.text, fontVariantNumeric: 'tabular-nums' }}>{formatPrice(atrProxy)}</div></div>
                 </div>
                 <Separator className="my-2" />
                 <div className="grid grid-cols-3 gap-3 text-xs">
-                  <div className="text-center p-2 rounded" style={{ background: te.purpleBg }}><div style={{ color: te.textMuted, fontFamily: te.mono, fontSize: '10px' }}>Wielkość pozycji</div><div className="font-bold" style={{ color: te.purple, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>${positionSizeUsd.toFixed(0)}</div></div>
-                  <div className="text-center p-2 rounded" style={{ background: te.purpleBg }}><div style={{ color: te.textMuted, fontFamily: te.mono, fontSize: '10px' }}>Ilość monet</div><div className="font-bold" style={{ color: te.purple, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{positionSizeCoins < 1 ? positionSizeCoins.toFixed(4) : positionSizeCoins.toFixed(2)}</div></div>
+                  <div className="text-center p-2 rounded" style={{ background: te.purpleBg }}><div style={{ color: te.textMuted, fontFamily: te.mono, fontSize: '10px' }}>Position size</div><div className="font-bold" style={{ color: te.purple, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>${positionSizeUsd.toFixed(0)}</div></div>
+                  <div className="text-center p-2 rounded" style={{ background: te.purpleBg }}><div style={{ color: te.textMuted, fontFamily: te.mono, fontSize: '10px' }}>Coin amount</div><div className="font-bold" style={{ color: te.purple, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{positionSizeCoins < 1 ? positionSizeCoins.toFixed(4) : positionSizeCoins.toFixed(2)}</div></div>
                   <div className="text-center p-2 rounded" style={{ background: te.purpleBg }}><div style={{ color: te.textMuted, fontFamily: te.mono, fontSize: '10px' }}>Alokacja</div><div className="font-bold" style={{ color: te.purple, fontFamily: te.mono, fontVariantNumeric: 'tabular-nums' }}>{allocationPct.toFixed(1)}%</div></div>
                 </div>
               </div>
             </div>
             <div className="mt-3 flex justify-end">
               <Button variant="outline" size="sm" className="text-xs gap-1.5" onClick={() => onOpenChart(signal.coin_id, signal.symbol, signal.name, signal.image, signal.current_price, signal.price_change_24h)}>
-                <LineChartIcon className="size-3.5" />Otwórz wykres TradingView
+                <LineChartIcon className="size-3.5" />Open TradingView chart
               </Button>
             </div>
           </>

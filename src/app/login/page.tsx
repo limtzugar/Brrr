@@ -19,10 +19,10 @@ export default function LoginPage() {
         body: JSON.stringify({ apiKey }),
       })
       const result = await response.json()
-      if (!response.ok) throw new Error(result.error || 'Logowanie nie powiodło się.')
+      if (!response.ok) throw new Error(result.error || 'Login failed.')
       window.location.assign('/')
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Logowanie nie powiodło się.')
+      setError(reason instanceof Error ? reason.message : 'Login failed.')
     } finally {
       setPending(false)
     }
@@ -38,14 +38,14 @@ export default function LoginPage() {
           <p className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">
             BRRR
           </p>
-          <h1 className="mt-2 text-2xl font-semibold">Dostęp do panelu</h1>
+          <h1 className="mt-2 text-2xl font-semibold">Access Panel</h1>
           <p className="mt-2 text-sm text-white/55">
-            Wprowadź klucz skonfigurowany jako BRRR_API_KEY.
+            Enter the key configured as BRRR_API_KEY.
           </p>
         </div>
 
         <label className="block text-sm text-white/70">
-          Klucz dostępu
+          Access Key
           <input
             autoFocus
             autoComplete="current-password"
@@ -67,7 +67,7 @@ export default function LoginPage() {
           disabled={pending || !apiKey}
           className="w-full rounded bg-emerald-400 px-4 py-2.5 font-semibold text-black disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {pending ? 'Sprawdzanie…' : 'Zaloguj'}
+          {pending ? 'Checking...' : 'Log in'}
         </button>
       </form>
     </main>

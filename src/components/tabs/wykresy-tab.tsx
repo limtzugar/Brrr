@@ -107,7 +107,7 @@ export default function WykresyTab() {
       const res = await fetch(`/api/indicators?coin_id=${selectedCoin}&days=${selectedDays}&indicators=hurst,rsi,macd,bb`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Błąd pobierania wskaźników')
+        throw new Error(data.error || 'Error pobierania wskaźników')
       }
       const data = await res.json()
       setIndicatorData({
@@ -120,7 +120,7 @@ export default function WykresyTab() {
         setCoinPrice(data.prices[data.prices.length - 1].price)
       }
     } catch (err) {
-      setIndicatorsError(err instanceof Error ? err.message : 'Nieznany błąd')
+      setIndicatorsError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
       setIndicatorsLoading(false)
     }
@@ -288,7 +288,7 @@ export default function WykresyTab() {
         <div className="relative" style={{ height: '55vh', minHeight: '400px' }}>
           {widgetLoading && (
             <div className="absolute inset-0 flex items-center justify-center z-10" style={{ background: te.bgCard }}>
-              <div className="flex items-center gap-3" style={{ color: te.textMuted }}><RefreshCw className="size-5 animate-spin" /><span>Ładowanie wykresu TradingView...</span></div>
+              <div className="flex items-center gap-3" style={{ color: te.textMuted }}><RefreshCw className="size-5 animate-spin" /><span>Loading TradingView chart...</span></div>
             </div>
           )}
           <div id={containerId} ref={tvContainerRef} className="w-full h-full" />
@@ -318,7 +318,7 @@ export default function WykresyTab() {
           ) : indicatorsError ? (
             <div className="flex items-center justify-center text-sm py-8" style={{ color: te.red }}><AlertTriangle className="size-4 mr-2" />{indicatorsError}</div>
           ) : hurstChartData.length === 0 ? (
-            <div className="flex items-center justify-center text-sm py-8" style={{ color: te.textDim }}>Brak danych Hurst dla wybranego okresu (wymaga ≥100 punktów)</div>
+            <div className="flex items-center justify-center text-sm py-8" style={{ color: te.textDim }}>No data Hurst dla wybranego okresu (wymaga ≥100 punktów)</div>
           ) : (
             <ChartContainer config={{ hurst: { color: currentHurst !== null && currentHurst < 0.5 ? te.purple : te.yellow }, rsi: { color: te.textMuted } }} className="h-[200px] w-full">
               <AreaChart data={hurstChartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>

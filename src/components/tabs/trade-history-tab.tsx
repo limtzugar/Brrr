@@ -40,7 +40,7 @@ export default function TradeHistoryTab() {
       const data = await res.json()
       setAnalytics(data)
     } catch {
-      setStatus('Błąd pobierania analityki')
+      setStatus('Error pobierania analityki')
     } finally {
       setLoading(false)
     }
@@ -58,10 +58,10 @@ export default function TradeHistoryTab() {
         setStatus(`Dane już załadowane: ${data.total.toLocaleString()} transakcji`)
         setAnalytics(data)
       } else {
-        setStatus('Brak danych — uruchom: node scripts/import-csv-direct.mjs')
+        setStatus('No data — uruchom: node scripts/import-csv-direct.mjs')
       }
     } catch {
-      setStatus('Błąd — uruchom: node scripts/import-csv-direct.mjs')
+      setStatus('Error — uruchom: node scripts/import-csv-direct.mjs')
     } finally {
       setImporting(false)
     }
@@ -104,14 +104,14 @@ export default function TradeHistoryTab() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <BarChart3 className="size-5" style={{ color: TE.orange }} />
-          <h2 className="text-lg font-semibold">Historia Transakcji</h2>
+          <h2 className="text-lg font-semibold">History Transakcji</h2>
           {analytics?.total ? (
             <Badge variant="outline">{analytics.total.toLocaleString()} trades</Badge>
           ) : null}
         </div>
         <div className="flex gap-2 flex-wrap">
           <Button size="sm" variant="outline" onClick={() => void fetchAnalytics()} disabled={loading}>
-            <RefreshCw className="size-3.5 mr-1" /> Odśwież
+            <RefreshCw className="size-3.5 mr-1" /> Refresh
           </Button>
           <Button size="sm" onClick={() => void importFromDirectory()} disabled={importing}
             style={{ background: TE.orange, color: '#000' }}>
@@ -136,7 +136,7 @@ export default function TradeHistoryTab() {
 
       {!analytics?.total ? (
         <div className="text-center py-12 opacity-60">
-          <p>Brak danych. Kliknij &quot;Import 162 CSV&quot; aby załadować historię Dip Hunter.</p>
+          <p>No data. Kliknij &quot;Import 162 CSV&quot; aby załadować historię Dip Hunter.</p>
         </div>
       ) : (
         <>
